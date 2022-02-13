@@ -1,0 +1,279 @@
+import { React, useState, useEffect } from 'react';
+
+import deleteRed2027 from '../../images/delete-red-20x27.png';
+
+import {TaskDueDate} from './TaskDueDate.js';
+import {TaskRemindDate} from './TaskRemindDate.js';
+import {TaskDateSelector } from './TaskDateSelector.js';
+import {TaskNote} from './TaskNote.js';
+import {TaskMove} from './TaskMove';
+import {TaskMoveListSelector} from './TaskMoveListSelector.js';
+import {TaskUriRef} from './TaskUriRef.js';
+
+export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, 
+												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI}) => {
+
+	const currListName = document.getElementById('tListName').value;
+	
+	const [showTaskNameField, setShowTaskNameField] = useState(false);
+	const [showDueDateSel, setShowDueDateSel] = useState(false);
+	const [showRemDateSel, setShowRemDateSel] = useState(false);
+	const [moveLists,setMoveLists] = useState([]);
+	const [showMoveListSel, setShowMoveListSel] = useState(false);
+	const [showTaskUriRefTxt, setShowTaskUriRefTxt] = useState(false);
+
+	function getLTH() {
+		var today = new Date();
+		var lth = today.getHours() + 4;
+		if (lth >= 24) {
+			lth = lth - 24;
+		}
+		return lth;
+	}
+	
+	useEffect(()=>{
+		if(showTaskNameField && document.getElementById('task-detail-label-text')!=undefined){
+			document.getElementById('task-detail-label-text').focus();
+			document.getElementById('task-detail-label-text').value = task.taskName;
+		}
+	},[showTaskNameField]);
+	
+	useEffect(()=>{
+		setShowMoveListSel(false);
+		setShowDueDateSel(false);
+		setShowRemDateSel(false);
+		setShowTaskUriRefTxt(false);
+	},[task]);
+	
+	useEffect(() => {
+		if(document.getElementById('task-detail-note-txt')!=undefined){
+			document.getElementById('task-detail-note-txt').innerHTML=task.note;
+		}
+	},[task]);
+	
+	const updateTaskName = async (event,taskId) => {
+		const updatedTaskName = event.target.value;
+		if(updatedTaskName===task.taskName){
+			setShowTaskNameField(false);
+			return false;
+		}
+		disableDiv();
+		const updateTaskNamePayLoad = {
+			taskId:taskId,
+			taskName:updatedTaskName
+		}
+		const settings = {
+			method:'PUT',
+			headers:{
+				'Authorization':getAuth(),
+				'Content-Type':'application/json; charset=UTF-8'
+			},
+			body:JSON.stringify(updateTaskNamePayLoad)
+		};
+		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/taskName`,settings);
+		const data = await response.json();
+		if(data.status==="success"){
+			let tempTaskList = [...taskList];
+			let taskListIndex;
+			if(task.completed){
+				taskListIndex=2;
+			}else{
+				taskListIndex=1;
+			}
+			let tempTaskG = tempTaskList[taskListIndex];
+			tempTaskG.map((tempTask,index)=>{
+				if(tempTask.taskId===taskId){
+					tempTaskG[index]=data.todoTask;
+				}
+			});
+			tempTaskList[taskListIndex] = tempTaskG;
+			onSetTask(data.todoTask);
+			setShowTaskNameField(false);
+		}
+		enableDiv();
+	}
+	
+	const onSetShowMoveListSel = (taskId) => {
+		if (document.getElementById('task-item-detail-move-sel') != undefined) {
+			setShowMoveListSel(false);
+		}else{
+			fetchlistList(taskId);
+		}
+		
+	}
+	
+	const fetchlistList = async (taskId) => {
+		disableDiv();
+		const settings = {
+			method:'GET',
+			headers:{
+				'Authorization':getAuth()
+			}
+		}
+		const response = await fetch(`${getServiceURI()}/todo/task/getListsOfUsers/${taskId}`,settings);
+		const data = await response.json();
+		if(data!==undefined){
+			enableDiv();
+			setShowMoveListSel(true);
+				setShowDueDateSel(false);
+				setShowRemDateSel(false);
+			setMoveLists(data);
+		}
+	}
+	
+	useEffect(() => {
+		if (document.getElementById('task-item-detail-move-sel') != undefined) {
+			document.getElementById('task-item-detail-move-sel').style.height = "10em";
+			document.getElementById('task-item-detail-move-sel').style.width
+				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
+		}
+	}, [moveLists]);
+	
+	const onSetShowDateSel = (event,tdElem) => {
+		
+		let divId='selRem';
+		if(tdElem==='dueDate'){
+			divId='selDue';
+		}
+		if (document.getElementById(divId) != undefined) {
+			document.getElementById(divId).style.height = "0px";
+			setShowRemDateSel(false);
+			setShowDueDateSel(false);
+		} else {
+			if(tdElem==='dueDate'){
+				setShowRemDateSel(false);
+				setShowMoveListSel(false);
+				setShowDueDateSel(true);
+			}else{
+				setShowRemDateSel(true);
+				setShowMoveListSel(false);
+				setShowDueDateSel(false);
+			}
+		}
+	}
+	
+	useEffect(() => {
+		if (document.getElementById('selDue') != undefined) {
+			document.getElementById('selDue').style.height = "13.5em";
+			document.getElementById('selDue').style.width
+				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
+		}
+	}, [showDueDateSel]);
+	
+	useEffect(() => {
+		if (document.getElementById('selRem') != undefined) {
+			document.getElementById('selRem').style.height = "13.5em";
+			document.getElementById('selRem').style.width
+				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
+		}
+	}, [showRemDateSel]);
+
+	const updateTDDate = async (event, taskId, when, tdElem) => {
+		disableDiv();
+		let reqPayload = {
+			"taskId": parseInt(taskId)
+		}
+		let remindTime;
+		if(when==="pick"){
+			if(tdElem==="remindMeDate"){
+				remindTime = document.getElementById('pick-td-rem-date').value;
+			}else{
+				remindTime = document.getElementById('pick-td-dd-date').value;
+			}
+		}else{
+			remindTime = getDateTime(when);
+		}
+		if(tdElem==="remindMeDate"){
+			reqPayload.remindTime = remindTime;
+			reqPayload.remindMe = true;
+		}else{
+			reqPayload.dueDate = remindTime;
+		}
+		const settings = {
+			method: 'PUT',
+			headers: {
+				'Authorization': getAuth(),
+				'Content-Type': "application/json; charset=utf-8"
+			},
+			body: JSON.stringify(reqPayload)
+		}
+		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/${tdElem}`, settings);
+		const data = await response.json();
+		onSetTask(data.todoTask);
+		if(tdElem==="remindMeDate"){
+			onSetShowDateSel('remindMeDate');
+		}else{
+			onSetShowDateSel('dueDate');
+		}
+		enableDiv();
+	}
+	function getDateTime(when) {
+		var tDate = new Date();
+		var lth = "09";
+		if (when === "lth") {
+			lth = getLTH();
+			if (lth < 4) {
+				tDate.setDate(tDate.getDate() + 1);
+			}
+			if (lth < 10) {
+				lth = "0" + lth;
+			}
+		} else if (when === "tmr") {
+			tDate.setDate(tDate.getDate() + 1);
+		} else if (when === "nwd") {
+			tDate.setDate(tDate.getDate() + 7);
+		}
+		let day = tDate.getDate();
+		if (day < 10) {
+			day = "0" + day;
+		}
+		return  tDate.getFullYear() + "-" + monthsI[tDate.getMonth()] + "-" + day + "T" + lth + ":00";
+	}
+
+	return (
+		<div className="col-sm-3 task-detail-div" id="task-detail-div">
+			<div className="task-detail-main">
+				<div className="row task-item-detail-name" id="task-item-detail-name">
+					<input type="checkbox" id="task-detail-chkbx-617" onChange={(event) => onCompleteTask(event,task.taskId)}
+						className="task-item-chkbx-detail task-item-chkbx " name="task-detail-chkbx-617" checked={task.completed} />
+					{!showTaskNameField && <label id="task-detail-label" className={task.completed ? "task-item-label strike-line" : "task-item-label"}
+						onClick={()=>setShowTaskNameField(true)}>{task.taskName}
+					</label>}
+					{showTaskNameField && <input type="text" id="task-detail-label-text" className="task-detail-label-text form-control" 
+							style={{ backgroundColor: '#403a3a'}} onBlur={(event)=>updateTaskName(event,task.taskId)} />}
+					<input id="task-detail-star-617" className="task-detail-star" type="checkbox" title="Important" 
+									onClick={(event)=>onUpdateTask(event,"important", task.taskId)}  checked={task.important} />
+				</div>
+				<div style={{position:'relative'}}>
+					<TaskDueDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={onUpdateTask} />
+					{showDueDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
+														days={days} getLTH={getLTH} tdElem="dueDate" />}
+				</div>
+				<div style={{position:'relative'}}>
+					<TaskRemindDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={onUpdateTask} />
+					{showRemDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
+													days={days} getLTH={getLTH} tdElem="remindMeDate"
+													/>}
+				</div>
+				<TaskNote task={task} onUpdateTask={onUpdateTask} />
+				<div style={{position:'relative'}}>
+					{currListName!="Important"	&&	<TaskMove task={task} showMoveListSel={showMoveListSel} onSetShowMoveListSel={onSetShowMoveListSel} />}
+					{showMoveListSel && <TaskMoveListSelector 	moveLists={moveLists!=undefined && moveLists}
+															onMoveTask={onMoveTask}
+															task={task}
+														/>}
+				</div>
+				<TaskUriRef task={task} showTaskUriRefTxt={showTaskUriRefTxt} setShowTaskUriRefTxt={setShowTaskUriRefTxt} onUpdateTask={onUpdateTask} />
+			</div>
+			<div className="row task-detail-delete">
+				<div style={{ textAlign: 'center', marginTop: 0.7 + 'em', width:80+'%' }}>
+					<label className="task-detail-crtd-lbl">Created on {onConvertDateT(task.dateCreated)}</label>
+				</div>
+				<div style={{ marginTop: 0.7 + 'em' , width:20+'%'}}>
+					<img alt="delete" className="task-detail-delete-label" id="task-delete-label" src={deleteRed2027}
+														onClick={(event)=>onDeleteTask(event,task.taskId)} />
+				</div>
+			</div>
+		</div>
+	);
+}
