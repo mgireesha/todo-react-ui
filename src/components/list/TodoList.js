@@ -2,7 +2,7 @@ import {React,useEffect, useState} from 'react';
 import {AddList} from './AddList.js';
 import {ListGroup} from './ListGroup.js';
 import {ListItem} from './ListItem.js';
-export const TodoList = ({onshowTask,userLists,onSetUserLists,onGetAuth,setShowListAddB,showListAddB,
+export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys,onGetAuth,setShowListAddB,showListAddB,
 							setShowTaskAdd,lisDivWidth,onSetTodoListToArchived,archivedListsIndex,commonListsIndex,disableDiv, enableDiv, getServiceURI}) => {
 
 	const TOKEN_EXPIRED="TOKEN_EXPIRED";
@@ -54,9 +54,15 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onGetAuth,setShowL
 		if(showArchived && !action){
 			document.getElementById('list-item-archive').style.height="2.3em";
 		}else{
-			let temparchlist = [...userLists[archivedListsIndex]];
+			let tempListLength;
+			let temparchlist;
+			if(archivedListsIndex!=-1){
+				temparchlist = [...userLists[archivedListsIndex]];
+				tempListLength = temparchlist.length;
+			}else{
+				tempListLength = 1;
+			}
 			let archHeight;
-			let tempListLength = temparchlist.length;
 			if(action=="archived"){
 				tempListLength=tempListLength+1;
 			}else if(action!=undefined){
@@ -90,7 +96,14 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onGetAuth,setShowL
 		const response = await fetch(`${getServiceURI()}/todo/list/`,settings);
 		const data = await response.json();
 		let newState = [...userLists];
-		newState[commonListsIndex]=[...newState[commonListsIndex], data.todoList];
+		//let commonListsIndex;
+		if(commonListsIndex==undefined || commonListsIndex==-1){
+			commonListsIndex = newState.length;
+			newState[commonListsIndex]=[data.todoList];
+			onSetUserListsKeys(commonListsIndex,data.todoList.groupName);
+		}else{
+			newState[commonListsIndex]=[...newState[commonListsIndex], data.todoList];
+		}
 		onSetUserLists(newState);
 		if(data.status==="success"){
 			setShowListAddB(false);

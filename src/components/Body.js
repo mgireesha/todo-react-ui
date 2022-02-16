@@ -97,7 +97,11 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		fetchTasks(null,respLists[respListKeys.findIndex(obj => obj=="default")][0].listId);
 	};
 	
-	
+	const onSetUserListsKeys = (index,group) => {
+		let tempUserListKeys = [...userListsKeys];
+		tempUserListKeys[index] = group;
+		setUserListsKeys(tempUserListKeys);
+	}
 	const onSetTodoListToArchived = (todoList) => {
 		let tempUserLists = [...userLists];
 		let filterIndex = commonListsIndex;
@@ -435,6 +439,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					setShowTaskAdd={setShowTaskAdd}
 					lisDivWidth={lisDivWidth}
 					onSetTodoListToArchived={onSetTodoListToArchived}
+					onSetUserListsKeys={onSetUserListsKeys}
 					archivedListsIndex={arcListIndex}
 					commonListsIndex={commonListsIndex}
 					disableDiv={disableDiv}
