@@ -12,8 +12,11 @@ export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm, onSetLogi
 				<label htmlFor="password" className="signup-label">Password</label>
 				<input className="form-control signup-input" type="password" name="password" id="password" placeholder="Create password" required />
 				{loginError != "" && <label style={{ color: '#e34e4e', padding: 0 }}>{loginError}</label>}
-				<label htmlFor="password" className="signup-label">
+				<label htmlFor="password" className="col-sm-6 signup-label">
 					<a style={{ color: '#0d6efd', cursor: 'pointer', fontSize: 12 }} onClick={()=>onSetShowLForm("reset")}>Forgot password ?</a>
+				</label>
+				<label htmlFor="password" className="col-sm-4 signup-label">
+					<a style={{ color: '#0d6efd', cursor: 'pointer', fontSize: 12 }} onClick={()=>onSetShowLForm("change-pwd")}>Change password</a>
 				</label>
 			</div>
 			<div className="row row-btn">

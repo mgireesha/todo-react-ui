@@ -3,6 +3,7 @@ import {React,useState,useEffect} from 'react';
 import {TaskListName} from './TaskListName.js';
 import {TaskItem} from './TaskItem.js';
 import {TaskCompletedCounter} from './TaskCompletedCounter.js';
+import {ConfirmPopup} from '../ConfirmPopup.js';
 import {AddTask} from './AddTask.js';
 
 
@@ -19,6 +20,21 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	const [isAddRemindMe, setAddRemindMe] = useState(false);
 	const [isShowCmptdTsks, setShowCmptdTsks] = useState(true);
 	
+	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
+	const [selctdTask,setSelctdTask] = useState(null);
+	const onSetShowConfirmPopup = (event,showCnfrmPp,taskId) => {
+		if(event.target==event.currentTarget && showCnfrmPp){
+			event.stopPropagation();
+		}
+		setSelctdTask(taskId);
+		setShowConfirmPopup(showCnfrmPp);
+	}
+	
+	const deleteTask=async(taskId)=>{
+		if(await onDeleteTask(taskId)){
+			setShowConfirmPopup(false);
+		}
+	}
 	/*useEffect(()=>{
 		setTaskListT1(taskListT);
 		setTaskListC1(taskListC);
@@ -198,6 +214,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 										todoList={taskList[todoIndex][0]}
 										onConvertDateT={onConvertDateT}
 										onToggleShowtaskDetls={onToggleShowtaskDetls}
+										onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
 						)}
 					
@@ -216,10 +233,17 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 										todoList={taskList[todoIndex][0]}
 										onConvertDateT={onConvertDateT}
 										onToggleShowtaskDetls={onToggleShowtaskDetls}
+										onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
 						)}
 					</div>}
 				</div>
+				<ConfirmPopup showConfirmPopup={showConfirmPopup} onSetShowConfirmPopup={onSetShowConfirmPopup}
+							onDelete={deleteTask}
+							selctdItem={selctdTask}
+							headerTxt="Delete Task"
+							bodyTxt="Are you sure to delete this task ?"
+							/>
 				<AddTask showTaskAdd={showTaskAdd} onTogglAddTaskField={togglAddTaskField} onAddNewTask={addNewTask} onTogglAddRemindMe={togglAddRemindMe} />
 				<input type="hidden" name="tListName" id="tListName" value={taskList[todoIndex]!==undefined && taskList[todoIndex][0].listName}  />
 				<input type="hidden" name="tListId" id="tListId" value={taskList[todoIndex]!==undefined && taskList[todoIndex][0].listId} />

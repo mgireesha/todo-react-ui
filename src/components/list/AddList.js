@@ -6,7 +6,7 @@ export const AddList = ({showListAdd,onAddList,onTogglAddListField}) => {
 	
 	
 	return (
-		<div className="list-item-add">
+		<div className="list-item-add" id="list-item-add">
 			{!showListAdd ? <AddListLabel onTogglAddListField={onTogglAddListField} /> : null}
 			{ showListAdd ? <AddListFiled onAddList={onAddList} /> : null }
 		</div>

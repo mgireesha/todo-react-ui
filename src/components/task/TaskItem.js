@@ -1,4 +1,4 @@
-import React from 'react';
+import {React,useState} from 'react';
 
 import calBlue from '../../images/calender-blue.png';
 import dotBlue from '../../images/dot-blue.png';
@@ -8,7 +8,8 @@ import deleteGrey2026 from '../../images/delete-grey-20x26.png';
 
 import Nbsp from '../Nbsp.js';
 
-export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoList, onConvertDateT, onToggleShowtaskDetls }) => {
+export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoList, 
+							onConvertDateT, onToggleShowtaskDetls, onSetShowConfirmPopup, showConfirmPopup }) => {
 
 	return (
 		<div className="row" style={{ margin: 10 }} key={"task-item"+taskObj.taskId}>
@@ -41,8 +42,9 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 						</div>
 					</div>
 				</div>
-				<div className="col-sm-1 task-item-delete" id={"task-item-delete-" + taskObj.taskId} onClick={(event) => onDelete(event, taskObj.taskId)} title="Delete Task">
-					<img alt="black dot" id={"task-item-delete-img-" + taskObj.taskId} src={deleteGrey2026} style={{ height: 1.8 + 'em' }} />
+				{/*<div className="col-sm-1 task-item-delete" id={"task-item-delete-" + taskObj.taskId} onClick={(event) => onDelete(event, taskObj.taskId)} title="Delete Task">*/}
+				<div className="col-sm-1 task-item-delete" id={"task-item-delete-" + taskObj.taskId} onClick={(event)=>onSetShowConfirmPopup(event,true,taskObj.taskId)} title="Delete Task">
+					<img alt="delete task" id={"task-item-delete-img-" + taskObj.taskId} src={deleteGrey2026} style={{ height: 1.8 + 'em' }} />
 				</div>
 			</div>
 		</div>

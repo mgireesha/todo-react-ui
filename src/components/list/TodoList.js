@@ -2,12 +2,15 @@ import {React,useEffect, useState} from 'react';
 import {AddList} from './AddList.js';
 import {ListGroup} from './ListGroup.js';
 import {ListItem} from './ListItem.js';
+import {ConfirmPopup} from '../ConfirmPopup.js';
 export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys,onGetAuth,setShowListAddB,showListAddB,
 							setShowTaskAdd,lisDivWidth,onSetTodoListToArchived,archivedListsIndex,commonListsIndex,disableDiv, enableDiv, getServiceURI}) => {
 
 	const TOKEN_EXPIRED="TOKEN_EXPIRED";
 	const[showArchived,setShowArchived] = useState(false);
 	
+	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
+	const [selctdList,setSelctdList] = useState(null);
 
 	useEffect(()=>{
 		if(setShowListAddB && document.getElementById('list-add-txt')!=undefined){
@@ -111,11 +114,16 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 		enableDiv();
 	}
 	
-	const deleteList = async (event,listId) => {
-		disableDiv();
-		if(event.target == event.currentTarget){
-  			event.stopPropagation()
+	const onSetShowConfirmPopup = (event,showCnfrmPp,listId) => {
+		if(event.target==event.currentTarget && showCnfrmPp){
+			event.stopPropagation();
 		}
+		setSelctdList(listId);
+		setShowConfirmPopup(showCnfrmPp);
+	}
+	
+	const deleteList = async (listId) => {
+		disableDiv();
 		const settings = {
 			method:'DELETE',
 			headers:{
@@ -143,6 +151,7 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 			}
 			onSetUserLists(tempLists);
 			document.getElementById('currentACTSel').value='';
+			setShowConfirmPopup(false);
 		}
 		enableDiv();
 	}
@@ -150,7 +159,7 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 	
 	return (
 		<div className="col-sm-3 list-div" id="list-div" style={{width:lisDivWidth}}>
-			<div className="list-item-main-comb">
+			<div className="list-item-main-comb" id="list-item-main-comb">
 				<div className="list-item-main" id="list-item-main">
 				{
 					userLists!=undefined && userLists!="" && userLists.map((uList,index) =>
@@ -161,6 +170,7 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 								onshowTask={onshowTask} 
 								onDeleteList={deleteList}
 								onAddListToArchive={addListToArchive}
+								onSetShowConfirmPopup={onSetShowConfirmPopup}
 								/>
 					)}
 				</div>
@@ -169,12 +179,18 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 					<span onClick={onSetShowArchived} style={{float: 'right',marginRight: 5, cursor:'pointer'}}>{showArchived ? '-' : '+'}</span>
 					{showArchived && userLists!=undefined && archivedListsIndex!=-1 &&  userLists[archivedListsIndex].length>0 && userLists[archivedListsIndex].map(uIList=>
 						<ListItem key={uIList.listId} list={uIList} onshowTask={onshowTask} onDeleteList={deleteList}
-										onAddListToArchive={addListToArchive}
+										onAddListToArchive={addListToArchive} onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
 					)}
 				</div>
 			</div>
 				<AddList showListAdd={showListAddB} onTogglAddListField={togglAddListField} onAddList={onAddList} />
+				<ConfirmPopup showConfirmPopup={showConfirmPopup} onSetShowConfirmPopup={onSetShowConfirmPopup}
+							onDelete={deleteList}
+							selctdItem={selctdList}
+							headerTxt="Delete List"
+							bodyTxt="Are you sure to delete this list ?"
+							/>
 			</div>
 	);
 }

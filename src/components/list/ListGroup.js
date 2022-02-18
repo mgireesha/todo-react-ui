@@ -1,7 +1,7 @@
 import {React} from 'react';
 import {ListItem} from './ListItem.js';
 
-export const ListGroup =({lists, groupName,onshowTask,onDeleteList,onAddListToArchive}) => {
+export const ListGroup =({lists, groupName,onshowTask,onDeleteList,onAddListToArchive,onSetShowConfirmPopup}) => {
 	//console.log(lists);
 	return(
 		<div className={groupName+" group-bg"}>
@@ -9,7 +9,7 @@ export const ListGroup =({lists, groupName,onshowTask,onDeleteList,onAddListToAr
 				{groupName}
 			</label>
 			{lists.map(uIList=>
-				<ListItem key={uIList.listId} list={uIList} onshowTask={onshowTask} onDeleteList={onDeleteList} onAddListToArchive={onAddListToArchive} />
+				<ListItem key={uIList.listId} list={uIList} onshowTask={onshowTask} onDeleteList={onDeleteList} onAddListToArchive={onAddListToArchive} onSetShowConfirmPopup={onSetShowConfirmPopup} />
 			)}
 		</div>
 	);

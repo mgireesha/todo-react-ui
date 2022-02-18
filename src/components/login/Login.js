@@ -4,6 +4,7 @@ import {SignInDiv} from './SignInDiv.js';
 import {SignUpDiv} from './SignUpDiv.js';
 import {LSuccessDiv} from './LSuccessDiv.js';
 import {ResetPwdDiv} from './ResetPwdDiv.js';
+import {ChangePwdDiv} from './ChangePwdDiv.js';
 import {ResetPwdOtpDiv} from './ResetPwdOtpDiv.js';
 
 
@@ -180,6 +181,48 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 	}
 	
+	const changePwd = async() => {
+		setLoginError("");
+		const currentPwd = document.getElementById('current-pwd');
+		const createPwd = document.getElementById('createPwd');
+		const confirmPwd = document.getElementById('confirmPwd');
+		const username = document.getElementById('username');
+		if(!validateReqFld(currentPwd) || !validateReqFld(username) ||
+			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
+			return;
+		}
+		if(createPwd.value!=confirmPwd.value){
+			alert("Passwords doesn't match");
+			createPwd.focus();
+			return;
+		}
+		disableDiv();
+		const changePPayload = {
+			currentPassword : currentPwd.value,
+			passWord : confirmPwd.value,
+			userName : username.value
+		}
+		const settings = {
+			method : 'POST',
+			headers : {
+				'Content-Type' : 'application/json; charset=UTF-8'
+			},
+			body : JSON.stringify(changePPayload)
+		}
+		const response = await fetch(`${getServiceURI()}/todo/change-pwd`,settings);
+		const data = await response.json();
+		enableDiv();
+		if(data.status){
+			if(data.status==="success"){
+				setLoginError(data.status);
+				setMessage("Password changed. Please sign in to continue.");
+				setShowLForm("lsuccess");
+			}else{
+				setLoginError(data.error);
+			}
+		}
+	}
+	
 	return (
 		<div className="body-signin" id="body-signin">
 			<div className="container ">
@@ -191,6 +234,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 						{showLForm==="lsuccess" && <LSuccessDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} message={message} />}
 						{showLForm==="reset" && <ResetPwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSendOtp={sendOtp} />}
 						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} />}
+						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} />}
 					</div>
 					<div className="col-sm-3"></div>
 				</div>

@@ -3,7 +3,7 @@ import {React} from 'react';
 import {ListActionSel} from './ListActionSel.js';
 import gearBlack200 from '../../images/gear-grey-200.png';
 
-export const ListItem =({list, onshowTask, onDeleteList,onAddListToArchive}) => {
+export const ListItem =({list, onshowTask, onDeleteList,onAddListToArchive,onSetShowConfirmPopup}) => {
 	
 	const onShowListActionSel = (event,listId) => {
 		if(event.target==event.currentTarget){
@@ -35,7 +35,7 @@ export const ListItem =({list, onshowTask, onDeleteList,onAddListToArchive}) => 
 			
 			</div>
 			<input type="hidden" id="currentACTSel" />
-			{list.groupName!="default" && <ListActionSel list={list} onAddListToArchive={onAddListToArchive} onDeleteList={onDeleteList} />}
+			{list.groupName!="default" && <ListActionSel list={list} onAddListToArchive={onAddListToArchive} onDeleteList={onDeleteList} onSetShowConfirmPopup={onSetShowConfirmPopup} />}
 			
 	</div>
 	);

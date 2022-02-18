@@ -9,6 +9,7 @@ import {TaskNote} from './TaskNote.js';
 import {TaskMove} from './TaskMove';
 import {TaskMoveListSelector} from './TaskMoveListSelector.js';
 import {TaskUriRef} from './TaskUriRef.js';
+import {ConfirmPopup} from '../ConfirmPopup.js';
 
 export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, 
 												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI}) => {
@@ -21,6 +22,8 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveT
 	const [moveLists,setMoveLists] = useState([]);
 	const [showMoveListSel, setShowMoveListSel] = useState(false);
 	const [showTaskUriRefTxt, setShowTaskUriRefTxt] = useState(false);
+	
+	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
 
 	function getLTH() {
 		var today = new Date();
@@ -50,6 +53,19 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveT
 			document.getElementById('task-detail-note-txt').innerHTML=task.note;
 		}
 	},[task]);
+	
+	const onSetShowConfirmPopup = (event,showCnfrmPp) => {
+		if(event.target==event.currentTarget && showCnfrmPp){
+			event.stopPropagation();
+		}
+		setShowConfirmPopup(showCnfrmPp);
+	}
+	
+	const deleteTask=async(taskId)=>{
+		if(await onDeleteTask(taskId)){
+			setShowConfirmPopup(false);
+		}
+	}
 	
 	const updateTaskName = async (event,taskId) => {
 		const updatedTaskName = event.target.value;
@@ -232,7 +248,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveT
 
 	return (
 		<div className="col-sm-3 task-detail-div" id="task-detail-div">
-			<div className="task-detail-main">
+			<div className="task-detail-main" id="task-detail-main">
 				<div className="row task-item-detail-name" id="task-item-detail-name">
 					<input type="checkbox" id="task-detail-chkbx-617" onChange={(event) => onCompleteTask(event,task.taskId)}
 						className="task-item-chkbx-detail task-item-chkbx " name="task-detail-chkbx-617" checked={task.completed} />
@@ -265,15 +281,21 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveT
 				</div>
 				<TaskUriRef task={task} showTaskUriRefTxt={showTaskUriRefTxt} setShowTaskUriRefTxt={setShowTaskUriRefTxt} onUpdateTask={onUpdateTask} />
 			</div>
-			<div className="row task-detail-delete">
+			<div className="row task-detail-delete" id="task-detail-delete">
 				<div style={{ textAlign: 'center', marginTop: 0.7 + 'em', width:80+'%' }}>
 					<label className="task-detail-crtd-lbl">Created on {onConvertDateT(task.dateCreated)}</label>
 				</div>
 				<div style={{ marginTop: 0.7 + 'em' , width:20+'%'}}>
 					<img alt="delete" className="task-detail-delete-label" id="task-delete-label" src={deleteRed2027}
-														onClick={(event)=>onDeleteTask(event,task.taskId)} />
+														onClick={(event)=>onSetShowConfirmPopup(event,true)} />
 				</div>
 			</div>
+			<ConfirmPopup showConfirmPopup={showConfirmPopup} onSetShowConfirmPopup={onSetShowConfirmPopup}
+							onDelete={deleteTask}
+							selctdItem={task.taskId}
+							headerTxt="Delete Task"
+							bodyTxt="Are you sure to delete this task ?"
+							/>
 		</div>
 	);
 }

@@ -3,6 +3,7 @@ import {TodoList} from './list/TodoList.js';
 import {TodoTask} from './task/TodoTask.js';
 import {TaskDetails} from './task-detail/TaskDetails.js';
 import {HiddenBodyInputs} from './HiddenBodyInputs.js';
+import {ConfirmPopup} from './ConfirmPopup.js';
 
 export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const TOKEN_EXPIRED="TOKEN_EXPIRED";
@@ -57,7 +58,26 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	
 	useEffect(() => {
 		fetchAllListsByUser();
+		document.getElementById('main-body-div').style.height 
+			= (window.innerHeight - 40)+"px";
+		document.getElementById('list-item-main-comb').style.minHeight
+			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
+		document.getElementById('task-item-main').style.minHeight
+			= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+		document.getElementById('list-item-main-comb').style.maxHeight
+			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
+		document.getElementById('task-item-main').style.maxHeight
+			= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
 	},[]);
+	
+	useEffect(()=>{
+		if(showTaskDetls && document.getElementById('task-detail-main')!=undefined){
+			document.getElementById('task-detail-main').style.minHeight
+			= (window.innerHeight - 30 - document.getElementById('task-detail-delete').offsetHeight)+"px";
+			document.getElementById('task-detail-main').style.maxHeight
+			= (window.innerHeight - 30 - document.getElementById('task-detail-delete').offsetHeight)+"px";
+		}
+	},[showTaskDetls])
 	
 	const onSetTodoListToTaskLIst = (todoList) => {
 		let tempTaskList = [...taskList];
@@ -312,10 +332,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}
 	}
 	
-	const deleteTask = async (event, taskId) => {
-		if(event.target==event.currentTarget){
+	const deleteTask = async (taskId) => {
+		/*if(event.target==event.currentTarget){
 			event.stopPropagation();
-		}
+		}*/
 		disableDiv();
 		const compt = document.getElementById("task-chkbx-"+taskId).checked;
 		const settings = {
@@ -346,6 +366,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			setShowtaskDetls(false);
 			setTask(null);
 			enableDiv();
+			return true;
 		}
 		
 	}
