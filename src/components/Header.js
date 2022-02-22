@@ -1,9 +1,9 @@
 import React from 'react';
-export const Header = () => {
+export const Header = ({getAuth}) => {
 	return (
 		<div className="row" id="todo-header">
-			<h4 className="col-sm-10" style={{marginLeft: 0.4+'em',color:'beige'}}><i>ToDo</i></h4>
-			<a className="col-sm-1" href="/logout">Logout</a>
+			<h4 className="" style={{marginLeft: 0.4+'em',color:'beige',width:80+'%'}}><i>ToDo</i></h4>
+			{getAuth()!="" &&<a className="" style={{width:15+'%'}} href="/logout">Logout</a>}
 		</div>
 	);
 }

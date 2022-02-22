@@ -43,7 +43,7 @@ function App() {
 
 	return (
 		<div className="container-fluid margin-zero" id="app-main-div">
-			<Header />
+			<Header getAuth={getAuth} />
 			<Router>
 				<Routes>
 					{['/login', '/logout'].map((path, index) => <Route path={path}

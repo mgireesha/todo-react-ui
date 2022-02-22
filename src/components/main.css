@@ -8,6 +8,8 @@
 
 body{
 	background-color: #2e2729;
+	/* font-family: 'Fira Sans', sans-serif; */
+	font-weight: 500;
 }
 
 .list-div{
@@ -15,7 +17,7 @@ body{
     margin-left: 5px;
     margin-right: 3px;
     border-radius: 4px;
-    font-family: cursive;
+    /* font-family: cursive; */
 }
 
 .task-div{
@@ -275,7 +277,7 @@ body{
 	 padding: 10px;
     background-color: beige;
 /*     margin: 10px; */
-    font-family: cursive;
+   /*  font-family: cursive; */
     border-radius: 5px;
 /*     margin-right : 4em; */
 }
@@ -359,7 +361,7 @@ body{
  .task-item-label {
 	 width: 80%;
 	 cursor: text;
-	 font-family: cursive;
+	 /* font-family: cursive; */
 }
 
 .strike-line{
@@ -473,7 +475,7 @@ task-add-due-date, focus {
     color: #7f6087;
     appearance: none;
     -webkit-appearance: none;
-    font-family: "Helvetica", arial, sans-serif;
+   /*  font-family: "Helvetica", arial, sans-serif; */
     font-size: 12px;
     border: 1px solid #96a2a5;
     background: beige;
@@ -490,7 +492,7 @@ task-add-due-date, focus {
     color: #7f6087;
     appearance: none;
     -webkit-appearance: none;
-    font-family: "Helvetica", arial, sans-serif;
+    /* font-family: "Helvetica", arial, sans-serif; */
     font-size: 12px;
     border: 1px solid #96a2a5;
     background: beige;
@@ -511,7 +513,7 @@ task-add-due-date, focus {
     margin-right: 3px;
     border-radius: 4px;
     /* overflow-y: auto; */
-    font-family: cursive
+    /* font-family: cursive */
 }
 
 .task-detail-main{
@@ -789,7 +791,7 @@ task-add-due-date, focus {
 }
 
 #importDiv,.ui-dialog-title,.ui-dialog-buttonset{
-	font-family: cursive !important;
+	/* font-family: cursive !important; */
 }
 
 .ui-widget-overlay{

@@ -43,7 +43,10 @@ export const TaskListName = ({todoList,onGetAuth,onSetTodoListToTaskLIst,disable
 	
 	return (
 		<div className="row task-list-name" style={{minHeight: 3.125+'em'}}>
-			{!showListNameField && <h2 className="task-list-name-header" onClick={todoList.groupName!=="default" ? ()=>setShowListNameField(true) : null} id="task-list-name-header-271">{todoList!=undefined && todoList.listName}</h2>}
+			{!showListNameField && 
+				<h2 className="task-list-name-header" onClick={todoList.groupName!=="default" ? ()=>setShowListNameField(true) : null} 
+							id="task-list-name-header-271">{todoList!=undefined && todoList.listName}</h2>
+			}
 			{showListNameField && <input type="text" id="task-list-name-text" className="task-list-name-text form-control" style={{backgroundColor: '#403A3A'}} onBlur={(event)=>updateListName(event,todoList.listId)} />}
 		</div>
 	);

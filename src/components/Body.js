@@ -3,7 +3,6 @@ import {TodoList} from './list/TodoList.js';
 import {TodoTask} from './task/TodoTask.js';
 import {TaskDetails} from './task-detail/TaskDetails.js';
 import {HiddenBodyInputs} from './HiddenBodyInputs.js';
-import {ConfirmPopup} from './ConfirmPopup.js';
 
 export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const TOKEN_EXPIRED="TOKEN_EXPIRED";
@@ -16,6 +15,8 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
  	const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
  	const monthsI = ['01','02','03','04','05','06','07','08','09','10','11','12'];
 	
+	const [isMobileDevice, setMobileDevice] = useState(false);
+	
 	const [taskList, setTaskList] = useState([]);
 	const [taskListKeys, setTaskListKeys] = useState([]);
 	const [userLists, setUserLists] = useState([]);
@@ -26,6 +27,8 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const [showListAddB, setShowListAddB] = useState(false);
 	const [showTaskAdd, setShowTaskAdd] = useState(false);
 	const [showTaskDetls, setShowtaskDetls] = useState(false);
+	const [showLists, setShowLists] = useState(true);
+	const [showTasks, setShowTasks] = useState(true);
 	const [lisDivWidth, setListDivWidth] = useState('');
 	
 	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
@@ -56,17 +59,27 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		return cDate;
 	}
 	
+	const  isMobile = () => {
+    		return ( ( window.innerWidth <= 760 ) 
+    					//&& ( window.innerHeight <= 600 ) 
+    			);
+  		}
+  		
 	useEffect(() => {
+		setMobileDevice(isMobile());
+		if(isMobile()){
+			setShowTasks(false);
+		}
 		fetchAllListsByUser();
 		document.getElementById('main-body-div').style.height 
 			= (window.innerHeight - 40)+"px";
 		document.getElementById('list-item-main-comb').style.minHeight
 			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
-		document.getElementById('task-item-main').style.minHeight
+		document.getElementById('main-body-div').style.minHeight
 			= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
 		document.getElementById('list-item-main-comb').style.maxHeight
 			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
-		document.getElementById('task-item-main').style.maxHeight
+		document.getElementById('main-body-div').style.maxHeight
 			= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
 	},[]);
 	
@@ -78,6 +91,16 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			= (window.innerHeight - 30 - document.getElementById('task-detail-delete').offsetHeight)+"px";
 		}
 	},[showTaskDetls])
+	
+	const onSetShowTasks = (value) => {
+		setShowTasks(value);
+		setShowLists(true);
+	}
+	
+	const onSetShowtaskDetls = (value) => {
+		setShowtaskDetls(value);
+		setShowTasks(true);
+	}
 	
 	const onSetTodoListToTaskLIst = (todoList) => {
 		let tempTaskList = [...taskList];
@@ -114,7 +137,9 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		let respListKeys = Object.keys(data);
 		setUserListsKeys(respListKeys);
 		enableDiv();
-		fetchTasks(null,respLists[respListKeys.findIndex(obj => obj=="default")][0].listId);
+		if(!isMobile()){
+			fetchTasks(null,respLists[respListKeys.findIndex(obj => obj=="default")][0].listId);
+		}
 	};
 	
 	const onSetUserListsKeys = (index,group) => {
@@ -155,6 +180,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const fetchTasks = async (event,listId) => {
 		if(event!=null && (event.target.id=='list-act-'+listId || event.target.id=='list-act-img-'+listId)){
 			return false;
+		}
+		if(isMobileDevice){
+			setShowLists(false);
+			setShowTasks(true);
 		}
 		setShowTaskAdd(false);
 		disableDiv();
@@ -201,20 +230,28 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		if (event.target.id == "task-chkbx-" + taskId || event.target.id == "task-item-delete-img-" + taskId) {
 			return false;
 		}
+		if(isMobileDevice){
+			setShowtaskDetls(true);
+			setShowTasks(false);
+		}
 		let curListDivWidth = document.getElementById('main-body-div').offsetWidth;
 		let reducedListDivWidth;
 		let currentTskDetId = document.getElementById('currentTskDetId').value;
 		if (showTaskDetls && currentTskDetId == taskId) {
 			setTask(null);
-			reducedListDivWidth = ((25 / 100) * curListDivWidth);
-			setListDivWidth(reducedListDivWidth + 'px');
+			if(!isMobileDevice){
+				reducedListDivWidth = ((25 / 100) * curListDivWidth);
+				setListDivWidth(reducedListDivWidth + 'px');
+			}
 			setShowtaskDetls(false);
 			return;
 		} else {
 			disableDiv();
 			setShowtaskDetls(true);
-			reducedListDivWidth = (22 / 100) * curListDivWidth;
-			setListDivWidth(reducedListDivWidth + 'px');
+			if(!isMobileDevice){
+				reducedListDivWidth = (22 / 100) * curListDivWidth;
+				setListDivWidth(reducedListDivWidth + 'px');
+			}
 		}
 		fetchTaskDetails(taskId);
 	}
@@ -451,7 +488,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	
 	return (
 		<div className="row" id="main-body-div">
-			<TodoList  	userLists={userLists} 
+			{showLists &&<TodoList  	userLists={userLists} 
 					onshowTask={fetchTasks} 
 					onSetUserLists={setUserLists}
 					onGetAuth={getAuth}
@@ -467,7 +504,8 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					enableDiv={enableDiv}
 					getServiceURI={getServiceURI}
 				/>
-			<TodoTask  	todoList={taskList[todoIndex]!==undefined && taskList[todoIndex]} 
+			}
+			{showTasks &&<TodoTask  	todoList={taskList[todoIndex]!==undefined && taskList[todoIndex]} 
 					taskListT={taskList[taskIndexT]} 
 					taskListC={taskList[taskIndexC]}
 					taskList={taskList}
@@ -488,21 +526,25 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					onCompleteTask={completeTask}
 					onSetTodoListToTaskLIst={onSetTodoListToTaskLIst}
 					onDeleteTask={deleteTask}
+					onSetShowTasks={onSetShowTasks}
+					isMobileDevice={isMobileDevice}
 					disableDiv={disableDiv}
 					enableDiv={enableDiv}
 					getServiceURI={getServiceURI}
 			 	/>
+			 }
 			{showTaskDetls && <TaskDetails 	task={task!=undefined && task} 
 										onConvertDateT={convertDateT}
 										setTask={setTask}
 										taskList={taskList}
 										setTaskList={setTaskList}
 										onSetTask={onSetTask}
-										setShowtaskDetls={setShowtaskDetls}
+										onSetShowtaskDetls={onSetShowtaskDetls}
 										showTaskDetls={showTaskDetls}
 										onMoveTask={moveTask}
 										onCompleteTask={completeTask}
 										onDeleteTask={deleteTask}
+										isMobileDevice={isMobileDevice}
 										onUpdateCount = {updateCount}
 										onUpdateTask={updateTask}
 										days={days}

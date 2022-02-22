@@ -23,7 +23,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		if(document.getElementById('body-signin')!=undefined){
 			document.getElementById('body-signin').style.height=window.innerHeight+'px';
 		}
-	},[])
+	},[]);
 	
 	const validateReqFld = (elem) => {
 		if(!elem.checkValidity()){
@@ -68,6 +68,13 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		enableDiv();
 	}
+	
+	const handleKeypress = e => {
+      	//it triggers by pressing the enter key
+    	if (e.keyCode === 13) {
+      	authenticate();
+    	}
+  	};
 	
 	const register = async() => {
 		const name = document.getElementById('name');

@@ -6,11 +6,11 @@ import {TaskCompletedCounter} from './TaskCompletedCounter.js';
 import {ConfirmPopup} from '../ConfirmPopup.js';
 import {AddTask} from './AddTask.js';
 
-
+import whiteLeftArrow from '../../images/white-left-arrow.png';
 
 export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpdateCount, onGetAuth, onConvertDateT, 
 							setShowListAddB,showTaskAdd,setShowTaskAdd,showTaskDetls,onToggleShowtaskDetls,setShowtaskDetls, 
-							onCompleteTask, onDeleteTask, onSetTodoListToTaskLIst, disableDiv, enableDiv,getServiceURI
+							onCompleteTask, onDeleteTask, onSetShowTasks, isMobileDevice, onSetTodoListToTaskLIst, disableDiv, enableDiv,getServiceURI
 					}) => {
 	
 	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
@@ -196,6 +196,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	
 	return(
 		<div className={showTaskDetls ? "col-sm-6 task-div" : "col-sm-8 task-div"} id="task-div">
+		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onSetShowTasks(false)} />}
 				{taskList[todoIndex]!=undefined &&<TaskListName  todoList={taskList[todoIndex][0]} 
 																onGetAuth={onGetAuth}
 																onSetTodoListToTaskLIst={onSetTodoListToTaskLIst}

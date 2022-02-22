@@ -11,10 +11,13 @@ import {TaskMoveListSelector} from './TaskMoveListSelector.js';
 import {TaskUriRef} from './TaskUriRef.js';
 import {ConfirmPopup} from '../ConfirmPopup.js';
 
-export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, 
+import whiteLeftArrow from '../../images/white-left-arrow.png';
+
+export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetShowtaskDetls, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, isMobileDevice,
 												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI}) => {
 
-	const currListName = document.getElementById('tListName').value;
+	//const currListName = document.getElementById('tListName').value;
+	const currListName = document.getElementById('listName').value;
 	
 	const [showTaskNameField, setShowTaskNameField] = useState(false);
 	const [showDueDateSel, setShowDueDateSel] = useState(false);
@@ -248,6 +251,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onMoveT
 
 	return (
 		<div className="col-sm-3 task-detail-div" id="task-detail-div">
+		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onSetShowtaskDetls(false)} />}
 			<div className="task-detail-main" id="task-detail-main">
 				<div className="row task-item-detail-name" id="task-item-detail-name">
 					<input type="checkbox" id="task-detail-chkbx-617" onChange={(event) => onCompleteTask(event,task.taskId)}
