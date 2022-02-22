@@ -99,9 +99,9 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		setShowLists(true);
 		if(document.getElementById('task-item-main')!=undefined){
 			document.getElementById('task-item-main').style.minHeight
-				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+				= (window.innerHeight - 115 - document.getElementById('list-item-add').offsetHeight)+"px";
 			document.getElementById('task-item-main').style.maxHeight
-				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+				= (window.innerHeight - 115 - document.getElementById('list-item-add').offsetHeight)+"px";
 		}
 	}
 	
