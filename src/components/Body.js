@@ -75,12 +75,14 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			= (window.innerHeight - 40)+"px";
 		document.getElementById('list-item-main-comb').style.minHeight
 			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
-		document.getElementById('main-body-div').style.minHeight
-			= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
 		document.getElementById('list-item-main-comb').style.maxHeight
 			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
-		document.getElementById('main-body-div').style.maxHeight
-			= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+		if(document.getElementById('task-item-main')!=undefined){
+			document.getElementById('task-item-main').style.minHeight
+				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+			document.getElementById('task-item-main').style.maxHeight
+				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+		}
 	},[]);
 	
 	useEffect(()=>{
@@ -95,6 +97,12 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const onSetShowTasks = (value) => {
 		setShowTasks(value);
 		setShowLists(true);
+		if(document.getElementById('task-item-main')!=undefined){
+			document.getElementById('task-item-main').style.minHeight
+				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+			document.getElementById('task-item-main').style.maxHeight
+				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
+		}
 	}
 	
 	const onSetShowtaskDetls = (value) => {
