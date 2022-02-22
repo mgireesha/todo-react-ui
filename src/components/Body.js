@@ -94,15 +94,17 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}
 	},[showTaskDetls])
 	
+	useEffect(()=>{
+		if(showTasks && document.getElementById('task-item-main')!=undefined){
+			document.getElementById('task-item-main').style.minHeight
+				= (window.innerHeight - 175)+"px";
+			document.getElementById('task-item-main').style.maxHeight
+				= (window.innerHeight - 175)+"px";
+		}
+	},[showTasks])
 	const onSetShowTasks = (value) => {
 		setShowTasks(value);
 		setShowLists(true);
-		if(document.getElementById('task-item-main')!=undefined){
-			document.getElementById('task-item-main').style.minHeight
-				= (window.innerHeight - 115 - document.getElementById('list-item-add').offsetHeight)+"px";
-			document.getElementById('task-item-main').style.maxHeight
-				= (window.innerHeight - 115 - document.getElementById('list-item-add').offsetHeight)+"px";
-		}
 	}
 	
 	const onSetShowtaskDetls = (value) => {
