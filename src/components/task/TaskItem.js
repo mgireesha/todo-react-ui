@@ -18,7 +18,7 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 				<div className="col-sm-11" style={{ padding: 10, paddingLeft: 0, width: 92 + '%' }}>
 					<input type="checkbox" id={"task-chkbx-" + taskObj.taskId} className={"task-item-chkbx task-chkbx-" + taskObj.taskId}
 						onChange={(event) => onCompleteTask(event, taskObj.taskId)} checked={taskObj.completed} />
-					<label className={taskObj.completed ? "task-item-label strike-line" : "task-item-label"} ><Nbsp /> {taskObj.taskName}</label>
+					<label className={taskObj.completed ? "task-item-label strike-line" : "task-item-label"} >{taskObj.taskName}</label>
 					<div className="row">
 						<label className="col-sm-1" style={{ width: 1.5 }}></label>
 						<div className="col-sm-11">

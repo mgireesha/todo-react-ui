@@ -362,8 +362,11 @@ body{
 	 width: 80%;
 	 cursor: text;
 	 /* font-family: cursive; */
+	 margin-left: 10px;
 }
-
+#task-detail-label{
+	padding: 0;
+}
 .strike-line{
 	 text-decoration: line-through;
 	 text-decoration-thickness: 2px;
