@@ -7,7 +7,7 @@ export const ListActionSel = ({ list,onAddListToArchive,onDeleteList ,onSetShowC
 				{list.groupName=="archived" ? "Unarchive" : "Archive"}
 			</label>
 			<label className="list-del-list-lab" onClick={(event)=>onSetShowConfirmPopup(event,true,list.listId)}>
-				Delete List x
+				Delete List
 			</label>
 		</div>
 	);

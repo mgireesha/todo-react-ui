@@ -143,7 +143,11 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		if(data.status==="MESSAGE_SENT"){
 			setShowLForm("verify-otp");
 		}else{
-			setLoginError(data.error);
+			if(data.error.indexOf("TOKEN_EXPIRED")!=-1){
+				setLoginError("Something went wrong. Please contact system adminstrator");
+			}else{
+				setLoginError(data.error);
+			}
 		}
 	}
 	

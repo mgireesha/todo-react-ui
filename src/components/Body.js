@@ -261,7 +261,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			return;
 		} else {
 			disableDiv();
-			setShowtaskDetls(true);
+			//setShowtaskDetls(true);
 			if(!isMobileDevice){
 				reducedListDivWidth = (22 / 100) * curListDivWidth;
 				setListDivWidth(reducedListDivWidth + 'px');
@@ -284,6 +284,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			window.location.reload();
 		}
 		setTask(data);
+		setShowtaskDetls(true);
 		if(isMobileDevice){
 			setShowtaskDetls(true);
 			setShowTasks(false);
