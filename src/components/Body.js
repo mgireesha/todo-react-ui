@@ -191,10 +191,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		if(event!=null && (event.target.id=='list-act-'+listId || event.target.id=='list-act-img-'+listId)){
 			return false;
 		}
-		if(isMobileDevice){
+		/*if(isMobileDevice){
 			setShowLists(false);
 			setShowTasks(true);
-		}
+		}*/
 		setShowTaskAdd(false);
 		disableDiv();
 		const settings = {
@@ -213,6 +213,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		let tempListKeys = Object.keys(data);
 		setTaskList(tempLists);
 		setTaskListKeys(tempListKeys);
+		if(isMobileDevice){
+			setShowLists(false);
+			setShowTasks(true);
+		}
 		setShowListAddB(false);
 		setShowtaskDetls(false);
 		setTask(null);
@@ -240,10 +244,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		if (event.target.id == "task-chkbx-" + taskId || event.target.id == "task-item-delete-img-" + taskId) {
 			return false;
 		}
-		if(isMobileDevice){
+		/*if(isMobileDevice){
 			setShowtaskDetls(true);
 			setShowTasks(false);
-		}
+		}*/
 		let curListDivWidth = document.getElementById('main-body-div').offsetWidth;
 		let reducedListDivWidth;
 		let currentTskDetId = document.getElementById('currentTskDetId').value;
@@ -280,6 +284,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			window.location.reload();
 		}
 		setTask(data);
+		if(isMobileDevice){
+			setShowtaskDetls(true);
+			setShowTasks(false);
+		}
 		enableDiv();
 	}
 	

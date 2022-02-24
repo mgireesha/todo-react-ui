@@ -20,8 +20,8 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 						onChange={(event) => onCompleteTask(event, taskObj.taskId)} checked={taskObj.completed} />
 					<label className={taskObj.completed ? "task-item-label strike-line" : "task-item-label"} >{taskObj.taskName}</label>
 					<div className="row">
-						<label className="col-sm-1" style={{ width: 1.5 }}></label>
-						<div className="col-sm-11">
+						{/*<label className="" style={{ width: 1.7+'em'}}></label>*/}
+						<div className="col-sm-11" style={{marginLeft:1.6+'em'}}>
 							{todoList.listName === "Important" && <div className="tc-row tc-tn-row">
 								<label style={{ fontSize: 12 }}><Nbsp />{taskObj.listName}<Nbsp /></label>
 								<img alt="." src={dotBlue} style={{ height: 0.2 + 'em', margin: 5 }} />
