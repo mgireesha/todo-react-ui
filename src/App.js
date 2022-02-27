@@ -8,7 +8,6 @@ import './components/main.css';
 import './components/login/SignIn.css';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
 function App() {
 	function getServiceURI(){
 		return "https://todo-ms-rc-sb.herokuapp.com"
@@ -53,7 +52,8 @@ function App() {
 							<Body getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} /> 
 							: 
 							<Login disableDiv={disableDiv} enableDiv={enableDiv} getAuth={getAuth} getServiceURI={getServiceURI} lError="Session exired. Please login" />} 
-						key={index} />)}
+						key={index} />)
+					}
 				</Routes>
 			</Router>
 			<div id="disable-div" className="disable-div" style={{ display: 'none' }}> </div>

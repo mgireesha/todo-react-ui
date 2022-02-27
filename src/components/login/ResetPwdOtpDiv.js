@@ -1,8 +1,11 @@
 import { React } from 'react';
 
-export const ResetPwdOtpDiv = ({ loginError, onSetLoginError, onSetShowLForm, onVerifyOtpAndResetPwd }) => {
+import whiteLeftArrow from '../../images/white-left-arrow.png';
+
+export const ResetPwdOtpDiv = ({ loginError, onSetLoginError, onSetShowLForm, onVerifyOtpAndResetPwd, prevShowLForm }) => {
 	return (
 		<div className="signup-form">
+			<img alt='back' src={whiteLeftArrow} onClick={()=>onSetShowLForm(prevShowLForm)} className='whiteLeftArrow' />
 			<h1 className="signup-header">Reset Password</h1>
 			<div className="row row-label">
 				<label className="signup-label">OTP</label>

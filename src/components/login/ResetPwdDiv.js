@@ -1,8 +1,10 @@
 import { React } from 'react';
+import whiteLeftArrow from '../../images/white-left-arrow.png';
 
-export const ResetPwdDiv = ({ loginError, onSetShowLForm, onSendOtp }) => {
+export const ResetPwdDiv = ({ loginError, onSetShowLForm, onSendOtp, prevShowLForm }) => {
 	return (
 		<div className="signup-form">
+			<img alt='back' src={whiteLeftArrow} onClick={()=>onSetShowLForm(prevShowLForm)} className='whiteLeftArrow' />
 			<h1 className="signup-header">Reset Password</h1>
 			<div className="reset-pwd-div" id="reset-pwd-div">
 				<div className="row row-label">

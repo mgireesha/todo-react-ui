@@ -886,8 +886,15 @@ task-add-due-date, focus {
 	margin-top: 1em;
 }
 
-sign-up-q-anch{
+.sign-up-q-anch{
 	color: #0d6efd;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+.whiteLeftArrow{
+    height:0.5em;
+    width:1.5em;
+    margin-left:10px;
+    cursor: pointer;
 }
