@@ -10,8 +10,8 @@ import './components/login/SignIn.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 function App() {
 	function getServiceURI(){
-		//return "https://todo-ms-rc-sb.herokuapp.com"
-		return "http://localhost:8087";
+		return "https://todo-ms-rc-sb.herokuapp.com"
+		//return "http://localhost:8087";
 	} 
 	function getAuth() {
 		let cookies = document.cookie;
