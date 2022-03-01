@@ -130,14 +130,14 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                                     <input type='checkbox' className='task-step-chkbx' checked={step.completed} onChange={(event)=>updateStep(event,step.stepId,'complete')}  />
                                 </label>
                                 <label className={step.completed ? 'strike-line' : ''} id={'add-nxt-label-'+step.stepId} style={{color:'#b9b4b4',cursor:'text', width:80+'%' }} key={index} onClick={()=>showRenameFld(step.stepId,'show')}>{step.stepName}</label>
-                                <textarea stepIndex={index} id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step'  style={{display:'none',width:75+'%'}}></textarea>
-                                <label id={'add-nxt-arr-'+step.stepId} style={{display:'none',cursor:'pointer'}} onClick={(event)=>updateStep(event,step.stepId,'stepName')}>&rarr;</label>
-                                <span id={'add-nxt-cnl-'+step.stepId} style={{display:'none'}} onClick={()=>showRenameFld(step.stepId,'hide')}>&#128473;<Nbsp/><Nbsp/></span>
+                                <textarea stepIndex={index} id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step'  style={{display:'none',width:72+'%'}}></textarea>
+                                <label id={'add-nxt-arr-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>updateStep(event,step.stepId,'stepName')}>&rarr;</label>
+                                <span id={'add-nxt-cnl-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld(step.stepId,'hide')}><Nbsp/><Nbsp/>&#x2715;</span>
                                 <label id={'step-rmv-label-'+step.stepId} className='step-rmv-label' style={{width:10+'%'}} onClick={()=>deleteStep(step.stepId)}>X</label>
                             </div>
                     )}
-                    {!showAddNxtFld && <div className='task-step-elem' style={{borderBottom:'none'}}>
-                        <span className='link-look' style={{textDecoration: 'none',color:'#b9b4b4'}} onClick={(event)=>onSetShowAddNxtFld(event,true)}>+ Next Step</span>
+                    {!showAddNxtFld && <div className='task-step-elem' style={{borderBottom:'none'}} onClick={(event)=>onSetShowAddNxtFld(event,true)}>
+                        <span className='link-look' style={{textDecoration: 'none',color:'#577db5'}} >+ Next Step</span>
                     </div>}
                 </div>
             <div>
