@@ -28,7 +28,7 @@ export const SignUpDiv = ({ onRegister, onSetShowLForm, prevShowLForm}) => {
 			</div>
 			<div className="row row-label">
 				<label className="signup-label">
-					Already a user ? <a onClick={()=>onSetShowLForm("signin")} style={{color: '#0d6efd',textDecoration:'underline',cursor:'pointer'}}>sign in</a>
+					Already a user ? <span onClick={()=>onSetShowLForm("signin")} className='link-look'>sign in</span>
 				</label>
 			</div>
 		</div>

@@ -7,7 +7,7 @@ export const TaskDateSelector = ({onUpdateTDDate,tdElem,task,days,getLTH,onSetSh
 		lth = lth - 12;
 		merd = "PM";
 	}
-	if (lth == 0) {
+	if (lth === 0) {
 		lth = 12;
 	}
 	let nwd = new Date();
@@ -15,7 +15,7 @@ export const TaskDateSelector = ({onUpdateTDDate,tdElem,task,days,getLTH,onSetSh
 	let nwDay = days[nwd.getDay()];
 	let divId = "selRem";
 	let dateTId = "pick-td-rem-date";
-	if (tdElem == "dueDate") {
+	if (tdElem === "dueDate") {
 		divId = "selDue";
 		dateTId = "pick-td-dd-date";
 	}
@@ -37,9 +37,9 @@ export const TaskDateSelector = ({onUpdateTDDate,tdElem,task,days,getLTH,onSetSh
 					 onBlur={(event)=>onUpdateTDDate(event,task.taskId,'pick',tdElem)}
 					 />
 			</div>
-			<div className="task-detail-rd-sel-close" onClick={(event)=>onSetShowDateSel(event,tdElem)}>
+			{/* <div className="task-detail-rd-sel-close" onClick={(event)=>onSetShowDateSel(event,tdElem)}>
 				<label>Close</label>
-			</div>
+			</div> */}
 		</div>
 	);
 }

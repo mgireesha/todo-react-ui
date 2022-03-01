@@ -2,10 +2,9 @@ import {React} from 'react';
 import {ListItem} from './ListItem.js';
 
 export const ListGroup =({lists, groupName,onshowTask,onDeleteList,onAddListToArchive,onSetShowConfirmPopup}) => {
-	//console.log(lists);
 	return(
 		<div className={groupName+" group-bg"}>
-			<label style={{display:groupName=="default" || groupName=="common" ? 'none' : 'block'}} className="group-bg-label">
+			<label style={{display:groupName==="default" || groupName==="common" ? 'none' : 'block'}} className="group-bg-label">
 				{groupName}
 			</label>
 			{lists.map(uIList=>

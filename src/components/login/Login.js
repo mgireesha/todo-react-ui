@@ -7,8 +7,6 @@ import {ResetPwdDiv} from './ResetPwdDiv.js';
 import {ChangePwdDiv} from './ChangePwdDiv.js';
 import {ResetPwdOtpDiv} from './ResetPwdOtpDiv.js';
 
-import whiteLeftArrow from '../../images/white-left-arrow.png';
-
 export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) => {
 	
 	const [loginError,setLoginError] = useState("");
@@ -16,8 +14,6 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 	const [prevShowLForm,setPrevShowLForm] = useState("signin");
 	const [message,setMessage] = useState("");
 	const [emailS,setEmailS] = useState("");
-
-	let prevShoLForm;
 
 	if((lError!==null || lError!=="") && window.location.pathname==="/"){
 		lError="";
@@ -44,7 +40,6 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 	const onSetShowLForm = (value) => {
 		setLoginError("");
 		setPrevShowLForm(showLForm);
-		console.log(prevShowLForm)
 		setShowLForm(value);
 	}
 	document.cookie="jToken=;";
@@ -130,6 +125,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 				setMessage(data.error);
 			}
 			setLoginError(data.status);
+			setPrevShowLForm(showLForm);
 			setShowLForm("lsuccess");
 		}
 		enableDiv();
@@ -160,7 +156,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		if(data.status==="MESSAGE_SENT"){
 			onSetShowLForm("verify-otp");
 		}else{
-			if(data.error.indexOf("TOKEN_EXPIRED")!=-1){
+			if(data.error.indexOf("TOKEN_EXPIRED")!==-1){
 				setLoginError("Email service is down. Please contact system adminstrator");
 			}else{
 				setLoginError(data.error);
@@ -177,7 +173,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
 			return;
 		}
-		if(createPwd.value!=confirmPwd.value){
+		if(createPwd.value!==confirmPwd.value){
 			alert("Passwords doesn't match");
 			createPwd.focus();
 			return;
@@ -202,6 +198,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			if(data.status==="success"){
 				setLoginError(data.status);
 				setMessage("Password reset successful. Please sign in to continue.");
+				setPrevShowLForm(showLForm);
 				setShowLForm("lsuccess");
 			}else{
 				setLoginError(data.error);
@@ -219,7 +216,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
 			return;
 		}
-		if(createPwd.value!=confirmPwd.value){
+		if(createPwd.value!==confirmPwd.value){
 			alert("Passwords doesn't match");
 			createPwd.focus();
 			return;
@@ -244,6 +241,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			if(data.status==="success"){
 				setLoginError(data.status);
 				setMessage("Password changed. Please sign in to continue.");
+				setPrevShowLForm(showLForm);
 				setShowLForm("lsuccess");
 			}else{
 				setLoginError(data.error);

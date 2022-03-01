@@ -10,6 +10,7 @@ import {TaskMove} from './TaskMove';
 import {TaskMoveListSelector} from './TaskMoveListSelector.js';
 import {TaskUriRef} from './TaskUriRef.js';
 import {ConfirmPopup} from '../ConfirmPopup.js';
+import {TaskSteps} from './TaskSteps.js';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 
@@ -38,11 +39,11 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 	}
 	
 	useEffect(()=>{
-		if(showTaskNameField && document.getElementById('task-detail-label-text')!=undefined){
+		if(showTaskNameField && document.getElementById('task-detail-label-text')!==null){
 			document.getElementById('task-detail-label-text').focus();
 			document.getElementById('task-detail-label-text').value = task.taskName;
 		}
-	},[showTaskNameField]);
+	},[showTaskNameField,task.taskName]);
 	
 	useEffect(()=>{
 		setShowMoveListSel(false);
@@ -52,13 +53,13 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 	},[task]);
 	
 	useEffect(() => {
-		if(document.getElementById('task-detail-note-txt')!=undefined){
+		if(document.getElementById('task-detail-note-txt')!==null){
 			document.getElementById('task-detail-note-txt').innerHTML=task.note;
 		}
 	},[task]);
 	
 	const onSetShowConfirmPopup = (event,showCnfrmPp) => {
-		if(event.target==event.currentTarget && showCnfrmPp){
+		if(event.target===event.currentTarget && showCnfrmPp){
 			event.stopPropagation();
 		}
 		setShowConfirmPopup(showCnfrmPp);
@@ -104,6 +105,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 				if(tempTask.taskId===taskId){
 					tempTaskG[index]=data.todoTask;
 				}
+				return true;
 			});
 			tempTaskList[taskListIndex] = tempTaskG;
 			onSetTask(data.todoTask);
@@ -113,7 +115,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 	}
 	
 	const onSetShowMoveListSel = (taskId) => {
-		if (document.getElementById('task-item-detail-move-sel') != undefined) {
+		if (document.getElementById('task-item-detail-move-sel') !== null) {
 			setShowMoveListSel(false);
 		}else{
 			fetchlistList(taskId);
@@ -141,7 +143,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 	}
 	
 	useEffect(() => {
-		if (document.getElementById('task-item-detail-move-sel') != undefined) {
+		if (document.getElementById('task-item-detail-move-sel') !== null) {
 			document.getElementById('task-item-detail-move-sel').style.height = "10em";
 			document.getElementById('task-item-detail-move-sel').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
@@ -154,7 +156,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 		if(tdElem==='dueDate'){
 			divId='selDue';
 		}
-		if (document.getElementById(divId) != undefined) {
+		if (document.getElementById(divId) !== null) {
 			document.getElementById(divId).style.height = "0px";
 			setShowRemDateSel(false);
 			setShowDueDateSel(false);
@@ -172,16 +174,16 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 	}
 	
 	useEffect(() => {
-		if (document.getElementById('selDue') != undefined) {
-			document.getElementById('selDue').style.height = "13.5em";
+		if (document.getElementById('selDue') !== null) {
+			document.getElementById('selDue').style.height = "12em";
 			document.getElementById('selDue').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
 		}
 	}, [showDueDateSel]);
 	
 	useEffect(() => {
-		if (document.getElementById('selRem') != undefined) {
-			document.getElementById('selRem').style.height = "13.5em";
+		if (document.getElementById('selRem') !== null) {
+			document.getElementById('selRem').style.height = "12em";
 			document.getElementById('selRem').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
 		}
@@ -263,22 +265,24 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 							style={{ backgroundColor: '#403a3a'}} onBlur={(event)=>updateTaskName(event,task.taskId)} />}
 					<input id="task-detail-star-617" className="task-detail-star" type="checkbox" title="Important" 
 									onClick={(event)=>onUpdateTask(event,"important", task.taskId)}  checked={task.important} />
+				<TaskSteps task={task} getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} onSetTask={onSetTask} />
 				</div>
+				
 				<div style={{position:'relative'}}>
-					<TaskDueDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={onUpdateTask} />
+					<TaskDueDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} showDueDateSel={showDueDateSel} onUpdateTask={onUpdateTask} />
 					{showDueDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
 														days={days} getLTH={getLTH} tdElem="dueDate" />}
 				</div>
 				<div style={{position:'relative'}}>
-					<TaskRemindDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={onUpdateTask} />
+					<TaskRemindDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={onUpdateTask} showRemDateSel={showRemDateSel} />
 					{showRemDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
 													days={days} getLTH={getLTH} tdElem="remindMeDate"
 													/>}
 				</div>
 				<TaskNote task={task} onUpdateTask={onUpdateTask} />
 				<div style={{position:'relative'}}>
-					{currListName!="Important"	&&	<TaskMove task={task} showMoveListSel={showMoveListSel} onSetShowMoveListSel={onSetShowMoveListSel} />}
-					{showMoveListSel && <TaskMoveListSelector 	moveLists={moveLists!=undefined && moveLists}
+					{currListName!=="Important"	&&	<TaskMove task={task} showMoveListSel={showMoveListSel} onSetShowMoveListSel={onSetShowMoveListSel} />}
+					{showMoveListSel && <TaskMoveListSelector 	moveLists={moveLists!==null && moveLists}
 															onMoveTask={onMoveTask}
 															task={task}
 														/>}

@@ -5,15 +5,15 @@ export const TaskListName = ({todoList,onGetAuth,onSetTodoListToTaskLIst,disable
 	const [showListNameField, setShowListNameField] = useState(false);
 	
 	useEffect(()=>{
-		if(showListNameField && document.getElementById('task-list-name-text')!=undefined){
+		if(showListNameField && document.getElementById('task-list-name-text')!==null){
 			document.getElementById('task-list-name-text').focus();
 			document.getElementById('task-list-name-text').value = todoList.listName;
 		}
-	},[showListNameField]);
+	},[showListNameField,todoList.listName]);
 	
 	const updateListName = async(event,listId) => {
 		const updatedListName = event.target.value;
-		if(updatedListName==todoList.listName){
+		if(updatedListName===todoList.listName){
 			setShowListNameField(false);
 			return false;
 		}
@@ -32,7 +32,7 @@ export const TaskListName = ({todoList,onGetAuth,onSetTodoListToTaskLIst,disable
 		};
 		const response = await fetch(`${getServiceURI()}/todo/list/${listId}/`,settings);
 		const data = await response.json();
-		if(data.status=="success"){
+		if(data.status==="success"){
 			let respList = data.todoList;
 			respList.taskCount=todoList.taskCount;
 			onSetTodoListToTaskLIst(respList);
@@ -45,7 +45,7 @@ export const TaskListName = ({todoList,onGetAuth,onSetTodoListToTaskLIst,disable
 		<div className="row task-list-name" style={{minHeight: 3.125+'em'}}>
 			{!showListNameField && 
 				<h2 className="task-list-name-header" onClick={todoList.groupName!=="default" ? ()=>setShowListNameField(true) : null} 
-							id="task-list-name-header-271">{todoList!=undefined && todoList.listName}</h2>
+							id="task-list-name-header-271">{todoList.listName}</h2>
 			}
 			{showListNameField && <input type="text" id="task-list-name-text" className="task-list-name-text form-control" style={{backgroundColor: '#403A3A'}} onBlur={(event)=>updateListName(event,todoList.listId)} />}
 		</div>

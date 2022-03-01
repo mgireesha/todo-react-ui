@@ -10,15 +10,15 @@ import './components/login/SignIn.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 function App() {
 	function getServiceURI(){
-		return "https://todo-ms-rc-sb.herokuapp.com"
-		//return "http://localhost:8087";
+		//return "https://todo-ms-rc-sb.herokuapp.com"
+		return "http://localhost:8087";
 	} 
 	function getAuth() {
 		let cookies = document.cookie;
 		let cookiesArr = cookies.split(';');
 		let cookieArr = [];
 		let jToken = '';
-		cookiesArr.map(cookie => {
+		cookiesArr.forEach(cookie => {
 			cookieArr = cookie.split('=');
 			if (cookieArr[0].trim() === "jToken") {
 				jToken = cookieArr[1];
@@ -48,7 +48,7 @@ function App() {
 					{['/login', '/logout'].map((path, index) => <Route path={path}
 						element={<Login disableDiv={disableDiv} enableDiv={enableDiv} getAuth={getAuth} getServiceURI={getServiceURI} />} key={index} />)}
 					{['/', '/todo'].map((path, index) => <Route path={path} 
-						element={getAuth() != '' ? 
+						element={getAuth() !== '' ? 
 							<Body getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} /> 
 							: 
 							<Login disableDiv={disableDiv} enableDiv={enableDiv} getAuth={getAuth} getServiceURI={getServiceURI} lError="Session exired. Please login" />} 

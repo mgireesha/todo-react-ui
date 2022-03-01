@@ -7,7 +7,7 @@ import {HiddenBodyInputs} from './HiddenBodyInputs.js';
 export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const TOKEN_EXPIRED="TOKEN_EXPIRED";
 	let currListName;
-	if(document.getElementById('listName')!=undefined){
+	if(document.getElementById('listName')!==null){
 		currListName = document.getElementById('listName').value;
 	}
 	
@@ -35,12 +35,11 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	let taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
 	let taskIndexC = taskListKeys.findIndex(obj => obj==="taskListC");
 	
-	let archivedListsIndex = userListsKeys.findIndex(obj => obj=="archived");
-	let defaultListsIndex = userListsKeys.findIndex(obj => obj=="default");
-	let commonListsIndex = userListsKeys.findIndex(obj => obj=="common");
+	let archivedListsIndex = userListsKeys.findIndex(obj => obj==="archived");
+	let commonListsIndex = userListsKeys.findIndex(obj => obj==="common");
 	
 	useEffect(()=>{
-		setArcListIndex(userListsKeys.findIndex(obj => obj=="archived"));
+		setArcListIndex(userListsKeys.findIndex(obj => obj==="archived"));
 	},[userListsKeys]);
 	
 	function convertDateT(date) {
@@ -64,7 +63,30 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
     					//&& ( window.innerHeight <= 600 ) 
     			);
   		}
-  		
+  	
+		  const fetchAllListsByUser = async () => {
+			disableDiv();
+			const settings = {
+				method: 'GET',
+				headers: {
+					'Authorization': getAuth()
+				}
+			};
+			const response = await fetch(`${getServiceURI()}/todo/list/listAllByUser/`, settings)
+			const data = await response.json();
+			if(data.status===TOKEN_EXPIRED){
+				document.cookie="jToken=;";
+				window.location.reload();
+			}
+			let respLists = Object.values(data);
+			setUserLists(respLists);
+			let respListKeys = Object.keys(data);
+			setUserListsKeys(respListKeys);
+			enableDiv();
+			if(!isMobile()){
+				fetchTasks(null,respLists[respListKeys.findIndex(obj => obj==="default")][0].listId);
+			}
+		};
 	useEffect(() => {
 		setMobileDevice(isMobile());
 		if(isMobile()){
@@ -77,7 +99,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
 		document.getElementById('list-item-main-comb').style.maxHeight
 			= (window.innerHeight - 60 - document.getElementById('list-item-add').offsetHeight)+"px";
-		if(document.getElementById('task-item-main')!=undefined){
+		if(document.getElementById('task-item-main')!==null){
 			document.getElementById('task-item-main').style.minHeight
 				= (window.innerHeight - 135 - document.getElementById('list-item-add').offsetHeight)+"px";
 			document.getElementById('task-item-main').style.maxHeight
@@ -86,7 +108,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	},[]);
 	
 	useEffect(()=>{
-		if(showTaskDetls && document.getElementById('task-detail-main')!=undefined){
+		if(showTaskDetls && document.getElementById('task-detail-main')!==null){
 			document.getElementById('task-detail-main').style.minHeight
 			= (window.innerHeight - 30 - document.getElementById('task-detail-delete').offsetHeight)+"px";
 			document.getElementById('task-detail-main').style.maxHeight
@@ -95,7 +117,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	},[showTaskDetls])
 	
 	useEffect(()=>{
-		if(showTasks && document.getElementById('task-item-main')!=undefined){
+		if(showTasks && document.getElementById('task-item-main')!==null){
 			document.getElementById('task-item-main').style.minHeight
 				= (window.innerHeight - 175)+"px";
 			document.getElementById('task-item-main').style.maxHeight
@@ -118,8 +140,8 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		setTaskList(tempTaskList);
 		
 		let tempUserLists = [...userLists];
-		tempUserLists.map(listG => {
-			listG = listG.map((list,index) => {
+		tempUserLists.forEach(listG => {
+			listG = listG.forEach((list,index) => {
 				if(list.listId===todoList.listId){
 					listG[index] = todoList;
 				}
@@ -128,29 +150,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		setUserLists(tempUserLists);
 	}
 	
-	const fetchAllListsByUser = async () => {
-		disableDiv();
-		const settings = {
-			method: 'GET',
-			headers: {
-				'Authorization': getAuth()
-			}
-		};
-		const response = await fetch(`${getServiceURI()}/todo/list/listAllByUser/`, settings)
-		const data = await response.json();
-		if(data.status==TOKEN_EXPIRED){
-			document.cookie="jToken=;";
-			window.location.reload();
-		}
-		let respLists = Object.values(data);
-		setUserLists(respLists);
-		let respListKeys = Object.keys(data);
-		setUserListsKeys(respListKeys);
-		enableDiv();
-		if(!isMobile()){
-			fetchTasks(null,respLists[respListKeys.findIndex(obj => obj=="default")][0].listId);
-		}
-	};
+	
 	
 	const onSetUserListsKeys = (index,group) => {
 		let tempUserListKeys = [...userListsKeys];
@@ -162,22 +162,22 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		let filterIndex = commonListsIndex;
 		let addIndex = archivedListsIndex;
 		let addUserLists;
-		if (todoList.groupName == "common") {
+		if (todoList.groupName === "common") {
 			filterIndex = archivedListsIndex;
 			addIndex = commonListsIndex;
 		}
 		let filterUserLists = tempUserLists[filterIndex];
 		tempUserLists[filterIndex] = filterUserLists.filter(function(list) {
-			return list.listId != todoList.listId;
+			return list.listId !== todoList.listId;
 		});
-		if (addIndex != -1) {
+		if (addIndex !== -1) {
 			addUserLists = tempUserLists[addIndex];
 			tempUserLists[addIndex] = [...addUserLists, todoList];
 		} else {
 			addIndex = tempUserLists.length;
 			tempUserLists[addIndex] = [todoList];
 			let tempuserListsKeys = [...userListsKeys];
-			if (todoList.groupName == "common") {
+			if (todoList.groupName === "common") {
 				tempuserListsKeys[addIndex] = "common";
 			} else {
 				tempuserListsKeys[addIndex] = "archived";
@@ -188,7 +188,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		document.getElementById('currentACTSel').value = '';
 	}
 	const fetchTasks = async (event,listId) => {
-		if(event!=null && (event.target.id=='list-act-'+listId || event.target.id=='list-act-img-'+listId)){
+		if(event!==null && (event.target.id==='list-act-'+listId || event.target.id==='list-act-img-'+listId)){
 			return false;
 		}
 		/*if(isMobileDevice){
@@ -205,7 +205,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		};
 		const response = await fetch(`${getServiceURI()}/todo/task/getTasksByListId/${listId}`, settings);
 		const data = await response.json();
-		if(data.status==TOKEN_EXPIRED){
+		if(data.status===TOKEN_EXPIRED){
 			document.cookie="jToken=;";
 			window.location.reload();
 		}
@@ -225,9 +225,9 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	
 	const updateCount = (action, listId) => {
 		let tempLists = [...userLists];
-		tempLists.map(listG => {
+		tempLists.forEach(listG => {
 			listG = listG.map(list => {
-				if (list.listId == listId) {
+				if (list.listId === listId) {
 					if (action === "remove") {
 						list.taskCount = list.taskCount - 1
 					} else {
@@ -241,17 +241,13 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	}
 	
 	const ToggleShowtaskDetls = (event, taskId) => {
-		if (event.target.id == "task-chkbx-" + taskId || event.target.id == "task-item-delete-img-" + taskId) {
+		if (event.target.id === "task-chkbx-" + taskId || event.target.id === "task-item-delete-img-" + taskId) {
 			return false;
 		}
-		/*if(isMobileDevice){
-			setShowtaskDetls(true);
-			setShowTasks(false);
-		}*/
 		let curListDivWidth = document.getElementById('main-body-div').offsetWidth;
 		let reducedListDivWidth;
 		let currentTskDetId = document.getElementById('currentTskDetId').value;
-		if (showTaskDetls && currentTskDetId == taskId) {
+		if (showTaskDetls && currentTskDetId === taskId.toString()) {
 			setTask(null);
 			if(!isMobileDevice){
 				reducedListDivWidth = ((25 / 100) * curListDivWidth);
@@ -261,7 +257,6 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			return;
 		} else {
 			disableDiv();
-			//setShowtaskDetls(true);
 			if(!isMobileDevice){
 				reducedListDivWidth = (22 / 100) * curListDivWidth;
 				setListDivWidth(reducedListDivWidth + 'px');
@@ -279,7 +274,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}
 		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/`, settigs);
 		const data = await response.json();
-		if(data.status=="TOKEN_EXPIRED"){
+		if(data.status==="TOKEN_EXPIRED"){
 			document.cookie="jToken=;";
 			window.location.reload();
 		}
@@ -294,12 +289,12 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	
 	const onSetTask = (task) => {
 		let tempList = [...taskList];
-		tempList.map(taskG => {
-			taskG.map((taskT, index) => {
+		tempList.forEach(taskG => {
+			taskG.forEach((taskT, index) => {
 				if (taskT.taskId === task.taskId) {
 					taskG[index] = task;
 				}
-			})
+			});
 		});
 		setTaskList(tempList);
 		setTask(task);
@@ -329,11 +324,11 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			let tasks;
 			if(task.completed){
 				tasks = tempTaskList[taskIndexC];
-				tasks = tasks.filter(function(taskF){return taskF.taskId!=task.taskId});
+				tasks = tasks.filter(function(taskF){return taskF.taskId!==task.taskId});
 				tempTaskList[taskIndexC] = tasks;
 			}else{
 				tasks = tempTaskList[taskIndexT];
-				tasks = tasks.filter(function(taskF){return taskF.taskId!=task.taskId});
+				tasks = tasks.filter(function(taskF){return taskF.taskId!==task.taskId});
 				tempTaskList[taskIndexT] = tasks;
 			}
 			setTaskList(tempTaskList);
@@ -346,7 +341,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	}
 	
 	const completeTask = async (event,taskId) => {
-		if(event.target==event.currentTarget){
+		if(event.target===event.currentTarget){
 			event.stopPropagation();
 		}
 		disableDiv();
@@ -381,7 +376,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 				tempTaskList[taskIndexC] = tempC;
 			}
 			setTaskList(tempTaskList);
-			if(task!=null || task!=undefined){
+			if(task!==null || task!==undefined){
 				onSetBodyTask(data.todoTask);
 			}
 			enableDiv();
@@ -389,9 +384,6 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	}
 	
 	const deleteTask = async (taskId) => {
-		/*if(event.target==event.currentTarget){
-			event.stopPropagation();
-		}*/
 		disableDiv();
 		const compt = document.getElementById("task-chkbx-"+taskId).checked;
 		const settings = {
@@ -403,7 +395,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		};
 		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/`,settings);
 		const data = await response.json();
-		if(data.status=="success"){
+		if(data.status==="success"){
 			let tempTaskList = [...taskList];
 			if(!compt){
 				let tempT = [...tempTaskList[taskIndexT]];
@@ -428,7 +420,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	}
 	
 	const updateTask = async (event, action, taskId) => {
-		if(event.target==event.currentTarget){
+		if(event.target===event.currentTarget){
 			event.stopPropagation();
 		}
 		let updateTaskPayload = {
@@ -436,27 +428,27 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}
 		let isImportant;
 		let taskAction;
-		if(action=="important"){
+		if(action==="important"){
 			taskAction = action;
 			isImportant = event.target.checked;
 			updateTaskPayload.important = isImportant;
-		}else if(action=="note"){
-			if(event.target.value==task.note){
+		}else if(action==="note"){
+			if(event.target.value===task.note){
 				return;
 			}
 			taskAction = action;
 			updateTaskPayload.note = event.target.value;
-		}else if (action=="removeDueDate"){
+		}else if (action==="removeDueDate"){
 			taskAction = "dueDate";
 			updateTaskPayload.dueDate = null;
-		}else if(action=="removeRemDate"){
+		}else if(action==="removeRemDate"){
 			taskAction = "remindMe";
 			updateTaskPayload.remindMe = false;
 			updateTaskPayload.remindTime = null;
-		}else if(action=="uri-ref"){
+		}else if(action==="uri-ref"){
 			taskAction = action;
 			updateTaskPayload.uriRef = event.target.value;
-		}else if(action=="removeUriRef"){
+		}else if(action==="removeUriRef"){
 			taskAction = "uri-ref";
 			updateTaskPayload.uriRef = null;
 		}else{
@@ -473,8 +465,8 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}
 		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/${taskAction}`,settings);
 		const data = await response.json();
-		if(data.status=="success"){
-			if(action=="important"){
+		if(data.status==="success"){
+			if(action==="important"){
 				let ImpListId = document.getElementById('hdn-inp-Important').value;
 				if(isImportant){
 					updateCount("add", ImpListId);
@@ -540,7 +532,6 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					showTaskDetls={showTaskDetls}
 					onToggleShowtaskDetls={ToggleShowtaskDetls}
 					onSetBodyTask={onSetBodyTask}
-					setTaskList={setTaskList}
 					setShowtaskDetls={setShowtaskDetls}
 					onCompleteTask={completeTask}
 					onSetTodoListToTaskLIst={onSetTodoListToTaskLIst}
@@ -552,7 +543,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					getServiceURI={getServiceURI}
 			 	/>
 			 }
-			{showTaskDetls && <TaskDetails 	task={task!=undefined && task} 
+			{showTaskDetls && <TaskDetails 	task={task!==null && task} 
 										onConvertDateT={convertDateT}
 										setTask={setTask}
 										taskList={taskList}
@@ -573,8 +564,8 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 										enableDiv={enableDiv}
 										getServiceURI={getServiceURI}
 									/>}
-			<HiddenBodyInputs todoList={taskList[todoIndex]!=undefined && taskList[todoIndex][0]} />
-			<input type="hidden" id="currentTskDetId" value={task!=undefined && task.taskId} />
+			<HiddenBodyInputs todoList={taskList[todoIndex]!==undefined && taskList[todoIndex][0]} />
+			<input type="hidden" id="currentTskDetId" value={task!==null && task.taskId} />
 		</div>
 	);
 }

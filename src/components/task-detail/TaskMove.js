@@ -10,7 +10,7 @@ export const TaskMove = ({ task, onSetShowMoveListSel, showMoveListSel }) => {
 			<div className="col-sm-8 task-detail-font-size" style={{ padding: 10, width: 65 + '%' }}>
 				<label><span id="task-detail-dueDate-span">Move Task</span></label>
 			</div>
-			{showMoveListSel && <div className="task-detail-font-size task-detail-mve-close" style={{ width: 25 + '%' }}>
+			{showMoveListSel && <div className="task-detail-font-size task-detail-sel-close" style={{ width: 25 + '%' }}>
 				<label>close</label>
 			</div>}
 		</div>

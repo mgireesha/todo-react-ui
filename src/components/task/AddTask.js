@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const AddTask = ({ showTaskAdd, onTogglAddTaskField, onAddNewTask, onTogglAddRemindMe }) => {
+export const AddTask = ({ showTaskAdd, onTogglAddTaskField, onAddNewTask }) => {
 	return (
 		<div className="task-add-main">
 

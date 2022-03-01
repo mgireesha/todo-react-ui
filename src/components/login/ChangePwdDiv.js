@@ -28,7 +28,7 @@ export const ChangePwdDiv = ({ loginError, onChangePwd, onSetShowLForm, prevShow
 				<button type="button" className="btn-signup" onClick={onChangePwd}>Change Pawssword</button>
 			</div>
 			<div className="row row-label" id="go-back-to-login">
-				<label for="confirmPwd" className="signup-label">Go back to <a style={{color: '#0d6efd',textDecoration:'underline',cursor:'pointer'}} onClick={()=>onSetShowLForm("signin")}>Login</a>
+				<label for="confirmPwd" className="signup-label">Go back to <span className='link-look' onClick={()=>onSetShowLForm("signin")}>Login</span>
 				</label>
 			</div>
 		</div>

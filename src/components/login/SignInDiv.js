@@ -11,12 +11,12 @@ export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm, onSetLogi
 			<div className="row row-label">
 				<label  className="signup-label">Password</label>
 				<input className="form-control signup-input" type="password" name="password" id="password" placeholder="Create password" required />
-				{loginError != "" && <label style={{ color: '#e34e4e', padding: 0 }}>{loginError}</label>}
-				<label className="col-sm-6 signup-label">
-					<a style={{ color: '#0d6efd', cursor: 'pointer', fontSize: 12 }} onClick={()=>onSetShowLForm("reset")}>Forgot password ?</a>
+				{loginError !== "" && <label style={{ color: '#e34e4e', padding: 0 }}>{loginError}</label>}
+				<label className="signup-label" style={{width:50+'%'}}>
+					<span className='link-look' onClick={()=>onSetShowLForm("reset")} style={{fontSize: 12,textDecoration:'none'}}>Forgot password ?</span>
 				</label>
-				<label className="col-sm-4 signup-label">
-					<a style={{ color: '#0d6efd', cursor: 'pointer', fontSize: 12 }} onClick={()=>onSetShowLForm("change-pwd")}>Change password</a>
+				<label className="signup-label" style={{width:50+'%'}}>
+					<span className='link-look' style={{fontSize: 12,textDecoration:'none'}} onClick={()=>onSetShowLForm("change-pwd")}>Change password</span>
 				</label>
 			</div>
 			<div className="row row-btn">
@@ -24,7 +24,7 @@ export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm, onSetLogi
 			</div>
 			<div className="row row-label">
 				<label className="signup-label">
-					New user ? <a onClick={()=>onSetShowLForm("signup")} style={{color: '#0d6efd',textDecoration:'underline',cursor:'pointer'}}>sign up</a> here
+					New user ? <span onClick={()=>onSetShowLForm("signup")} className='link-look'>sign up</span> here
 				</label>
 			</div>
 		</div>

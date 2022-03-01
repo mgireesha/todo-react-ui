@@ -27,13 +27,6 @@ body{
 	    border-radius: 4px;
 }
 
-.list-item-main{
-	/* max-height: 32.4em;
-    overflow-y: auto;
-    min-height: 31.4em;
-    overflow-x:hidden;  */
-   /*  margin:5px; */
-}
 .list-item-main-comb{
 	max-height: 32.1em;
     overflow-y: auto;
@@ -116,6 +109,8 @@ body{
 .list-item:hover, .list-item:hover + .list-item-delete{
 	background-color: #cbc24a;
 }
+
+
 
 .list-item-delete-def{
 	background-color: darkkhaki;
@@ -372,6 +367,7 @@ body{
 	 text-decoration-thickness: 2px;
 	 text-decoration-color: #363839;
 clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+color: grey;
 }
 
 .task-add-button-div{
@@ -547,7 +543,7 @@ task-add-due-date, focus {
 	    background-color: #2e2729;
 }
 
-.task-item-detail-dueDate:hover, .task-item-detail-remindMe:hover, .task-item-detail-move:hover{
+.task-item-detail-dueDate:hover, .task-item-detail-remindMe:hover, .task-item-detail-move:hover, .task-step-elem:hover{
 	background-color: #1e1e1e;
 }
 .task-item-detail-remindMe, .task-item-detail-remindMe *:hover, .task-item-detail-dueDate, .task-item-detail-dueDate *:hover{
@@ -609,6 +605,7 @@ task-add-due-date, focus {
 } */
 .task-detail-dueDate-del:hover,.task-detail-remind-del:hover{
 	background-color: #403a3a;
+    color: #df4e4e;
 }
 .task-detail-remind-img-sld{
 	height: 1.4em;
@@ -715,7 +712,7 @@ task-add-due-date, focus {
 	margin-left: 10px;
 	margin-top: -8px;
 	border: 1px solid #656562;
-	transition: height 0.9s ease-out;
+	transition: height 0.5s ease-out;
     height: 0;
     overflow: hidden;
 }
@@ -793,10 +790,6 @@ task-add-due-date, focus {
 	display: none;
 }
 
-#importDiv,.ui-dialog-title,.ui-dialog-buttonset{
-	/* font-family: cursive !important; */
-}
-
 .ui-widget-overlay{
 	background-color: rgb(42 42 42) !important;
 }
@@ -828,12 +821,12 @@ task-add-due-date, focus {
     transition: height 0.9s ease-out;
     height: 0;
 }
-.task-detail-mve-close{
+.task-detail-sel-close{
 	padding: 10px;
     text-align: center;
     border-radius: 5px;
 }
-.task-detail-mve-close:hover{
+.task-detail-sel-close:hover{
     background-color: #403a3a;
 }
 
@@ -897,4 +890,102 @@ task-add-due-date, focus {
     width:1.5em;
     margin-left:10px;
     cursor: pointer;
+}
+
+.link-look{
+    color: #0d6efd;
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+.c-ta{
+    resize:none;
+    overflow:auto;
+    border:0px;
+    border-bottom: 1px solid grey;
+    outline:0px;
+    background-color:transparent;
+    color: #b9b4b4;
+    cursor: text !important;
+    width: 100%;
+    height: 35px;
+    padding: 5px;
+}
+
+.c-ta-stps{
+    resize:none;
+    overflow:auto;
+    border:0px;
+    outline:0px;
+    background-color:transparent;
+    color: #b9b4b4;
+    cursor: text !important;
+    height: 20px;
+    padding: 5px;
+}
+
+.task-step-chkbx {
+    position: relative;
+    width: 1em;
+    height: 1em;
+    color: #363839;
+    border: 1px solid #bdc1c6;
+    border-radius: 50%;
+    appearance: none;
+    outline: 0;
+    cursor: pointer;
+    transition: background 175ms cubic-bezier(0.1, 0.1, 0.25, 1);
+    margin-right: 5px;
+}
+.task-step-chkbx::before {
+    position: absolute;
+    content: '';
+    display: block;
+    left: 3px;
+    width: 5px;
+    height: 8px;
+    border-style: solid;
+    border-color: #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+}
+
+.task-step-chkbx:checked {
+    background-color: green;
+    color: #fff;
+    border-color: #06842c;
+}
+
+.task-step-chkbx:checked::before {
+    opacity: 1;
+}
+
+.task-step-elem{
+	background-color: #2e2729;
+    color: beige;
+    /* border-radius: 5px; */
+    padding: 8px;
+    border-bottom: 1px solid #64645e;
+    /* border-top: 1px solid #64645e; */
+    cursor: pointer;
+}
+.step-rmv-label{
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0;
+}
+.step-rmv-label:hover{
+    background-color: #403a3a;
+    color: #df4e4e;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.task-step-elem:hover .step-rmv-label{
+    background-color: #403a3a;
+    color: #df4e4e;
+    cursor: pointer;
+    opacity: 1;
 }

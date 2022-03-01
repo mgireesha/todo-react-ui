@@ -23,7 +23,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
 	const [selctdTask,setSelctdTask] = useState(null);
 	const onSetShowConfirmPopup = (event,showCnfrmPp,taskId) => {
-		if(event.target==event.currentTarget && showCnfrmPp){
+		if(event.target===event.currentTarget && showCnfrmPp){
 			event.stopPropagation();
 		}
 		setSelctdTask(taskId);
@@ -52,7 +52,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	}*/
 	
 	useEffect(()=>{
-		if(showTaskAdd && document.getElementById('task-item-add-txt')!=undefined){
+		if(showTaskAdd && document.getElementById('task-item-add-txt')!==null){
 			document.getElementById('task-item-add-txt').focus();
 		}
 	},[showTaskAdd]);
@@ -197,7 +197,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	return(
 		<div className={showTaskDetls ? "col-sm-6 task-div" : "col-sm-8 task-div"} id="task-div">
 		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onSetShowTasks(false)} />}
-				{taskList[todoIndex]!=undefined &&<TaskListName  todoList={taskList[todoIndex][0]} 
+				{taskList[todoIndex]!==undefined &&<TaskListName  todoList={taskList[todoIndex][0]} 
 																onGetAuth={onGetAuth}
 																onSetTodoListToTaskLIst={onSetTodoListToTaskLIst}
 																disableDiv={disableDiv}
@@ -220,7 +220,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 						)}
 					
 					</div>
-					<TaskCompletedCounter count={taskList[taskIndexC]!=undefined && taskList[taskIndexC].length} 
+					<TaskCompletedCounter count={taskList[taskIndexC]!==undefined && taskList[taskIndexC]!==null && taskList[taskIndexC].length} 
 											onToggleShowCmptdTsks={toggleShowCmptdTsks}
 											isShowCmptdTsks={isShowCmptdTsks}
 											 />
@@ -245,7 +245,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 							headerTxt="Delete Task"
 							bodyTxt="Are you sure to delete this task ?"
 							/>
-				<AddTask showTaskAdd={showTaskAdd} onTogglAddTaskField={togglAddTaskField} onAddNewTask={addNewTask} onTogglAddRemindMe={togglAddRemindMe} />
+				<AddTask showTaskAdd={showTaskAdd} onTogglAddTaskField={togglAddTaskField} onAddNewTask={addNewTask} />
 				<input type="hidden" name="tListName" id="tListName" value={taskList[todoIndex]!==undefined && taskList[todoIndex][0].listName}  />
 				<input type="hidden" name="tListId" id="tListId" value={taskList[todoIndex]!==undefined && taskList[todoIndex][0].listId} />
 			</div>
