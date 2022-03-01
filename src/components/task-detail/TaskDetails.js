@@ -15,7 +15,7 @@ import {TaskSteps} from './TaskSteps.js';
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 
 export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetShowtaskDetls, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, isMobileDevice,
-												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI}) => {
+												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI,impListId}) => {
 
 	//const currListName = document.getElementById('tListName').value;
 	const currListName = document.getElementById('listName').value;
@@ -175,7 +175,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 	
 	useEffect(() => {
 		if (document.getElementById('selDue') !== null) {
-			document.getElementById('selDue').style.height = "12em";
+			document.getElementById('selDue').style.height = "13em";
 			document.getElementById('selDue').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
 		}
