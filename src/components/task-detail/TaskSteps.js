@@ -111,10 +111,10 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                 document.getElementById('step-rmv-label-'+stepId).style.display='none';
             }
         }else{
-            
             document.getElementById('add-nxt-arr-'+stepId).style.display='none';
             document.getElementById('add-nxt-cnl-'+stepId).style.display='none';
             document.getElementById('add-nxt-fld-'+stepId).style.display='none';
+            setShowAddNxtFld(false);
             document.getElementById('add-nxt-label-'+stepId).style.display='';
             document.getElementById('step-rmv-label-'+stepId).style.display='inline-block';
         }
@@ -144,8 +144,8 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                 {showAddNxtFld && 
                 <div style={{borderBottom:'1px solid grey'}}>
                     <textarea id='add-nxt-fld-' className='c-ta' placeholder='Add step'></textarea>
-                    <label id={'add-nxt-arr-'} style={{display:'none',cursor:'pointer'}} onClick={(event)=>addNextStep(task.taskId)}>&rarr;</label>
-                    <span id={'add-nxt-cnl-'} style={{display:'none'}} onClick={()=>showRenameFld('','hide')}>&#128473;<Nbsp/><Nbsp/></span>
+                    <label id={'add-nxt-arr-'} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>addNextStep(task.taskId)}>&rarr;</label>
+                    <span id={'add-nxt-cnl-'} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld('','hide')}>&#128473;<Nbsp/><Nbsp/></span>
                 </div> 
                 }
             </div>
