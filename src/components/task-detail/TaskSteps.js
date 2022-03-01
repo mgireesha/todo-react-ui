@@ -145,7 +145,7 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                 <div style={{borderBottom:'1px solid grey'}}>
                     <textarea id='add-nxt-fld-' className='c-ta' placeholder='Add step'></textarea>
                     <label id={'add-nxt-arr-'} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>addNextStep(task.taskId)}>&rarr;</label>
-                    <span id={'add-nxt-cnl-'} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld('','hide')}>&#128473;<Nbsp/><Nbsp/></span>
+                    <span id={'add-nxt-cnl-'} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld('','hide')}><Nbsp/><Nbsp/>&#x2715;</span>
                 </div> 
                 }
             </div>

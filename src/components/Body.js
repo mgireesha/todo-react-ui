@@ -30,6 +30,9 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const [showLists, setShowLists] = useState(true);
 	const [showTasks, setShowTasks] = useState(true);
 	const [lisDivWidth, setListDivWidth] = useState('');
+
+	const [impListId,setImpListId] = useState(0);
+
 	
 	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
 	let taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
@@ -81,6 +84,11 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			let respLists = Object.values(data);
 			setUserLists(respLists);
 			let respListKeys = Object.keys(data);
+			data.default.forEach(list=>{
+				if(list.listName==='Important'){
+					setImpListId(list.listId);
+				}
+			})
 			setUserListsKeys(respListKeys);
 			enableDiv();
 			if(!isMobile()){
@@ -385,7 +393,12 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	
 	const deleteTask = async (taskId) => {
 		disableDiv();
-		const compt = document.getElementById("task-chkbx-"+taskId).checked;
+		let compt;
+		if(document.getElementById("task-chkbx-"+taskId)!==null){
+			compt = document.getElementById("task-chkbx-"+taskId).checked;
+		}else if(document.getElementById("task-detail-chkbx-"+taskId)!==null){
+			compt = document.getElementById("task-detail-chkbx-"+taskId).checked;
+		}
 		const settings = {
 			method: 'DELETE',
 			headers: {
@@ -409,7 +422,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			setTaskList(tempTaskList);
 			updateCount("remove",data.todoTask.listId);
 			if(data.todoTask.important){
-				updateCount("remove",document.getElementById('hdn-inp-Important').value);
+				updateCount("remove",impListId);
 			}
 			setShowtaskDetls(false);
 			setTask(null);
@@ -467,7 +480,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		const data = await response.json();
 		if(data.status==="success"){
 			if(action==="important"){
-				let ImpListId = document.getElementById('hdn-inp-Important').value;
+				let ImpListId = impListId;
 				if(isImportant){
 					updateCount("add", ImpListId);
 				}else{
@@ -563,6 +576,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 										disableDiv={disableDiv}
 										enableDiv={enableDiv}
 										getServiceURI={getServiceURI}
+										impListId={impListId}
 									/>}
 			<HiddenBodyInputs todoList={taskList[todoIndex]!==undefined && taskList[todoIndex][0]} />
 			<input type="hidden" id="currentTskDetId" value={task!==null && task.taskId} />
