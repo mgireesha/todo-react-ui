@@ -1,5 +1,7 @@
 import { React, useEffect, useState } from 'react';
 
+import Nbsp from '../Nbsp.js';
+
 export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getServiceURI }) => {
 
     const [showAddNxtFld, setShowAddNxtFld] = useState(false);
@@ -9,18 +11,22 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
     }
 
     useEffect(()=>{
-        if(document.getElementById('add-nxt-fld')!==null)
-            document.getElementById('add-nxt-fld').focus();
+        if(document.getElementById('add-nxt-fld-')!==null){
+            document.getElementById('add-nxt-fld-').focus();
+            if(showAddNxtFld){
+                showRenameFld('','show');
+            }
+        }
     },[showAddNxtFld]);
 
-    const addNextStep = async(event,taskId) => {
-        const stepName = event.target.value;
-        if(stepName===''){
+    const addNextStep = async(taskId) => {
+        const stepName = document.getElementById('add-nxt-fld-');
+        if(stepName.value===''){
             setShowAddNxtFld(false);
             return false;
         }
         const addNxtStepPayload = {
-            stepName
+            stepName:stepName.value
         }
         disableDiv();
         const settigs = {
@@ -47,7 +53,15 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
         if(action==='complete'){
             updateStepPayLoad.completed = event.target.checked;
         }else if(action==='stepName'){
-            updateStepPayLoad.stepName = event.target.value;
+            const txtArea = document.getElementById('add-nxt-fld-'+stepId);
+            const stepIndex = txtArea.getAttribute('stepIndex');
+            const currStepName = task.taskSteps[stepIndex].stepName;
+            if(currStepName!==txtArea.value){
+                updateStepPayLoad.stepName = txtArea.value;
+            }else{
+                showRenameFld(stepId,'hide');
+                return false;
+            }
         }
         const settigs = {
             method:'PUT',
@@ -61,6 +75,7 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
         const response = await fetch(`${getServiceURI()}/todo/task/taskStep/${action}/`,settigs);
         const data = await response.json();
         if(data.status==='success'){
+            showRenameFld(stepId,'hide');
             onSetTask(data.todoTask);
         }
         enableDiv();
@@ -83,11 +98,27 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
         enableDiv();
     }
 
-    const showRenameFld = (event,stepId) => {
-        event.target.style.display='none';
-        document.getElementById('add-nxt-fld-'+stepId).innerHTML=event.target.innerHTML;
-        document.getElementById('add-nxt-fld-'+stepId).style.display='inline';
-        document.getElementById('add-nxt-fld-'+stepId).focus();
+    const showRenameFld = (stepId,action) => {
+        if(action==='show'){
+            document.getElementById('add-nxt-arr-'+stepId).style.display='inline';
+            document.getElementById('add-nxt-cnl-'+stepId).style.display='inline';
+            document.getElementById('add-nxt-fld-'+stepId).focus();
+            if(document.getElementById('add-nxt-label-'+stepId)!==null){
+                document.getElementById('add-nxt-label-'+stepId).style.display='none';
+                document.getElementById('add-nxt-fld-'+stepId).innerHTML
+                    = document.getElementById('add-nxt-label-'+stepId).innerHTML;
+                document.getElementById('add-nxt-fld-'+stepId).style.display='inline';
+                document.getElementById('step-rmv-label-'+stepId).style.display='none';
+            }
+        }else{
+            
+            document.getElementById('add-nxt-arr-'+stepId).style.display='none';
+            document.getElementById('add-nxt-cnl-'+stepId).style.display='none';
+            document.getElementById('add-nxt-fld-'+stepId).style.display='none';
+            document.getElementById('add-nxt-label-'+stepId).style.display='';
+            document.getElementById('step-rmv-label-'+stepId).style.display='inline-block';
+        }
+        
     }
 
     return (
@@ -98,9 +129,11 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                                 <label style={{width:10+'%'}}>
                                     <input type='checkbox' className='task-step-chkbx' checked={step.completed} onChange={(event)=>updateStep(event,step.stepId,'complete')}  />
                                 </label>
-                                <label className={step.completed ? 'strike-line' : ''} style={{color:'#b9b4b4',cursor:'text', width:80+'%' }} key={index} onClick={(event)=>showRenameFld(event,step.stepId)}>{step.stepName}</label>
-                                <textarea id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step' onBlur={(event)=>updateStep(event,step.stepId,'stepName')} style={{display:'none',width:80+'%'}}></textarea>
-                                <label className='step-rmv-label' style={{width:10+'%'}} onClick={()=>deleteStep(step.stepId)}>X</label>
+                                <label className={step.completed ? 'strike-line' : ''} id={'add-nxt-label-'+step.stepId} style={{color:'#b9b4b4',cursor:'text', width:80+'%' }} key={index} onClick={()=>showRenameFld(step.stepId,'show')}>{step.stepName}</label>
+                                <textarea stepIndex={index} id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step'  style={{display:'none',width:75+'%'}}></textarea>
+                                <label id={'add-nxt-arr-'+step.stepId} style={{display:'none',cursor:'pointer'}} onClick={(event)=>updateStep(event,step.stepId,'stepName')}>&rarr;</label>
+                                <span id={'add-nxt-cnl-'+step.stepId} style={{display:'none'}} onClick={()=>showRenameFld(step.stepId,'hide')}>&#128473;<Nbsp/><Nbsp/></span>
+                                <label id={'step-rmv-label-'+step.stepId} className='step-rmv-label' style={{width:10+'%'}} onClick={()=>deleteStep(step.stepId)}>X</label>
                             </div>
                     )}
                     {!showAddNxtFld && <div className='task-step-elem' style={{borderBottom:'none'}}>
@@ -108,7 +141,13 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                     </div>}
                 </div>
             <div>
-                {showAddNxtFld && <textarea id='add-nxt-fld' className='c-ta' placeholder='Add step' onBlur={(event)=>addNextStep(event,task.taskId)}></textarea>}
+                {showAddNxtFld && 
+                <div style={{borderBottom:'1px solid grey'}}>
+                    <textarea id='add-nxt-fld-' className='c-ta' placeholder='Add step'></textarea>
+                    <label id={'add-nxt-arr-'} style={{display:'none',cursor:'pointer'}} onClick={(event)=>addNextStep(task.taskId)}>&rarr;</label>
+                    <span id={'add-nxt-cnl-'} style={{display:'none'}} onClick={()=>showRenameFld('','hide')}>&#128473;<Nbsp/><Nbsp/></span>
+                </div> 
+                }
             </div>
         </div>
     );
