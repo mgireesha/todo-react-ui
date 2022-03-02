@@ -16,7 +16,6 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 			return step.completed;
 		});
 	}
-	console.log(comptdSteps)						
 	return (
 		<div className="row" style={{ margin: 10 }} key={"task-item"+taskObj.taskId}>
 			<div className={taskDetail !== null && taskDetail.taskId === taskObj.taskId ? "task-item selected-task" : "task-item"}
@@ -40,17 +39,17 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 								<img alt="." src={dotBlue} style={{ height: 0.2 + 'em', margin: 5 }} />
 							</div>}
 							<div className="tc-row tc-dd-row" style={{ display: taskObj.dueDate !== null ? 'inline' : 'none' }}>
-								<img alt="due date" src={calBlue} style={{ height: 0.8 + 'em' }} />
+								<img key='due date' alt="due date" src={calBlue} style={{ height: 0.8 + 'em' }} />
 								<label style={{ fontSize: 12 }}><Nbsp />{taskObj.dueDate !== null && onConvertDateT(taskObj.dueDate)}</label>
 								<img alt="." src={dotBlue} style={{ height: 0.2 + 'em', margin: 5 }} />
 							</div>
 							<div className="tc-row tc-rem-row" style={{ display: taskObj.remindTime !== null ? 'inline' : 'none' }}>
-								<img alt="due date" src={bellBlue} style={{ height: 0.8 + 'em' }} />
+								<img key='remind time' alt="remind time" src={bellBlue} style={{ height: 0.8 + 'em' }} />
 								<label style={{ fontSize: 12 }}><Nbsp />{taskObj.remindTime !== null && onConvertDateT(taskObj.remindTime)}</label>
 								<img alt="." src={dotBlue} style={{ height: 0.2 + 'em', margin: 5 }} />
 							</div>
 							<div className="tc-row tc-note-row" style={{ display: taskObj.note !== null && taskObj.note !== "" ? 'inline' : 'none' }}>
-								<img alt="note" src={noteBlueS1} style={{ height: 0.8 + 'em' }} />
+								<img key='note' alt="note" src={noteBlueS1} style={{ height: 0.8 + 'em' }} />
 							</div>
 						</div>
 					</div>

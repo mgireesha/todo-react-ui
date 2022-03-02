@@ -343,7 +343,10 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			updateCount("remove",currentListId);
 			updateCount("add",targetListId);
 			setShowtaskDetls(false);
-			setTask(null);
+			if(isMobileDevice){
+				setShowTasks(true);
+			}
+			//setTask(null);
 		}
 		enableDiv();
 	}
@@ -425,6 +428,9 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 				updateCount("remove",impListId);
 			}
 			setShowtaskDetls(false);
+			if(isMobileDevice){
+				setShowTasks(true);
+			}
 			setTask(null);
 			enableDiv();
 			return true;
@@ -500,8 +506,11 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					tListG = tListG.filter(function(task){return task.taskId!==taskId});
 					tempTaskList[tListIndex]=tListG;
 					setTaskList(tempTaskList);
-					setTask(null);
+					//setTask(null);
 					setShowtaskDetls(false);
+					if(isMobileDevice){
+						setShowTasks(true);
+					}
 				}
 			}else{
 				onSetTask(data.todoTask);

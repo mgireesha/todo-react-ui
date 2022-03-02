@@ -54,7 +54,7 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
             updateStepPayLoad.completed = event.target.checked;
         }else if(action==='stepName'){
             const txtArea = document.getElementById('add-nxt-fld-'+stepId);
-            const stepIndex = txtArea.getAttribute('stepIndex');
+            const stepIndex = txtArea.getAttribute('stepindex');
             const currStepName = task.taskSteps[stepIndex].stepName;
             if(currStepName!==txtArea.value){
                 updateStepPayLoad.stepName = txtArea.value;
@@ -102,12 +102,12 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
         if(action==='show'){
             document.getElementById('add-nxt-arr-'+stepId).style.display='inline';
             document.getElementById('add-nxt-cnl-'+stepId).style.display='inline';
-            document.getElementById('add-nxt-fld-'+stepId).focus();
             if(document.getElementById('add-nxt-label-'+stepId)!==null){
                 document.getElementById('add-nxt-label-'+stepId).style.display='none';
-                document.getElementById('add-nxt-fld-'+stepId).innerHTML
+                document.getElementById('add-nxt-fld-'+stepId).value
                     = document.getElementById('add-nxt-label-'+stepId).innerHTML;
                 document.getElementById('add-nxt-fld-'+stepId).style.display='inline';
+                document.getElementById('add-nxt-fld-'+stepId).focus();
                 document.getElementById('step-rmv-label-'+stepId).style.display='none';
             }
         }else{
@@ -115,8 +115,10 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
             document.getElementById('add-nxt-cnl-'+stepId).style.display='none';
             document.getElementById('add-nxt-fld-'+stepId).style.display='none';
             setShowAddNxtFld(false);
-            document.getElementById('add-nxt-label-'+stepId).style.display='';
-            document.getElementById('step-rmv-label-'+stepId).style.display='inline-block';
+            if(document.getElementById('add-nxt-label-'+stepId)!==null){
+                document.getElementById('add-nxt-label-'+stepId).style.display='';
+                document.getElementById('step-rmv-label-'+stepId).style.display='inline-block';
+            }
         }
         
     }
@@ -124,13 +126,13 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
     return (
         <div style={{ fontSize: 13 }}>
                 <div style={{marginTop:10}}>
-                    {task.taskSteps!==null && task.taskSteps.length !== 0 && task.taskSteps.map((step,index) => 
+                    {task!==null && task.taskSteps!==null && task.taskSteps.length !== 0 && task.taskSteps.map((step,index) => 
                             <div className='task-step-elem'>
                                 <label style={{width:10+'%'}}>
                                     <input type='checkbox' className='task-step-chkbx' checked={step.completed} onChange={(event)=>updateStep(event,step.stepId,'complete')}  />
                                 </label>
                                 <label className={step.completed ? 'strike-line' : ''} id={'add-nxt-label-'+step.stepId} style={{color:'#b9b4b4',cursor:'text', width:80+'%' }} key={index} onClick={()=>showRenameFld(step.stepId,'show')}>{step.stepName}</label>
-                                <textarea stepIndex={index} id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step'  style={{display:'none',width:72+'%'}}></textarea>
+                                <textarea stepindex={index} id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step'  style={{display:'none',width:72+'%'}}></textarea>
                                 <label id={'add-nxt-arr-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>updateStep(event,step.stepId,'stepName')}>&rarr;</label>
                                 <span id={'add-nxt-cnl-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld(step.stepId,'hide')}><Nbsp/><Nbsp/>&#x2715;</span>
                                 <label id={'step-rmv-label-'+step.stepId} className='step-rmv-label' style={{width:10+'%'}} onClick={()=>deleteStep(step.stepId)}>X</label>

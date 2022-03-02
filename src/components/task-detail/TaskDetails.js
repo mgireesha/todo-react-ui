@@ -256,15 +256,15 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onSetShowtaskDetls(false)} />}
 			<div className="task-detail-main" id="task-detail-main">
 				<div className="row task-item-detail-name" id="task-item-detail-name">
-					<input type="checkbox" id="task-detail-chkbx-617" onChange={(event) => onCompleteTask(event,task.taskId)}
-						className="task-item-chkbx-detail task-item-chkbx " name="task-detail-chkbx-617" checked={task.completed} />
+					<input type="checkbox"  onChange={(event) => onCompleteTask(event,task.taskId)}
+						className="task-item-chkbx-detail task-item-chkbx " checked={task.completed} />
 					{!showTaskNameField && <label id="task-detail-label" className={task.completed ? "task-item-label strike-line" : "task-item-label"}
 						onClick={()=>setShowTaskNameField(true)}>{task.taskName}
 					</label>}
 					{showTaskNameField && <input type="text" id="task-detail-label-text" className="task-detail-label-text form-control" 
 							style={{ backgroundColor: '#403a3a'}} onBlur={(event)=>updateTaskName(event,task.taskId)} />}
-					<input id="task-detail-star-617" className="task-detail-star" type="checkbox" title="Important" 
-									onClick={(event)=>onUpdateTask(event,"important", task.taskId)}  checked={task.important} />
+					<input className="task-detail-star" type="checkbox" title="Important" 
+									onChange={(event)=>onUpdateTask(event,"important", task.taskId)}  checked={task.important} />
 				<TaskSteps task={task} getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} onSetTask={onSetTask} />
 				</div>
 				
