@@ -330,7 +330,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		if(data.status==="success"){
 			let task = data.todoTask;
 			let tasks;
-			if(task.completed){
+			if(task.td){
 				tasks = tempTaskList[taskIndexC];
 				tasks = tasks.filter(function(taskF){return taskF.taskId!==task.taskId});
 				tempTaskList[taskIndexC] = tasks;
@@ -387,7 +387,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 				tempTaskList[taskIndexC] = tempC;
 			}
 			setTaskList(tempTaskList);
-			if(task!==null || task!==undefined){
+			if(task!==null && task!==undefined){
 				onSetBodyTask(data.todoTask);
 			}
 			enableDiv();
