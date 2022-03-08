@@ -9,7 +9,7 @@ import deleteGrey2026 from '../../images/delete-grey-20x26.png';
 import Nbsp from '../Nbsp.js';
 
 export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoList, 
-							onConvertDateT, isDatePassed, onToggleShowtaskDetls, onSetShowConfirmPopup, showConfirmPopup }) => {
+							onConvertDateT, dueDateColor, onToggleShowtaskDetls, onSetShowConfirmPopup, showConfirmPopup }) => {
 	let comptdSteps;
 	if(taskObj!==null && taskObj.taskSteps!==null){
 		comptdSteps = taskObj.taskSteps.filter(function(step){
@@ -40,7 +40,7 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 							</div>}
 							<div className="tc-row tc-dd-row" style={{ display: taskObj.dueDate !== null ? 'inline' : 'none' }}>
 								<img key='due date' alt="due date" src={calBlue} style={{ height: 0.8 + 'em' }} />
-								<label style={{ fontSize: 12, color:(isDatePassed(taskObj.dueDate) && !taskObj.completed)?'#b50c0c':'' }}><Nbsp />{taskObj.dueDate !== null && onConvertDateT(taskObj.dueDate)}</label>
+								<label style={{ fontSize: 12, color:dueDateColor(taskObj.dueDate)}}><Nbsp />{taskObj.dueDate !== null && onConvertDateT(taskObj.dueDate)}</label>
 								<img alt="." src={dotBlue} style={{ height: 0.2 + 'em', margin: 5 }} />
 							</div>
 							<div className="tc-row tc-rem-row" style={{ display: taskObj.remindTime !== null ? 'inline' : 'none' }}>

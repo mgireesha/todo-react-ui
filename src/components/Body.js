@@ -85,20 +85,36 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}else{
 			return false;
 		}
-			
-			
-		// 	if(iDate.getMonth()<=today.getMonth()){
-		// 		if(iDate.getDate()<=today.getDate()){
-		// 			return true;
-		// 		}else{
-		// 			return false;
-		// 		}
-		// 	}else{
-		// 		return false;
-		// 	}
-		// }else{
-		// 	return false;
-		// }
+	}
+
+	const dueDateColor = (date) => {
+		var iDate = new Date(date);
+		var today = new Date();
+		if(iDate.getFullYear()<=today.getFullYear()){
+			if(iDate.getFullYear()<today.getFullYear()){
+				return '#b50c0c';
+			}else{
+				if(iDate.getMonth()<=today.getMonth()){
+					if(iDate.getMonth()<today.getMonth()){
+						return '#b50c0c';
+					}else{
+						if(iDate.getDate()<=today.getDate()){
+							if(iDate.getDate()===today.getDate()){
+								return '#577db5';
+							}else if(iDate.getDate()<today.getDate()){
+								return '#b50c0c';
+							}
+						}else{
+							return '';
+						}
+					}
+				}else{
+					return '';
+				}
+			}
+		}else{
+			return '';
+		}
 	} 
 	
 	const  isMobile = () => {
@@ -588,7 +604,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					onUpdateCount = {updateCount}
 					onGetAuth={getAuth}
 					onConvertDateT={convertDateT}
-					isDatePassed={isDatePassed}
+					dueDateColor={dueDateColor}
 					setShowListAddB={setShowListAddB}
 					setShowTaskAdd={setShowTaskAdd}
 					showTaskAdd={showTaskAdd}
@@ -608,7 +624,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			 }
 			{showTaskDetls && <TaskDetails 	task={task!==null && task} 
 										onConvertDateT={convertDateT}
-										isDatePassed={isDatePassed}
+										dueDateColor={dueDateColor}
 										setTask={setTask}
 										taskList={taskList}
 										setTaskList={setTaskList}

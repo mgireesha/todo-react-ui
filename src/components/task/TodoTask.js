@@ -8,7 +8,7 @@ import {AddTask} from './AddTask.js';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 
-export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpdateCount, onGetAuth, onConvertDateT, isDatePassed,
+export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpdateCount, onGetAuth, onConvertDateT, dueDateColor,
 							setShowListAddB,showTaskAdd,setShowTaskAdd,showTaskDetls,onToggleShowtaskDetls,setShowtaskDetls, 
 							onCompleteTask, onDeleteTask, onSetShowTasks, isMobileDevice, onSetTodoListToTaskLIst, disableDiv, enableDiv,getServiceURI
 					}) => {
@@ -214,7 +214,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 										taskDetail={taskDetail}
 										todoList={taskList[todoIndex][0]}
 										onConvertDateT={onConvertDateT}
-										isDatePassed={isDatePassed}
+										dueDateColor={dueDateColor}
 										onToggleShowtaskDetls={onToggleShowtaskDetls}
 										onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
@@ -234,7 +234,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 										taskDetail={taskDetail}
 										todoList={taskList[todoIndex][0]}
 										onConvertDateT={onConvertDateT}
-										isDatePassed={isDatePassed}
+										dueDateColor={dueDateColor}
 										onToggleShowtaskDetls={onToggleShowtaskDetls}
 										onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
