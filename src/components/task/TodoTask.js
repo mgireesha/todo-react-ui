@@ -17,7 +17,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	let taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
 	let taskIndexC = taskListKeys.findIndex(obj => obj==="taskListC");
 	
-	const [isAddRemindMe, setAddRemindMe] = useState(false);
+	// const [isAddRemindMe, setAddRemindMe] = useState(false);
 	const [isShowCmptdTsks, setShowCmptdTsks] = useState(true);
 	
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
@@ -62,7 +62,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 		setShowListAddB(false);
 	} 
 	
-	const togglAddRemindMe = (isAddRemindMe) => setAddRemindMe(isAddRemindMe);
+	// const togglAddRemindMe = (isAddRemindMe) => setAddRemindMe(isAddRemindMe);
 	
 	/*const completeTask = async (event,taskId) => {
 		if(event.target==event.currentTarget){
@@ -145,7 +145,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 	
 	const addNewTask = async () => {
 		const taskName = document.getElementById('task-item-add-txt');
-		const remindMeDate = document.getElementById('remindMeDate').value;
+		const tDueDate = document.getElementById('tDueDate').value;
 		const listName = document.getElementById('tListName').value;
 		const listId = document.getElementById('tListId').value;
 		if(!taskName.checkValidity()){
@@ -156,8 +156,7 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 		const addNewTaskPayLoad = {
 			listId: listId,
 			listName: listName,
-			remindMe: isAddRemindMe,
-			remindTime: remindMeDate,
+			dueDate: tDueDate,
 			taskName: taskName.value
 		};
 		const settings = {
@@ -177,8 +176,8 @@ export const TodoTask = ({taskList, setTaskList, taskListKeys, taskDetail, onUpd
 			setTaskList(tempTaskList);
 			onUpdateCount("add",data.todoTask.listId);
 			document.getElementById('task-item-add-txt').value="";
-			document.getElementById('remindMeDate').vaue="";
-			setAddRemindMe(false);
+			document.getElementById('tDueDate').vaue="";
+			// setAddRemindMe(false);
 			setShowTaskAdd(false);
 			setShowtaskDetls(false);
 		}

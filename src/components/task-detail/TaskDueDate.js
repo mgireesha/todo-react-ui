@@ -13,7 +13,7 @@ export const TaskDueDate = ({task,onConvertDateT,dueDateColor,onSetShowDateSel, 
 				<label><span id="task-detail-dueDate-span">{task.dueDate!==null ? 'Due '+onConvertDateT(task.dueDate) : "Select a due date"}</span></label>
 			</div>
 			{task.dueDate!==null && !showDueDateSel && <div className="task-detail-remind-div task-detail-dueDate-del" id="task-detail-dueDate-del" style={{width:15+'%'}}>
-				<label id="task-detail-dueDate-del-lbl-617" onClick={(event)=>onUpdateTask(event,'removeDueDate',task.taskId)}>X</label>
+				<label onClick={(event)=>onUpdateTask(event,'removeDueDate',task.taskId)}>X</label>
 			</div>}
 			{showDueDateSel && <div className="task-detail-font-size task-detail-sel-close" style={{ width:15+'%',paddingLeft:7}}>
 				<label>close</label>

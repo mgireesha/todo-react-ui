@@ -19,7 +19,7 @@ export const AddTask = ({ showTaskAdd, onTogglAddTaskField, onAddNewTask }) => {
 							<input type="text" placeholder="Enter task name" id="task-item-add-txt" className="form-control" required />
 						</div>
 						<div className="task-add-due-date-div col-sm-2">
-							<input type="datetime-local" className="task-add-due-date" id="remindMeDate" title="Add remind date" />
+							<input type="datetime-local" className="task-add-due-date" id="tDueDate" title="Add due date" />
 						</div>
 						<div className="task-add-button-div col-sm-2">
 							<button className="task-add-button" id="task-add-button" onClick={onAddNewTask}>Add</button>
