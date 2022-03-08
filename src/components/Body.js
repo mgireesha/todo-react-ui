@@ -60,6 +60,46 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 		}
 		return cDate;
 	}
+
+	const isDatePassed = (date) => {
+		var iDate = new Date(date);
+		var today = new Date();
+		if(iDate.getFullYear()<=today.getFullYear()){
+			if(iDate.getFullYear()<today.getFullYear()){
+				return true;
+			}else{
+				if(iDate.getMonth()<=today.getMonth()){
+					if(iDate.getMonth()<today.getMonth()){
+						return true;
+					}else{
+						if(iDate.getDate()<=today.getDate()){
+							return true;
+						}else{
+							return false;
+						}
+					}
+				}else{
+					return false;
+				}
+			}
+		}else{
+			return false;
+		}
+			
+			
+		// 	if(iDate.getMonth()<=today.getMonth()){
+		// 		if(iDate.getDate()<=today.getDate()){
+		// 			return true;
+		// 		}else{
+		// 			return false;
+		// 		}
+		// 	}else{
+		// 		return false;
+		// 	}
+		// }else{
+		// 	return false;
+		// }
+	} 
 	
 	const  isMobile = () => {
     		return ( ( window.innerWidth <= 760 ) 
@@ -538,7 +578,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					getServiceURI={getServiceURI}
 				/>
 			}
-			{showTasks &&<TodoTask  	todoList={taskList[todoIndex]!==undefined && taskList[todoIndex]} 
+			{showTasks &&<TodoTask  todoList={taskList[todoIndex]!==undefined && taskList[todoIndex]} 
 					taskListT={taskList[taskIndexT]} 
 					taskListC={taskList[taskIndexC]}
 					taskList={taskList}
@@ -548,6 +588,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 					onUpdateCount = {updateCount}
 					onGetAuth={getAuth}
 					onConvertDateT={convertDateT}
+					isDatePassed={isDatePassed}
 					setShowListAddB={setShowListAddB}
 					setShowTaskAdd={setShowTaskAdd}
 					showTaskAdd={showTaskAdd}
@@ -567,6 +608,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			 }
 			{showTaskDetls && <TaskDetails 	task={task!==null && task} 
 										onConvertDateT={convertDateT}
+										isDatePassed={isDatePassed}
 										setTask={setTask}
 										taskList={taskList}
 										setTaskList={setTaskList}

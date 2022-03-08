@@ -14,7 +14,7 @@ import {TaskSteps} from './TaskSteps.js';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 
-export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetShowtaskDetls, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, isMobileDevice,
+export const TaskDetails = ({ task, onConvertDateT, isDatePassed, onSetTask, taskList, onSetShowtaskDetls, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, isMobileDevice,
 												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI,impListId}) => {
 
 	//const currListName = document.getElementById('tListName').value;
@@ -269,7 +269,7 @@ export const TaskDetails = ({ task, onConvertDateT, onSetTask, taskList, onSetSh
 				</div>
 				
 				<div style={{position:'relative'}}>
-					<TaskDueDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} showDueDateSel={showDueDateSel} onUpdateTask={onUpdateTask} />
+					<TaskDueDate task={task} onConvertDateT={onConvertDateT} isDatePassed={isDatePassed} onSetShowDateSel={onSetShowDateSel} showDueDateSel={showDueDateSel} onUpdateTask={onUpdateTask} />
 					{showDueDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
 														days={days} getLTH={getLTH} tdElem="dueDate" />}
 				</div>
