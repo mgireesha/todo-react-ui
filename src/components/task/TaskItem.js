@@ -40,7 +40,7 @@ export const TaskItem = ({ onDelete, onCompleteTask, taskObj, taskDetail, todoLi
 							</div>}
 							<div className="tc-row tc-dd-row" style={{ display: taskObj.dueDate !== null ? 'inline' : 'none' }}>
 								<img key='due date' alt="due date" src={calBlue} style={{ height: 0.8 + 'em' }} />
-								<label style={{ fontSize: 12, color:dueDateColor(taskObj.dueDate)}}><Nbsp />{taskObj.dueDate !== null && onConvertDateT(taskObj.dueDate)}</label>
+								<label style={{ fontSize: 12, color:taskObj.completed?'':dueDateColor(taskObj.dueDate)}}><Nbsp />{taskObj.dueDate !== null && onConvertDateT(taskObj.dueDate)}</label>
 								<img alt="." src={dotBlue} style={{ height: 0.2 + 'em', margin: 5 }} />
 							</div>
 							<div className="tc-row tc-rem-row" style={{ display: taskObj.remindTime !== null ? 'inline' : 'none' }}>

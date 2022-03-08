@@ -88,6 +88,9 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	}
 
 	const dueDateColor = (date) => {
+		if(date===null){
+			return '';
+		}
 		var iDate = new Date(date);
 		var today = new Date();
 		if(iDate.getFullYear()<=today.getFullYear()){
