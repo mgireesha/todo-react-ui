@@ -17,9 +17,9 @@ export const ResetPwdDiv = ({ loginError, onSetShowLForm, onSendOtp, prevShowLFo
 				</div>
 			</div>
 			<div className="row row-label" id="go-back-to-login">
-				<label for="confirmPwd" className="signup-label col-sm-4">Go back to <span className='link-look' onClick={()=>onSetShowLForm("signin")}>Login</span>
+				<label className="signup-label col-sm-4">Go back to <span className='link-look' onClick={()=>onSetShowLForm("signin")}>Login</span>
 				</label>
-				<label htmlFor="confirmPwd" className="signup-label col-sm-6">
+				<label className="signup-label col-sm-6">
 					New user ? <span onClick={()=>onSetShowLForm("signup")} className='link-look'>sign up</span> here
 				</label>
 			</div>

@@ -2,10 +2,13 @@ import { React } from 'react';
 import Modal from "react-bootstrap/Modal";
 
 export const ConfirmPopup = ({showConfirmPopup, onSetShowConfirmPopup, onDelete , selctdItem,
-								headerTxt, bodyTxt}) => {
+								headerTxt, bodyTxt,msize}) => {
+	if(msize===undefined || msize===null){
+		msize='sm';
+	}
 	return (
 		<div id="confirm-popup">
-			<Modal show={showConfirmPopup} size="sm" >
+			<Modal show={showConfirmPopup} size={msize} >
 				<Modal.Header>
 					<h6>{headerTxt}</h6>
 					<button type="button" className="close" data-dismiss="modal" aria-hidden="true" onClick={()=>onSetShowConfirmPopup(false)}>×</button>

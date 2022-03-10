@@ -3,6 +3,7 @@ import './App.css';
 import { Header } from './components/Header.js';
 import { Body } from './components/Body.js';
 import { Login } from './components/login/Login.js';
+import {ManageUsers} from './components/ManageUsers.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './components/main.css';
 import './components/login/SignIn.css';
@@ -47,6 +48,7 @@ function App() {
 				<Routes>
 					{['/login', '/logout'].map((path, index) => <Route path={path}
 						element={<Login disableDiv={disableDiv} enableDiv={enableDiv} getAuth={getAuth} getServiceURI={getServiceURI} />} key={index} />)}
+					<Route path='/todo/ManageUsers' element={<ManageUsers getAuth={getAuth} getServiceURI={getServiceURI} disableDiv={disableDiv} enableDiv={enableDiv} />} />
 					{['/', '/todo'].map((path, index) => <Route path={path} 
 						element={getAuth() !== '' ? 
 							<Body getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} /> 

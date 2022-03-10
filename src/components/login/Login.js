@@ -14,6 +14,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 	const [prevShowLForm,setPrevShowLForm] = useState("signin");
 	const [message,setMessage] = useState("");
 	const [emailS,setEmailS] = useState("");
+	const [pwdstgth,setPwdstgth] = useState(0);
 
 	if((lError!==null || lError!=="") && window.location.pathname==="/"){
 		lError="";
@@ -29,6 +30,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 	},[]);
 	
 	const validateReqFld = (elem) => {
+		elem.setCustomValidity('');
 		if(!elem.checkValidity()){
 			elem.reportValidity();
 			return false;
@@ -173,9 +175,12 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
 			return;
 		}
+		if(!passwordStrength(createPwd)){
+			return false;
+		}
 		if(createPwd.value!==confirmPwd.value){
-			alert("Passwords doesn't match");
-			createPwd.focus();
+			confirmPwd.setCustomValidity("Passwords doesn't match");
+			confirmPwd.reportValidity();
 			return;
 		}
 		disableDiv();
@@ -216,9 +221,12 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
 			return;
 		}
+		if(!passwordStrength(createPwd)){
+			return false;
+		}
 		if(createPwd.value!==confirmPwd.value){
-			alert("Passwords doesn't match");
-			createPwd.focus();
+			confirmPwd.setCustomValidity("Passwords doesn't match");
+			confirmPwd.reportValidity();
 			return;
 		}
 		disableDiv();
@@ -249,6 +257,78 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 	}
 	
+	const passwordStrength = (elem) => {
+		elem.setCustomValidity('');
+		if(pwdstgth<4){
+			//alert("Provided password is weak. Please provide a strong password");
+			elem.setCustomValidity('Please provide a strong password');
+			elem.reportValidity();
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	const checkPwdStrength = (event) => {
+		event.target.setCustomValidity('');
+		setPwdstgth(0);
+		const createPwd = event.target.value;
+		const pwdStrength = document.getElementById('pwdStrength');
+		if(createPwd===''){
+			pwdStrength.innerHTML='Password Strength';
+			return;
+		}
+		var passed = 0;
+		var regex = [];
+		regex.push("[A-Z]"); //For Uppercase Alphabet
+		regex.push("[a-z]"); //For Lowercase Alphabet
+		regex.push("[0-9]"); //For Numeric Digits
+		regex.push("[$@$!%*#?&]"); //For Special Characters
+
+		regex.forEach(element => {
+			if(new RegExp(element).test(createPwd)){
+				passed++;
+			}
+		});
+
+		if(passed>2 && createPwd.length>8){
+			passed++;
+		}
+		setPwdstgth(passed);
+		var color = "";
+		var passwordStrength = "";
+		switch(passed){
+			case 0:
+				break;
+			case 1:
+				passwordStrength = "Password is Weak.";
+				color = "Red";
+				break;
+			case 2:
+				passwordStrength = "Password is Good.";
+				color = "darkorange";
+				break;
+			case 3:
+				passwordStrength = "Password is Good.";
+				color = "darkorange";
+				break;
+			case 4:
+				passwordStrength = "Password is Strong.";
+				color = "darkgreen";
+				break;
+			case 5:
+				passwordStrength = "Password is Very Strong.";
+				color = "Green";
+				break;
+			default:
+				break;
+
+		}
+		pwdStrength.innerHTML = passwordStrength;
+		pwdStrength.style.color = color;
+
+	}
+
 	return (
 		<div className="body-signin" id="body-signin">
 			<div className="container ">
@@ -256,11 +336,11 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 					<div className="col-sm-3"></div>
 					<div className="col-sm-5 middle-span">
 						{(showLForm==="signin" || showLForm==="") && <SignInDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} onAuthenticate={authenticate} />}
-						{showLForm==="signup" && <SignUpDiv onSetShowLForm={onSetShowLForm} onRegister={register} prevShowLForm={prevShowLForm} />}
+						{showLForm==="signup" && <SignUpDiv onSetShowLForm={onSetShowLForm} onRegister={register} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength}  />}
 						{showLForm==="lsuccess" && <LSuccessDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} message={message} />}
 						{showLForm==="reset" && <ResetPwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSendOtp={sendOtp} prevShowLForm={prevShowLForm} />}
-						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} prevShowLForm={prevShowLForm} />}
-						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} prevShowLForm={prevShowLForm} />}
+						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
+						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
 					</div>
 					<div className="col-sm-3"></div>
 				</div>

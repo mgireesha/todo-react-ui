@@ -988,3 +988,17 @@ task-add-due-date, focus {
     cursor: pointer;
     opacity: 1;
 }
+
+.user-table-body,.user-table-header{
+    border-bottom: 1px solid darkgray;
+    border-left: 1px solid darkgray;
+    border-right: 1px solid darkgray;
+}
+
+.user-table-elem{
+    padding: 10px;
+    border-right: 1px solid darkgray;
+}
+.user-table-btn{
+    width: 90%;
+}

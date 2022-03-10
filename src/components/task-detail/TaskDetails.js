@@ -183,7 +183,7 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 	
 	useEffect(() => {
 		if (document.getElementById('selRem') !== null) {
-			document.getElementById('selRem').style.height = "12em";
+			document.getElementById('selRem').style.height = "13em";
 			document.getElementById('selRem').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
 		}
