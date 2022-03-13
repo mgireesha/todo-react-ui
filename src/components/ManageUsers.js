@@ -61,7 +61,7 @@ export const ManageUsers = ({getAuth, getServiceURI, disableDiv, enableDiv}) => 
                     <label className="col-sm-2 user-table-elem">Name</label>
                     <label className="col-sm-2 user-table-elem">UserName</label>
                     <label className="col-sm-2 user-table-elem">Roles</label>
-                    <label className="col-sm-2 user-table-elem">Passeword</label>
+                    <label className="col-sm-2 user-table-elem">Password</label>
                     <label className="col-sm-3 user-table-elem" style={{textAlign:'center'}}>Action</label>
                 </div>
                 {users.map(user=>

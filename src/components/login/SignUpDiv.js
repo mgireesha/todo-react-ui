@@ -2,7 +2,7 @@ import { React } from 'react';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 
-export const SignUpDiv = ({ onRegister, onSetShowLForm, prevShowLForm, checkPwdStrength}) => {
+export const SignUpDiv = ({ onRegister, onSetShowLForm, prevShowLForm, checkPwdStrength,checkUNameAvaiability}) => {
 	return (
 		<div className="signup-form">
 			<img alt='back' src={whiteLeftArrow} onClick={()=>onSetShowLForm(prevShowLForm)} className='whiteLeftArrow' />
@@ -13,7 +13,8 @@ export const SignUpDiv = ({ onRegister, onSetShowLForm, prevShowLForm, checkPwdS
 			</div>
 			<div className="row row-label">
 				<label className="signup-label">Email</label>
-				<input className="form-control signup-input" name="email" id="email" placeholder="Your email" required />
+				<input className="form-control signup-input" name="email" id="email" placeholder="Your email" required onKeyUp={(event)=>checkUNameAvaiability(event)} />
+				<span id="email-availality" style={{display: 'inline-block',padding: 0.1+'em',color: 'darkgreen'}} className=""></span>
 			</div>
 			<div className="row row-label">
 				<label className="signup-label">Create new password</label>

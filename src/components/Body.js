@@ -143,11 +143,15 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 			let respLists = Object.values(data);
 			setUserLists(respLists);
 			let respListKeys = Object.keys(data);
-			data.default.forEach(list=>{
-				if(list.listName==='Important'){
-					setImpListId(list.listId);
-				}
-			})
+			if(typeof data === 'object' 
+				&& data != null 
+				&& Object.keys(data).length !== 0){
+				data.default.forEach(list=>{
+					if(list.listName==='Important'){
+						setImpListId(list.listId);
+					}
+				})
+			}
 			setUserListsKeys(respListKeys);
 			enableDiv();
 			if(!isMobile()){

@@ -16,6 +16,8 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 	const [emailS,setEmailS] = useState("");
 	const [pwdstgth,setPwdstgth] = useState(0);
 
+	const emailReg = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+
 	if((lError!==null || lError!=="") && window.location.pathname==="/"){
 		lError="";
 	}
@@ -95,13 +97,21 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		const email = document.getElementById('email');
 		const createPwd = document.getElementById('createPwd');
 		const confirmPwd = document.getElementById('confirmPwd');
+		const emailAvailality = document.getElementById('email-availality');
 		if(!validateReqFld(name) || !validateReqFld(email) || 
 			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
 			return;
 		}
+		if(!validateEmail(email)){
+			cReportValidity(email,"Please provide valid email address")
+			return;
+		}
+		if(!passwordStrength(createPwd)){
+			return false;
+		}
 		if(createPwd.value!==confirmPwd.value){
-			alert("Passwords doesn't match");
-			createPwd.focus();
+			confirmPwd.setCustomValidity("Passwords doesn't match");
+			confirmPwd.reportValidity();
 			return;
 		}
 		disableDiv();
@@ -120,9 +130,16 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const response = await fetch(`${getServiceURI()}/todo/signup`,settings);
 		const data = await response.json();
+		enableDiv();
 		if(data.status){
 			if(data.status==="success"){
 				setMessage("You have registered successfully. Please sign in to continue.");
+			}else if(data.status==='USER_EXISTS'){
+				emailAvailality.innerHTML = 'User name already exists';
+				emailAvailality.style.color = '#c9300d';
+				email.classList.add('email-unavilabe');
+				email.focus();
+				return;
 			}else{
 				setMessage(data.error);
 			}
@@ -130,13 +147,52 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			setPrevShowLForm(showLForm);
 			setShowLForm("lsuccess");
 		}
-		enableDiv();
 	}
 	
+	const checkUNameAvaiability = async(event) => {
+		const uName = event.target;
+		const emailAvailality = document.getElementById('email-availality');
+		if(uName.value===''){
+			emailAvailality.innerHTML='';
+			uName.classList.remove('email-avilabe');
+			uName.classList.remove('email-unavilabe');
+			return;
+		}
+		if(!validateEmail(uName)){
+			emailAvailality.innerHTML='Please provide valid email address';
+			emailAvailality.style.color = '#c9300d';
+			return;
+		}
+		const settings = {
+			method:'GET',
+			headers:{
+				'Authorization':getAuth()
+			}
+		}
+		const response = await fetch(`${getServiceURI()}/todo/user/checkUsername/${uName.value}`);
+		const data = await response.json();
+		if(data.status==='USER_EXISTS'){
+			emailAvailality.innerHTML = 'User name already exists';
+			emailAvailality.style.color = '#c9300d';
+			uName.classList.remove('email-avilabe');
+			uName.classList.add('email-unavilabe');
+			uName.focus();
+		}else{
+			emailAvailality.innerHTML = 'User name available';
+			emailAvailality.style.color = 'green';
+			uName.classList.add('email-avilabe');
+			uName.classList.remove('email-unavilabe');
+		}
+	}
+
 	const sendOtp = async() => {
 		setLoginError("");
 		const userName = document.getElementById('username-resetP');
 		if(!validateReqFld(userName)){
+			return;
+		}
+		if(!validateEmail(userName)){
+			cReportValidity(userName,"Please provide valid email address");
 			return;
 		}
 		disableDiv();
@@ -179,8 +235,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			return false;
 		}
 		if(createPwd.value!==confirmPwd.value){
-			confirmPwd.setCustomValidity("Passwords doesn't match");
-			confirmPwd.reportValidity();
+			cReportValidity(createPwd,"Passwords doesn't match");
 			return;
 		}
 		disableDiv();
@@ -221,6 +276,10 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			!validateReqFld(createPwd) || !validateReqFld(confirmPwd)){
 			return;
 		}
+		if(!validateEmail(username)){
+			cReportValidity(username,"Please provide valid email address")
+			return;
+		}
 		if(!passwordStrength(createPwd)){
 			return false;
 		}
@@ -257,6 +316,17 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 	}
 	
+	const validateEmail = (email) => {
+		return emailReg.test(email.value);
+	}
+
+	const cReportValidity = (elem,error) => {
+		if(error!==null && error!==""){
+			elem.setCustomValidity(error);
+		}
+		elem.reportValidity();
+	}
+
 	const passwordStrength = (elem) => {
 		elem.setCustomValidity('');
 		if(pwdstgth<4){
@@ -336,7 +406,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 					<div className="col-sm-3"></div>
 					<div className="col-sm-5 middle-span">
 						{(showLForm==="signin" || showLForm==="") && <SignInDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} onAuthenticate={authenticate} />}
-						{showLForm==="signup" && <SignUpDiv onSetShowLForm={onSetShowLForm} onRegister={register} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength}  />}
+						{showLForm==="signup" && <SignUpDiv onSetShowLForm={onSetShowLForm} onRegister={register} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} checkUNameAvaiability={checkUNameAvaiability} />}
 						{showLForm==="lsuccess" && <LSuccessDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} message={message} />}
 						{showLForm==="reset" && <ResetPwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSendOtp={sendOtp} prevShowLForm={prevShowLForm} />}
 						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}

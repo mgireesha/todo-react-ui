@@ -1002,3 +1002,13 @@ task-add-due-date, focus {
 .user-table-btn{
     width: 90%;
 }
+
+.email-avilabe{
+    border: 2px solid green;
+    border-radius: 3px;
+}
+
+.email-unavilabe{
+    border: 2px solid #b31616;
+    border-radius: 3px;
+}
