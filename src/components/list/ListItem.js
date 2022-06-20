@@ -5,7 +5,7 @@ import gearBlack200 from '../../images/gear-grey-200.png';
 import { useDispatch } from 'react-redux';
 import { fetTaskList, setTaskDetailShow } from '../redux/task/taskActions.js';
 
-export const ListItem =({list, onDeleteList,onAddListToArchive,onSetShowConfirmPopup}) => {
+export const ListItem =({list, onDeleteList,onSetShowConfirmPopup}) => {
 	const dispatch = useDispatch();
 	
 	const onshowTask = (event,listId) => {
@@ -43,7 +43,7 @@ export const ListItem =({list, onDeleteList,onAddListToArchive,onSetShowConfirmP
 				{list.listName==="Important" && <input type="hidden" id="hdn-inp-Important" value={list.listId} />}
 			</div>
 			<input type="hidden" id="currentACTSel" />
-			{list.groupName!=="default" && <ListActionSel list={list} onAddListToArchive={onAddListToArchive} onDeleteList={onDeleteList} onSetShowConfirmPopup={onSetShowConfirmPopup} />}
+			{list.groupName!=="default" && <ListActionSel list={list}  onSetShowConfirmPopup={onSetShowConfirmPopup} />}
 			
 	</div>
 	);

@@ -131,10 +131,17 @@ export const moveTaskSucc = (task) => ({
 
 export const addTaskToTaskList = (taskList, taskListKeys, task) => {
     let taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
-    let taskListT = taskList[taskIndexT];
+    let taskListT;
+    if(taskIndexT===-1){
+        taskIndexT = taskList.length;
+        taskListT = [];
+        taskListKeys[taskIndexT] = "taskListT";
+    }else{
+        taskListT = taskList[taskIndexT];
+    }
     taskListT.push(task);
     taskList[taskIndexT] = taskListT;
-    return taskList;
+    return {taskList,taskListKeys};
 }
 
 export const addListToTaskList = (taskList, taskListKeys, list) => {

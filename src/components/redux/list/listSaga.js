@@ -1,9 +1,9 @@
-import { CREATE_LIST_START, DELETE_LIST_START, FETCH_LISTS_START, UPDATE_LIST_START } from "./listActionTypes";
+import { ADD_LIST_ARCHIVE_START, CREATE_LIST_START, DELETE_LIST_START, FETCH_LISTS_START, UPDATE_LIST_START } from "./listActionTypes";
 
 import {takeLatest, call, put} from 'redux-saga/effects';
-import { createListAPI, deleteListAPI, getUserListsAPI, updateListAPI } from "../apis";
-import { createListSucc, deleteListSucc, fethUserListsSucc, updateListSucc } from "./listActions";
-import { fetTaskList, fetTasksByList, updateTaskTodoList } from "../task/taskActions";
+import { archiveListAPI, createListAPI, deleteListAPI, getUserListsAPI, updateListAPI } from "../apis";
+import { addListToArchiveSucc, createListSucc, deleteListSucc, fethUserListsSucc, updateListSucc } from "./listActions";
+import { fetTaskList, updateTaskTodoList } from "../task/taskActions";
 import { handleAPIError } from "../../utils/GlobalFuns";
 
 export function* onFetchUserLists(){
@@ -54,7 +54,6 @@ export function* onUpdateListAsync(payload){
     try {
         const response = yield call(updateListAPI,payload);
         if(response.status===200){
-            const data = response.data;
             yield put(updateListSucc(payload.list));
             yield put(updateTaskTodoList(payload.list));
         }
@@ -73,6 +72,23 @@ export function* onDeleteListAsync(payload){
         const response = yield call(deleteListAPI,payload);
         if(response.status===200){
             yield put(deleteListSucc(payload.list))
+        }
+    } catch (error) {
+        console.log(error)
+        handleAPIError(error);
+    }
+}
+
+export function* onAddListToArchive(){
+    yield takeLatest(ADD_LIST_ARCHIVE_START, onAddListToArchiveAsync);
+}
+
+export function* onAddListToArchiveAsync(payload){
+    try {
+        const response = yield call(archiveListAPI,payload);
+        if(response.status===200){
+            const todoList = response.data.todoList;
+            yield put(addListToArchiveSucc(todoList));
         }
     } catch (error) {
         console.log(error)

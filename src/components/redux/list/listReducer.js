@@ -1,6 +1,12 @@
-import { INIT, LOADING, SUCCESS } from "../todoActionTypes"
-import { addListToUserLists, getUpdatedUserLists, removeList, setListCounter, updateListCounter } from "./listActions"
-import { CREATE_LIST_START, CREATE_LIST_SUCCESS, DELETE_LIST_START, DELETE_LIST_SUCCESS, FETCH_LISTS_START, FETCH_LISTS_SUCCESS, MOVE_TASK_START, SET_LIST_COUNTER, SET_MOBILE_DEVICE, SET_SHOW_LISTS, SET_SHOW_LIST_ADD, UPDATE_LIST_START, UPDATE_LIST_SUCCESS, UPDATE_LIST_WIDTH } from "./listActionTypes"
+import { INIT, LOADING } from "../todoActionTypes"
+import { addListToUserLists, getUpdatedUserLists, removeList, updateArchiveList, updateListCounter } from "./listActions"
+import { ADD_LIST_ARCHIVE_START, ADD_LIST_ARCHIVE_SUCCESS, 
+            CREATE_LIST_START, CREATE_LIST_SUCCESS,
+            FETCH_LISTS_START, FETCH_LISTS_SUCCESS,
+            UPDATE_LIST_START, UPDATE_LIST_SUCCESS, UPDATE_LIST_WIDTH,
+            DELETE_LIST_START, DELETE_LIST_SUCCESS, 
+            SET_LIST_COUNTER, SET_MOBILE_DEVICE, SET_SHOW_LISTS, SET_SHOW_LIST_ADD,
+        } from "./listActionTypes"
 
 export const initialState = {
     userLists:[],
@@ -63,6 +69,19 @@ const listReducer = (state = initialState, action) => {
                 ...state,
                 userLists:removeList([...state.userLists],[...state.userListsKeys],action.list),
                 phase:DELETE_LIST_SUCCESS
+            }
+        case ADD_LIST_ARCHIVE_START:
+            return{
+                ...state,
+                phase:LOADING
+            }
+        case ADD_LIST_ARCHIVE_SUCCESS:
+            const archRes = updateArchiveList([...state.userLists],[...state.userListsKeys],action.list);
+            return{
+                ...state,
+                userLists:archRes.userLists,
+                userListsKeys:archRes.userListsKeys,
+                phase:ADD_LIST_ARCHIVE_SUCCESS
             }
         case SET_SHOW_LIST_ADD:
             return{

@@ -58,7 +58,7 @@ body{
     padding: 0;
     margin-left: 10px;
     margin-top: -8px;
-    transition: height 0.5s ease-out;
+    transition: height 0.2s ease-out;
     height: 0;
     overflow: hidden;
     background-color: #2e2729;
@@ -144,7 +144,7 @@ body{
     font-weight: 500;
     color: beige;
    /*  height: 2.3em; */
-    transition: height 0.3s ease-out;
+    /* transition: height 0.1s ease-out; */
 }
 
 

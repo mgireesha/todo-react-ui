@@ -1,4 +1,9 @@
-import { CREATE_LIST_START, CREATE_LIST_SUCCESS, DELETE_LIST_START, DELETE_LIST_SUCCESS, FETCH_LISTS_START, FETCH_LISTS_SUCCESS, SET_LIST_COUNTER, SET_MOBILE_DEVICE, SET_SHOW_LISTS, SET_SHOW_LIST_ADD, UPDATE_LIST_START, UPDATE_LIST_SUCCESS, UPDATE_LIST_WIDTH } from "./listActionTypes";
+import { CREATE_LIST_START, CREATE_LIST_SUCCESS,
+        FETCH_LISTS_START, FETCH_LISTS_SUCCESS,
+        DELETE_LIST_START, DELETE_LIST_SUCCESS, 
+        UPDATE_LIST_START, UPDATE_LIST_SUCCESS, UPDATE_LIST_WIDTH,
+        SET_LIST_COUNTER, SET_MOBILE_DEVICE, SET_SHOW_LISTS, SET_SHOW_LIST_ADD, ADD_LIST_ARCHIVE_START, ADD_LIST_ARCHIVE_SUCCESS
+    } from "./listActionTypes";
 
 export const fethUserLists = () => ({
     type: FETCH_LISTS_START
@@ -37,6 +42,16 @@ export const deleteList = (list) => ({
 
 export const deleteListSucc = (list) => ({
     type:DELETE_LIST_SUCCESS,
+    list
+})
+
+export const addListToArchive = (list) => ({
+    type:ADD_LIST_ARCHIVE_START,
+    list
+})
+
+export const addListToArchiveSucc = (list) => ({
+    type:ADD_LIST_ARCHIVE_SUCCESS,
     list
 })
 
@@ -107,4 +122,35 @@ export const removeList = (userLists,userListsKeys,list) => {
     userList = userList.filter(elem => {return elem.listId!==list.listId});
     userLists[listIndex] = userList;
     return userLists;
+}
+
+export const updateArchiveList = (userLists,userListsKeys,list) => {
+    let archiveListIndex = userListsKeys.findIndex(obj => obj==='archived');
+    let commonListIndex = userListsKeys.findIndex(obj => obj==='common');
+    let archivedList;
+    let commonList;
+    if(archiveListIndex===-1){
+        archiveListIndex = userLists.length;
+        archivedList=[];
+        userListsKeys[archiveListIndex]= 'archived';
+    }else{
+        archivedList = userLists[archiveListIndex];
+    }
+    if(commonListIndex===-1){
+        commonListIndex = userLists.length;
+        commonList=[];
+        userListsKeys[commonListIndex]= 'common';
+    }else{
+        commonList = userLists[commonListIndex];
+    }
+    if(list.groupName==='archived'){
+        archivedList.push(list);
+        commonList = commonList.filter(elem => {return elem.listId!==list.listId});
+    }else{
+        archivedList = archivedList.filter(elem => {return elem.listId!==list.listId});
+        commonList.push(list);
+    }
+    userLists[archiveListIndex] = archivedList;
+    userLists[commonListIndex] = commonList;
+    return {userLists,userListsKeys};
 }

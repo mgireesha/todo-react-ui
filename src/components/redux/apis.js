@@ -61,3 +61,7 @@ export const updateTaskStepAPI = (payload) => {
 export const deleteTaskStepAPI = (payload) => {
     return iAxios.delete(`/todo/task/taskStep/${payload.stepId}`).then(response => response);
 }
+
+export const archiveListAPI = (payload) => {
+    return iAxios.put(`/todo/list/archiveList/${payload.list.listId}`).then(response => response);
+}

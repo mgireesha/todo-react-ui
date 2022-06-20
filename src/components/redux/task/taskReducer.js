@@ -55,9 +55,11 @@ export const taskReducer = (state = initialState, action) => {
                 phase:LOADING
             }
         case CREATE_TASK_SUCCESS:
+            const addTaskRes = addTaskToTaskList([...state.taskList],[...state.taskListKeys],action.task);
             return{
                 ...state,
-                taskList:addTaskToTaskList([...state.taskList],[...state.taskListKeys],action.task),
+                taskList:addTaskRes.taskList,
+                taskListKeys:addTaskRes.taskListKeys,
                 showTaskAdd:false,
                 phase:CREATE_TASK_SUCCESS
             }
