@@ -1,11 +1,22 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setShowListAdd } from '../redux/list/listActions';
+import { setShowTaskAdd } from '../redux/task/taskActions';
 
-export const AddTask = ({ showTaskAdd, onTogglAddTaskField, onAddNewTask }) => {
+export const AddTask = ({ onAddNewTask }) => {
+	const dispatch = useDispatch();
+	const showListAdd = useSelector(state => state.list.showListAdd);
+	const showTaskAdd = useSelector(state => state.task.showTaskAdd);
+	const TogglAddTaskField = (showTaskAdd) => {
+		if(showListAdd && showTaskAdd){
+			dispatch(setShowListAdd(false));
+		}
+		dispatch(setShowTaskAdd(showTaskAdd));
+	}
 	return (
 		<div className="task-add-main">
-
 			{!showTaskAdd &&
-				<div className="row" id="task-item-add-div" style={{ margin: 10 }} onClick={() => onTogglAddTaskField(true)}>
+				<div className="row" id="task-item-add-div" style={{ margin: 10 }} onClick={()=>TogglAddTaskField(true)}>
 					<div className="task-item-add-div" style={{ width: 97.5 + '%' }}>
 						<label className="col-sm-11">Add New Task </label>
 						<label className="col-sm-1">+</label>

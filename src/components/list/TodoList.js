@@ -3,20 +3,30 @@ import {AddList} from './AddList.js';
 import {ListGroup} from './ListGroup.js';
 import {ListItem} from './ListItem.js';
 import {ConfirmPopup} from '../ConfirmPopup.js';
-export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys,onGetAuth,setShowListAddB,showListAddB,
-							setShowTaskAdd,lisDivWidth,onSetTodoListToArchived,archivedListsIndex,commonListsIndex,disableDiv, enableDiv, getServiceURI}) => {
 
+import {useDispatch, useSelector} from 'react-redux';
+import { disableDiv, enableDiv, getAuth, getServiceURI } from '../utils/GlobalFuns.js';
+import { createList, deleteList } from '../redux/list/listActions.js';
+import { fetTaskList, setTaskDetailShow } from '../redux/task/taskActions.js';
+import { DELETE_LIST_SUCCESS } from '../redux/list/listActionTypes.js';
+
+export const TodoList = () => {
+	const dispatch = useDispatch();
 	const TOKEN_EXPIRED="TOKEN_EXPIRED";
 	const[showArchived,setShowArchived] = useState(false);
-	
+	const userLists = useSelector(state => state.list.userLists);
+	const userListsKeys = useSelector(state => state.list.userListsKeys);
+	let archivedListsIndex = userListsKeys.findIndex(obj => obj==="archived");
+	let defaultListIndex = userListsKeys.findIndex(obj =>obj==='default');
+	const taskList = useSelector(state => state.task.taskList);
+	const taskListKeys = useSelector(state => state.task.taskListKeys);
+	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
+	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:undefined;
+	const phase = useSelector(state => state.list.phase);
+	const listDivWidth = useSelector(state => state.list.listDivWidth);
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
 	const [selctdList,setSelctdList] = useState(null);
 
-	useEffect(()=>{
-		if(setShowListAddB && document.getElementById('list-add-txt')!==null){
-			document.getElementById('list-add-txt').focus();
-		}
-	},[showListAddB]);
 	
 	const onSetShowArchived = () =>{
 		showArchivedLists();
@@ -27,24 +37,19 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 		}
 	}
 	
-	const togglAddListField = (isShowListAddField) => {
-		setShowListAddB(isShowListAddField);
-		setShowTaskAdd(false);
-	}
-	
 	const addListToArchive = async (listId) => {
 		disableDiv();
 		const settings = {
 			method:'PUT',
 			headers:{
-				'Authorization':onGetAuth(),
+				'Authorization':getAuth(),
 				'Content-Type':'application/json; charset=UTF-8'
 			}
 		}
 		const response = await fetch(`${getServiceURI()}/todo/list/archiveList/${listId}`,settings);
 		const data = await response.json();
 		if(data.status==="success"){
-			await onSetTodoListToArchived(data.todoList);
+			//await onSetTodoListToArchived(data.todoList);
 			showArchivedLists(data.todoList.groupName);
 		}else if(data.status===TOKEN_EXPIRED){
 			document.cookie="jToken=;";
@@ -78,87 +83,42 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 		}
 		
 	}
-	const onAddList = async () => {
+	const onAddList = () => {
 		const listAddTxt = document.getElementById('list-add-txt');
 		if(!listAddTxt.checkValidity()){
 			listAddTxt.reportValidity();
 			return false;
 		}
-		disableDiv();
 		const  addListPayload = {
 		"listName" : listAddTxt.value
 		}
-		const settings = {
-			method: 'POST',
-			headers: {
-				'Authorization': onGetAuth(),
-				'Content-Type': 'application/json; charset=UTF-8'
-			},
-			body:JSON.stringify(addListPayload)
-		};
-		const response = await fetch(`${getServiceURI()}/todo/list/`,settings);
-		const data = await response.json();
-		let newState = [...userLists];
-		if(commonListsIndex===null || commonListsIndex===-1){
-			commonListsIndex = newState.length;
-			newState[commonListsIndex]=[data.todoList];
-			onSetUserListsKeys(commonListsIndex,data.todoList.groupName);
-		}else{
-			newState[commonListsIndex]=[...newState[commonListsIndex], data.todoList];
-		}
-		onSetUserLists(newState);
-		if(data.status==="success"){
-			setShowListAddB(false);
-		}
-		enableDiv();
+		dispatch(createList(addListPayload));
 	}
 	
-	const onSetShowConfirmPopup = (event,showCnfrmPp,listId) => {
+	const onSetShowConfirmPopup = (event,showCnfrmPp,list) => {
 		if(event.target===event.currentTarget && showCnfrmPp){
 			event.stopPropagation();
 		}
-		setSelctdList(listId);
+		setSelctdList(list);
 		setShowConfirmPopup(showCnfrmPp);
 	}
 	
-	const deleteList = async (listId) => {
-		disableDiv();
-		const settings = {
-			method:'DELETE',
-			headers:{
-				'Authorization': onGetAuth(),
-				'Content-Type': 'application/json; charset=UTF-8'
-			}
+	useEffect(()=>{
+		if(phase === DELETE_LIST_SUCCESS && selctdList.listId===todoList.listId){
+			dispatch(setTaskDetailShow(false));
+			dispatch(fetTaskList(userLists[defaultListIndex][0].listId));
 		}
-		const response = await fetch(`${getServiceURI()}/todo/list/${listId}`,settings);
-		const data = await response.json();
-		if(data.status==="success"){
-			let tempLists = [...userLists];
-			let tempListG;
-			let tempIndex;
-			if(data.todoList.groupName==="archived"){
-				tempIndex = archivedListsIndex;
-			}else{
-				tempIndex = commonListsIndex;
-			}
-			tempListG = [...tempLists[tempIndex]];
-			tempListG = tempListG.filter(function(list){return listId!==list.listId});
-			tempLists[tempIndex] = [...tempListG];
-			let cListId=document.getElementById('listId').value;
-			if(cListId===listId.toString()){
-				onshowTask(null,tempLists[0][0].listId);
-			}
-			onSetUserLists(tempLists);
-			document.getElementById('currentACTSel').value='';
-			setShowConfirmPopup(false);
-		}
-		enableDiv();
+	},[phase])
+
+	const initDeleteList = (list) => {
+		dispatch(deleteList(list));
+		setShowConfirmPopup(false);
 	}
 	
 	
 	return (
-		<div className="col-sm-3 list-div" id="list-div" style={{width:lisDivWidth}}>
-			<div className="list-item-main-comb" id="list-item-main-comb">
+		<div className="col-sm-3 list-div" id="list-div" style={{width:listDivWidth}}>
+			 <div className="list-item-main-comb" id="list-item-main-comb">
 				<div className="list-item-main" id="list-item-main">
 				{
 					userLists!==null && userLists.map((uList,index) =>
@@ -166,7 +126,6 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 							<ListGroup key={index} 
 								lists={uList} 
 								groupName={uList[0].groupName} 
-								onshowTask={onshowTask} 
 								onDeleteList={deleteList}
 								onAddListToArchive={addListToArchive}
 								onSetShowConfirmPopup={onSetShowConfirmPopup}
@@ -177,19 +136,19 @@ export const TodoList = ({onshowTask,userLists,onSetUserLists,onSetUserListsKeys
 					<label>Archived</label>
 					<span onClick={onSetShowArchived} style={{float: 'right',marginRight: 5, cursor:'pointer'}}>{showArchived ? '-' : '+'}</span>
 					{showArchived && userLists!==null && archivedListsIndex!==-1 &&  userLists[archivedListsIndex].length>0 && userLists[archivedListsIndex].map(uIList=>
-						<ListItem key={uIList.listId} list={uIList} onshowTask={onshowTask} onDeleteList={deleteList}
+						<ListItem key={uIList.listId} list={uIList} onDeleteList={deleteList}
 										onAddListToArchive={addListToArchive} onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
 					)}
 				</div>
 			</div>
-				<AddList showListAdd={showListAddB} onTogglAddListField={togglAddListField} onAddList={onAddList} />
+				<AddList onAddList={onAddList} />
 				<ConfirmPopup showConfirmPopup={showConfirmPopup} onSetShowConfirmPopup={onSetShowConfirmPopup}
-							onDelete={deleteList}
+							onDelete={initDeleteList}
 							selctdItem={selctdList}
 							headerTxt="Delete List"
 							bodyTxt="Are you sure to delete this list ?"
-							/>
+							/> 
 			</div>
 	);
 }

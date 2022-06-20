@@ -1,6 +1,8 @@
 import { React } from 'react';
 
-export const TaskDateSelector = ({onUpdateTDDate,tdElem,task,days,getLTH,onSetShowDateSel}) => {
+import {days}  from '../utils/GlobalFuns';
+
+export const TaskDateSelector = ({onUpdateTDDate,tdElem,task,getLTH}) => {
 	let merd = "AM";
 	let lth = getLTH();
 	if (lth > 12) {
@@ -22,19 +24,19 @@ export const TaskDateSelector = ({onUpdateTDDate,tdElem,task,days,getLTH,onSetSh
 
 	return (
 		<div className="row task-item-detail-elem task-detail-remind-sel" id={divId} style={{ zIndex: 1000 }}>
-			<div className="row sel-remind-row" onClick={(event)=>onUpdateTDDate(event,task.taskId,'lth',tdElem)}>
+			<div className="row sel-remind-row" onClick={(event)=>onUpdateTDDate(event,task,'lth',tdElem)}>
 				<label>Later Today at {lth} {merd}</label>
 			</div>
-			<div className="row sel-remind-row" onClick={(event)=>onUpdateTDDate(event,task.taskId,'tmr',tdElem)}>
+			<div className="row sel-remind-row" onClick={(event)=>onUpdateTDDate(event,task,'tmr',tdElem)}>
 				<label>Tomorrow,&nbsp;&nbsp;9 AM</label>
 			</div>
-			<div className="row sel-remind-row" onClick={(event)=>onUpdateTDDate(event,task.taskId,'nwd',tdElem)}>
+			<div className="row sel-remind-row" onClick={(event)=>onUpdateTDDate(event,task,'nwd',tdElem)}>
 				<label>Next Week {nwDay},&nbsp;&nbsp;9 AM</label>
 			</div>
 			<div className="row sel-remind-row">
 				<label className="col-sm-5">Pick A Date</label>
 				<input className="col-sm-7 pick-td-rem-date" type="datetime-local" id={dateTId}
-					 onBlur={(event)=>onUpdateTDDate(event,task.taskId,'pick',tdElem)}
+					 onBlur={(event)=>onUpdateTDDate(event,task,'pick',tdElem)}
 					 />
 			</div>
 			{/* <div className="task-detail-rd-sel-close" onClick={(event)=>onSetShowDateSel(event,tdElem)}>

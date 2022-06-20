@@ -6,8 +6,9 @@ import {LSuccessDiv} from './LSuccessDiv.js';
 import {ResetPwdDiv} from './ResetPwdDiv.js';
 import {ChangePwdDiv} from './ChangePwdDiv.js';
 import {ResetPwdOtpDiv} from './ResetPwdOtpDiv.js';
+import { disableDiv, enableDiv, getAuth, getServiceURI } from '../utils/GlobalFuns.js';
 
-export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) => {
+export const Login = ({lError}) => {
 	
 	const [loginError,setLoginError] = useState("");
 	const [showLForm,setShowLForm] = useState("signin");
@@ -165,11 +166,8 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const settings = {
 			method:'GET',
-			headers:{
-				'Authorization':getAuth()
-			}
 		}
-		const response = await fetch(`${getServiceURI()}/todo/user/checkUsername/${uName.value}`);
+		const response = await fetch(`${getServiceURI()}/todo/user/checkUsername/${uName.value}`,settings);
 		const data = await response.json();
 		if(data.status==='USER_EXISTS'){
 			emailAvailality.innerHTML = 'User name already exists';

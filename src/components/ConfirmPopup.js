@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 export const ConfirmPopup = ({showConfirmPopup, onSetShowConfirmPopup, onDelete , selctdItem,
 								headerTxt, bodyTxt,msize}) => {
 	if(msize===undefined || msize===null){
-		msize='sm';
+		msize='md';
 	}
 	return (
 		<div id="confirm-popup">
