@@ -2,7 +2,7 @@ import {React} from 'react';
 
 import {ListActionSel} from './ListActionSel.js';
 import gearBlack200 from '../../images/gear-grey-200.png';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetTaskList, setTaskDetailShow } from '../redux/task/taskActions.js';
 
 export const ListItem =({list, onDeleteList,onSetShowConfirmPopup}) => {
@@ -14,6 +14,7 @@ export const ListItem =({list, onDeleteList,onSetShowConfirmPopup}) => {
 		}
 		dispatch(setTaskDetailShow(false));
 		dispatch(fetTaskList(listId));
+
 	}
 	const onShowListActionSel = (event,listId) => {
 		if(event.target===event.currentTarget){

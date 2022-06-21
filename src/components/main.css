@@ -818,7 +818,7 @@ task-add-due-date, focus {
     margin-top: -8px;
     border: 1px solid #656562;
     overflow-y: auto;
-    transition: height 0.9s ease-out;
+    transition: height 0.3s ease-out;
     height: 0;
 }
 .task-detail-sel-close{

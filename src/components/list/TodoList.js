@@ -5,9 +5,10 @@ import {ListItem} from './ListItem.js';
 import {ConfirmPopup} from '../ConfirmPopup.js';
 
 import {useDispatch, useSelector} from 'react-redux';
-import { createList, deleteList } from '../redux/list/listActions.js';
-import { fetTaskList, setTaskDetailShow } from '../redux/task/taskActions.js';
+import { createList, deleteList, setShowLists } from '../redux/list/listActions.js';
+import { fetTaskList, setShowTasks, setTaskDetailShow } from '../redux/task/taskActions.js';
 import { ADD_LIST_ARCHIVE_SUCCESS, DELETE_LIST_SUCCESS } from '../redux/list/listActionTypes.js';
+import { FETCH_TASK_LIST_SUCCESS } from '../redux/task/taskActionTypes.js';
 
 export const TodoList = () => {
 	const dispatch = useDispatch();
@@ -23,7 +24,9 @@ export const TodoList = () => {
 	const taskListKeys = useSelector(state => state.task.taskListKeys);
 	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
 	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:undefined;
-	const phase = useSelector(state => state.list.phase);
+	const listPhase = useSelector(state => state.list.phase);
+	const taskPhase = useSelector(state => state.task.phase);
+	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
 	const listDivWidth = useSelector(state => state.list.listDivWidth);
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
 	const [selctdList,setSelctdList] = useState(null);
@@ -81,14 +84,18 @@ export const TodoList = () => {
 	}
 	
 	useEffect(()=>{
-		if(phase === DELETE_LIST_SUCCESS && selctdList.listId===todoList.listId){
+		if(listPhase === DELETE_LIST_SUCCESS && selctdList.listId===todoList.listId){
 			dispatch(setTaskDetailShow(false));
 			dispatch(fetTaskList(userLists[defaultListIndex][0].listId));
 		}
-		if(phase===ADD_LIST_ARCHIVE_SUCCESS){
+		if(listPhase===ADD_LIST_ARCHIVE_SUCCESS){
 			setArchListsHgt(showArchived);
 		}
-	},[phase])
+		if(taskPhase===FETCH_TASK_LIST_SUCCESS && isMobileDevice){
+			dispatch(setShowTasks(true));
+            dispatch(setShowLists(false));
+		}
+	},[listPhase,taskPhase])
 
 	useEffect(()=>{
 		setArchListsHgt(showArchived);

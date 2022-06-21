@@ -10,7 +10,7 @@ export function* onFetchUserLists(){
     yield takeLatest(FETCH_LISTS_START, onFetchUserListsAsnc);
 }
 
-export function* onFetchUserListsAsnc(){
+export function* onFetchUserListsAsnc(payload){
     try {
         const response = yield call(getUserListsAPI);
         if(response.status===200){
@@ -22,7 +22,8 @@ export function* onFetchUserListsAsnc(){
             const userLists = Object.values(data);
             const userListsKeys = Object.keys(data);
             yield put(fethUserListsSucc(userLists,userListsKeys));
-            yield put(fetTaskList(userLists[userListsKeys.findIndex(obj => obj==="default")][0].listId));
+            if(!payload.isMobileDevice)
+                yield put(fetTaskList(userLists[userListsKeys.findIndex(obj => obj==="default")][0].listId));
         }
     } catch (error) {
         console.log(error);

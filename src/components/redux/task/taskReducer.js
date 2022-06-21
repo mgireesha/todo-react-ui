@@ -120,7 +120,8 @@ export const taskReducer = (state = initialState, action) => {
             return{
                 ...state,
                 taskDetailShow:action.taskDetailShow,
-                taskDetail:!action.taskDetailShow?null:state.taskDetail
+                taskDetail:!action.taskDetailShow?null:state.taskDetail,
+                showTaskAdd:false
             }
         case MOVE_TASK_START:
             return{

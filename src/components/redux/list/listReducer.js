@@ -38,9 +38,11 @@ const listReducer = (state = initialState, action) => {
                 phase:LOADING
             }
         case CREATE_LIST_SUCCESS:
+            const addListRes = addListToUserLists([...state.userLists],[...state.userListsKeys],action.list)
             return{
                 ...state,
-                userLists:addListToUserLists([...state.userLists],[...state.userListsKeys],action.list),
+                userLists:addListRes.userLists,
+                userListsKeys:addListRes.userListsKeys,
                 phase:CREATE_LIST_SUCCESS
             }
         case UPDATE_LIST_WIDTH:

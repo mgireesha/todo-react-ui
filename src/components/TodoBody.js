@@ -4,11 +4,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import { TodoList } from "./list/TodoList";
 import { TodoTask } from "./task/TodoTask";
 import { TaskDetails } from "./task-detail/TaskDetails";
-import { fethUserLists } from "./redux/list/listActions";
+import { fethUserLists, setIsMobileDevice } from "./redux/list/listActions";
 import { LOADING } from "./redux/todoActionTypes";
 
-import { disableDiv } from "./utils/GlobalFuns";
+import { disableDiv, isMobile } from "./utils/GlobalFuns";
 import { enableDiv } from "./utils/GlobalFuns";
+import { setShowTasks, setTaskDetailShow } from "./redux/task/taskActions";
 
 export const TodoBody = () => {
 
@@ -19,7 +20,6 @@ export const TodoBody = () => {
     const showTasks = useSelector(state => state.task.showTasks);
     const showLists = useSelector(state => state.list.showLists);
     useEffect(()=>{
-        dispatch(fethUserLists());
         document.getElementById('main-body-div').style.height 
 			= (window.innerHeight - 40)+"px";
         document.getElementById('list-item-main-comb').style.minHeight
@@ -50,6 +50,17 @@ export const TodoBody = () => {
             enableDiv();
         }
     },[listPhase,taskPhase]);
+
+    useEffect(()=>{
+        if(isMobile()){
+            dispatch(setIsMobileDevice(true));
+            dispatch(setShowTasks(false));
+            dispatch(setTaskDetailShow(false));
+            dispatch(fethUserLists(true));
+        }else{
+            dispatch(fethUserLists(false));
+        }
+    },[]);
 
     return(
         <div className="row" id="main-body-div">

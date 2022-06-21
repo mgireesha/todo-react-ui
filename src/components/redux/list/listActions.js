@@ -5,8 +5,9 @@ import { CREATE_LIST_START, CREATE_LIST_SUCCESS,
         SET_LIST_COUNTER, SET_MOBILE_DEVICE, SET_SHOW_LISTS, SET_SHOW_LIST_ADD, ADD_LIST_ARCHIVE_START, ADD_LIST_ARCHIVE_SUCCESS
     } from "./listActionTypes";
 
-export const fethUserLists = () => ({
-    type: FETCH_LISTS_START
+export const fethUserLists = (isMobileDevice) => ({
+    type: FETCH_LISTS_START,
+    isMobileDevice:isMobileDevice!==undefined?isMobileDevice:false
 })
 
 export const fethUserListsSucc = (userLists,userListsKeys) => ({
@@ -85,9 +86,10 @@ export const addListToUserLists = (userLists,userListsKeys,list) => {
     let commonListsIndex = userListsKeys.findIndex(obj => obj==="common");
     let commonLists = commonListsIndex!==-1?userLists[commonListsIndex]:[];
     if(commonListsIndex===-1)commonListsIndex=userLists.length;
+    userListsKeys[commonListsIndex]='common';
     commonLists.push(list);
     userLists[commonListsIndex]=commonLists;
-    return userLists;
+    return {userLists,userListsKeys};
 }
 
 export const getUpdatedUserLists = (userLists,userListsKeys,list) => {

@@ -8,7 +8,9 @@ import {ConfirmPopup} from '../ConfirmPopup.js';
 import {AddTask} from './AddTask.js';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
-import { createTask, deleteTask, setShowTasks } from '../redux/task/taskActions.js';
+import { createTask, deleteTask, setShowTasks, setTaskDetailShow } from '../redux/task/taskActions.js';
+import { fethUserLists, setShowLists } from "../redux/list/listActions.js";
+import { FETCH_TASK_SUCCESS } from '../redux/task/taskActionTypes.js';
 
 export const TodoTask = () => {
 	
@@ -22,11 +24,24 @@ export const TodoTask = () => {
 	let taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
 	let taskIndexC = taskListKeys.findIndex(obj => obj==="taskListC");
 	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:undefined;
-	console.log(todoList);
 	const [isShowCmptdTsks, setShowCmptdTsks] = useState(true);
-	
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
 	const [selctdTask,setSelctdTask] = useState(null);
+	const phase = useSelector(state => state.task.phase);
+
+	const onMobileGoback = () => {
+		dispatch(fethUserLists(isMobileDevice));
+		dispatch(setShowTasks(false))
+		dispatch(setShowLists(true));
+	}
+
+	useEffect(()=>{
+		if(phase===FETCH_TASK_SUCCESS && isMobileDevice){
+			dispatch(setShowTasks(false));
+            //dispatch(setTaskDetailShow(true));
+		}
+	},[phase]);
+
 	const onSetShowConfirmPopup = (event,showCnfrmPp,task) => {
 		if(event.target===event.currentTarget && showCnfrmPp){
 			event.stopPropagation();
@@ -73,7 +88,7 @@ export const TodoTask = () => {
 	
 	return(
 		<div className={showTaskDetls ? "col-sm-6 task-div" : "col-sm-8 task-div"} id="task-div">
-		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>dispatch(setShowTasks(false))} />}
+		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={onMobileGoback} />}
 				{todoList!==undefined && todoList.listId!==undefined && <TaskListName  todoList={todoList}  />}
 				<div id="task-item-main">
 					<div className="tasks-n-cmptd-div">

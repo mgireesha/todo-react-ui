@@ -17,12 +17,12 @@ import { days, dueDateColor, monthsI } from '../utils/GlobalFuns';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 import { convertDateT } from '../utils/GlobalFuns';
-import { deleteTask, moveTask, updateTask } from '../redux/task/taskActions';
+import { deleteTask, fetTaskList, moveTask, setShowTasks, setTaskDetailShow, updateTask } from '../redux/task/taskActions';
 import { UPDATE_TASK_SUCCESS } from '../redux/task/taskActionTypes';
 
-export const TaskDetails = ({ onSetShowtaskDetls, isMobileDevice}) => {
+export const TaskDetails = () => {
 
-	
+	const dispatch = useDispatch();
 	const task = useSelector(state => state.task.taskDetail);
 	const taskList = useSelector(state => state.task.taskList);
 	const taskListKeys = useSelector(state => state.task.taskListKeys);
@@ -31,9 +31,8 @@ export const TaskDetails = ({ onSetShowtaskDetls, isMobileDevice}) => {
 	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:{};
 	const [impList,setImpList] = useState();
 	const phase = useSelector(state => state.task.phase);
-	const dispatch = useDispatch();
 	const currListName = todoList.listName;
-	
+	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
 	const [showTaskNameField, setShowTaskNameField] = useState(false);
 	const [showDueDateSel, setShowDueDateSel] = useState(false);
 	const [showRemDateSel, setShowRemDateSel] = useState(false);
@@ -42,6 +41,12 @@ export const TaskDetails = ({ onSetShowtaskDetls, isMobileDevice}) => {
 	const [showTaskUriRefTxt, setShowTaskUriRefTxt] = useState(false);
 	
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
+
+	const onMobileGoback = (listId) => {
+		dispatch(fetTaskList(listId));
+		dispatch(setShowTasks(true));
+		dispatch(setTaskDetailShow(false));
+	}
 
 	function getLTH() {
 		var today = new Date();
@@ -59,6 +64,7 @@ export const TaskDetails = ({ onSetShowtaskDetls, isMobileDevice}) => {
 			if(task.uriRef!==null){
 				setShowTaskUriRefTxt(false);
 			}
+			setShowTaskNameField(false);
 		}
 	},[phase,task])
 
@@ -104,12 +110,14 @@ export const TaskDetails = ({ onSetShowtaskDetls, isMobileDevice}) => {
 	}
 	
 	useEffect(() => {
-		if (document.getElementById('task-item-detail-move-sel') !== null && showMoveListSel) {
-			document.getElementById('task-item-detail-move-sel').style.height = "10em";
+		if (document.getElementById('task-item-detail-move-sel') !== null && showMoveListSel && moveLists!==null) {
+			const hgtArr = ['0em','0em','0em','2.5em','5em','7em','9em']
+			let hgt = hgtArr[moveLists.length];
+			document.getElementById('task-item-detail-move-sel').style.height = hgt!==undefined?hgt:'10em';
 			document.getElementById('task-item-detail-move-sel').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
 		}
-	}, [showMoveListSel]);
+	}, [showMoveListSel,moveLists]);
 
 	useEffect(()=>{
 		if(userLists!=null && userLists!==undefined && userLists.length>0){
@@ -245,11 +253,14 @@ export const TaskDetails = ({ onSetShowtaskDetls, isMobileDevice}) => {
 
 	const onMoveTask = (task,targetList) => {
 		dispatch(moveTask(task,targetList,todoList));
+		if(isMobileDevice){
+			onMobileGoback(task.listId)
+		}
 	}
 
 	return (
 		<div className="col-sm-3 task-detail-div" id="task-detail-div">
-		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onSetShowtaskDetls(false)} />}
+		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onMobileGoback(task.listId)} />}
 			<div className="task-detail-main" id="task-detail-main">
 				<div className="row task-item-detail-name" id="task-item-detail-name">
 					<input type="checkbox"  onChange={(event) => initUpdateTask(event,'complete',task)}

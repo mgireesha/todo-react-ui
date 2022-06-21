@@ -2,8 +2,8 @@ import { CREATE_TASK_START, CREATE_TASK_STEP_START, DELETE_TASK_START, DELETE_TA
 
 import {takeLatest, call, put} from 'redux-saga/effects';
 import { createTaskAPI, createTaskStepAPI, deleteTaskAPI, deleteTaskStepAPI, getTaskByTaskIdAPI, getTaskListAPI, moveTaskAPI, updateTaskAPI, updateTaskStepAPI } from "../apis";
-import { addNextStepSucc, createTaskSucc, deleteTaskSucc, fetchTaskSucc, fetTaskListSucc, moveTaskSucc, setTaskDetailShow, updateTaskListSucc, updatetaskStepSucc, updateTaskSucc } from "./taskActions";
-import { handleAPIError } from "../../utils/GlobalFuns";
+import { addNextStepSucc, createTaskSucc, deleteTaskSucc, fetchTaskSucc, fetTaskList, fetTaskListSucc, moveTaskSucc, setShowTasks, setTaskDetailShow, updateTaskListSucc, updatetaskStepSucc, updateTaskSucc } from "./taskActions";
+import { handleAPIError, isMobile } from "../../utils/GlobalFuns";
 import { setListCounter } from "../list/listActions";
 
 export function* onFetchTaskList() {
@@ -79,7 +79,13 @@ export function* onUpdateTaskAsync(payload){
                         yield put(setListCounter(impList,'add'))
                     }else{
                         yield put(setListCounter(impList,'reduce'))
-                        if(todoList.listName==='Important')yield put(setTaskDetailShow(false));
+                        if(todoList.listName==='Important'){
+                            yield put(setTaskDetailShow(false));
+                            if(isMobile()){
+                                yield put(fetTaskList(todoList.listId));
+                                yield put(setShowTasks(true));
+                            }
+                        }
                     }              
             }
         }
@@ -100,6 +106,10 @@ export function* onDeleteTaskAsync(payload){
             if(response.data.status==='success'){
                 yield put (setListCounter(payload.list,'reduce'));
                 yield put(deleteTaskSucc(payload.task));
+                if(isMobile()){
+                    yield put(fetTaskList(payload.list.listId));
+                    yield put(setShowTasks(true));
+                }
             }
         }
     } catch (error) {
