@@ -60,7 +60,7 @@ export const TodoBody = () => {
         }else{
             dispatch(fethUserLists(false));
         }
-    },[]);
+    },[dispatch]);
 
     return(
         <div className="row" id="main-body-div">

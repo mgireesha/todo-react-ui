@@ -26,22 +26,21 @@ export const TaskDetails = () => {
 	const task = useSelector(state => state.task.taskDetail);
 	const taskList = useSelector(state => state.task.taskList);
 	const taskListKeys = useSelector(state => state.task.taskListKeys);
+	const todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
 	const userLists = useSelector(state => state.list.userLists);
-	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
 	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:{};
-	const [impList,setImpList] = useState();
-	const phase = useSelector(state => state.task.phase);
 	const currListName = todoList.listName;
-	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
+	const [impList,setImpList] = useState();
 	const [showTaskNameField, setShowTaskNameField] = useState(false);
 	const [showDueDateSel, setShowDueDateSel] = useState(false);
 	const [showRemDateSel, setShowRemDateSel] = useState(false);
 	const [moveLists,setMoveLists] = useState([]);
 	const [showMoveListSel, setShowMoveListSel] = useState(false);
 	const [showTaskUriRefTxt, setShowTaskUriRefTxt] = useState(false);
-	
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
-
+	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
+	const phase = useSelector(state => state.task.phase);
+	
 	const onMobileGoback = (listId) => {
 		dispatch(fetTaskList(listId));
 		dispatch(setShowTasks(true));

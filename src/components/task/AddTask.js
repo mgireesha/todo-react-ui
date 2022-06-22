@@ -7,12 +7,14 @@ export const AddTask = ({ onAddNewTask }) => {
 	const dispatch = useDispatch();
 	const showListAdd = useSelector(state => state.list.showListAdd);
 	const showTaskAdd = useSelector(state => state.task.showTaskAdd);
+	
 	const TogglAddTaskField = (showTaskAdd) => {
 		if(showListAdd && showTaskAdd){
 			dispatch(setShowListAdd(false));
 		}
 		dispatch(setShowTaskAdd(showTaskAdd));
 	}
+	
 	return (
 		<div className="task-add-main">
 			{!showTaskAdd &&

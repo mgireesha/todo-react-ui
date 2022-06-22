@@ -33,7 +33,6 @@ export const TodoList = () => {
 
 	
 	const onSetShowArchived = () =>{
-		//setArchListsHgt(!showArchived);
 		if(showArchived){
 			setShowArchived(false);
 		}else{
@@ -95,7 +94,7 @@ export const TodoList = () => {
 			dispatch(setShowTasks(true));
             dispatch(setShowLists(false));
 		}
-	},[listPhase,taskPhase])
+	},[listPhase,taskPhase,todoList,selctdList,showArchived,isMobileDevice,defaultListIndex,userLists,dispatch])
 
 	useEffect(()=>{
 		setArchListsHgt(showArchived);
@@ -123,7 +122,7 @@ export const TodoList = () => {
 					)}
 				</div>
 				<div className="list-item-archive" id="list-item-archive">
-					<label>Archived - {archivedLists.length}</label>
+					<label>Archived : {archivedLists.length}</label>
 					<span onClick={onSetShowArchived} style={{float: 'right',marginRight: 5, cursor:'pointer'}}>{showArchived ? '-' : '+'}</span>
 					{showArchived && userLists!==null && archivedListsIndex!==-1 &&  userLists[archivedListsIndex].length>0 && userLists[archivedListsIndex].map(uIList=>
 						<ListItem key={uIList.listId} list={uIList} onDeleteList={deleteList}

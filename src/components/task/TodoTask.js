@@ -8,7 +8,7 @@ import {ConfirmPopup} from '../ConfirmPopup.js';
 import {AddTask} from './AddTask.js';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
-import { createTask, deleteTask, setShowTasks, setTaskDetailShow } from '../redux/task/taskActions.js';
+import { createTask, deleteTask, setShowTasks } from '../redux/task/taskActions.js';
 import { fethUserLists, setShowLists } from "../redux/list/listActions.js";
 import { FETCH_TASK_SUCCESS } from '../redux/task/taskActionTypes.js';
 
@@ -17,12 +17,12 @@ export const TodoTask = () => {
 	const dispatch = useDispatch();
 	const taskList = useSelector(state => state.task.taskList);
 	const taskListKeys = useSelector(state => state.task.taskListKeys);
+	const todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
+	const taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
+	const taskIndexC = taskListKeys.findIndex(obj => obj==="taskListC");
 	const showTaskDetls = useSelector(state => state.task.taskDetailShow);
 	const showTaskAdd = useSelector(state => state.task.showTaskAdd);
 	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
-	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
-	let taskIndexT = taskListKeys.findIndex(obj => obj==="taskListT");
-	let taskIndexC = taskListKeys.findIndex(obj => obj==="taskListC");
 	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:undefined;
 	const [isShowCmptdTsks, setShowCmptdTsks] = useState(true);
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
@@ -38,9 +38,8 @@ export const TodoTask = () => {
 	useEffect(()=>{
 		if(phase===FETCH_TASK_SUCCESS && isMobileDevice){
 			dispatch(setShowTasks(false));
-            //dispatch(setTaskDetailShow(true));
 		}
-	},[phase]);
+	},[phase,dispatch,isMobileDevice]);
 
 	const onSetShowConfirmPopup = (event,showCnfrmPp,task) => {
 		if(event.target===event.currentTarget && showCnfrmPp){
@@ -101,7 +100,7 @@ export const TodoTask = () => {
 						)}
 					
 					</div>
-					<TaskCompletedCounter count={taskList[taskIndexC]!==undefined && taskList[taskIndexC]!==null && taskList[taskIndexC].length} 
+					<TaskCompletedCounter count={taskList[taskIndexC]!==undefined && taskList[taskIndexC].length} 
 											onToggleShowCmptdTsks={toggleShowCmptdTsks}
 											isShowCmptdTsks={isShowCmptdTsks}
 											 />

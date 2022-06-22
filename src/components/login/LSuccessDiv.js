@@ -1,6 +1,6 @@
 import {React} from 'react';
 
-export const LSuccessDiv = ({loginError, onSetLoginError, onSetShowLForm, message}) => {
+export const LSuccessDiv = ({loginError, onSetShowLForm, message}) => {
 	return(
 		<div className="signup-form">
 			<h1 className="signup-header" style={{color:loginError==="success"?"green":"red", textTransform:'capitalize'}}>{loginError}!</h1>

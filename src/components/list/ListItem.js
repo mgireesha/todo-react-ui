@@ -2,10 +2,10 @@ import {React} from 'react';
 
 import {ListActionSel} from './ListActionSel.js';
 import gearBlack200 from '../../images/gear-grey-200.png';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetTaskList, setTaskDetailShow } from '../redux/task/taskActions.js';
 
-export const ListItem =({list, onDeleteList,onSetShowConfirmPopup}) => {
+export const ListItem =({list,onSetShowConfirmPopup}) => {
 	const dispatch = useDispatch();
 	
 	const onshowTask = (event,listId) => {
@@ -21,7 +21,7 @@ export const ListItem =({list, onDeleteList,onSetShowConfirmPopup}) => {
 			event.stopPropagation();
 		}
 		let currentACTSel = document.getElementById('currentACTSel').value;
-		if(currentACTSel!=="" && (document.getElementById('list-item-act-sel-'+currentACTSel) !== null && document.getElementById('list-item-act-sel-'+currentACTSel).style.height==='3em' || currentACTSel===listId.toString())){
+		if(currentACTSel!=="" && (document.getElementById('list-item-act-sel-'+currentACTSel) !== null && (document.getElementById('list-item-act-sel-'+currentACTSel).style.height==='3em' || currentACTSel===listId.toString()))){
 			document.getElementById('list-item-act-sel-'+currentACTSel).style.height=0;
 			document.getElementById('currentACTSel').value="";
 		}

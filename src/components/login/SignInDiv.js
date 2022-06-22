@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm, onSetLoginError}) => {
+export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm}) => {
 	return (
 		<div className="signup-form">
 			<h1 className="signup-header">Sign In</h1>

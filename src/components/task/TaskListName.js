@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateList } from '../redux/list/listActions';
 import { UPDATE_LIST_SUCCESS } from '../redux/list/listActionTypes';
 
-export const TaskListName = ({todoList,getServiceURI}) => {
+export const TaskListName = ({todoList}) => {
 	const dispatch = useDispatch();
 	const phase = useSelector(state => state.list.phase);
 	const [showListNameField, setShowListNameField] = useState(false);
