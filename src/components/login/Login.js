@@ -16,6 +16,7 @@ export const Login = ({lError}) => {
 	const [message,setMessage] = useState("");
 	const [emailS,setEmailS] = useState("");
 	const [pwdstgth,setPwdstgth] = useState(0);
+	const [showPwd, setShowPwd] = useState(false);
 
 	const emailReg = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
@@ -402,14 +403,14 @@ export const Login = ({lError}) => {
 			<div className="container ">
 				<div className="row row-main">
 					<div className="col-sm-3"></div>
-					<div className="col-sm-5 middle-span">
-						{(showLForm==="signin" || showLForm==="") && <SignInDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} onAuthenticate={authenticate} />}
+					{/*<div className="col-sm-5 middle-span">*/}
+						{(showLForm==="signin" || showLForm==="") && <SignInDiv loginError={loginError} onSetShowLForm={onSetShowLForm} showPwd={showPwd} setShowPwd={setShowPwd} onAuthenticate={authenticate} />}
 						{showLForm==="signup" && <SignUpDiv onSetShowLForm={onSetShowLForm} onRegister={register} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} checkUNameAvaiability={checkUNameAvaiability} />}
 						{showLForm==="lsuccess" && <LSuccessDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} message={message} />}
 						{showLForm==="reset" && <ResetPwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSendOtp={sendOtp} prevShowLForm={prevShowLForm} />}
 						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
-						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
-					</div>
+						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} showPwd={showPwd} setShowPwd={setShowPwd} />}
+					{/*</div>*/}
 					<div className="col-sm-3"></div>
 				</div>
 			</div>

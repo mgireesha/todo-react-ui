@@ -844,7 +844,7 @@ task-add-due-date, focus {
 .disable-div {
 	z-index: 1500;
 	width: 1362px;
-	height: 566.391px;
+	height: 100%;
 	position: absolute;
 	top: 36.7969px;
 	left: 0px;
@@ -1011,4 +1011,23 @@ task-add-due-date, focus {
 .email-unavilabe{
     border: 2px solid #b31616;
     border-radius: 3px;
+}
+
+.middle-span, .task-detail-div{
+
+    animation: slideIn 500ms ease-in;
+}
+
+
+@keyframes slideIn {
+    0%{
+        transform:  translateX(250px);
+    }
+    80%{
+        transform:  translateX(-30px);
+    }
+    100%{
+        
+    }
+    
 }
