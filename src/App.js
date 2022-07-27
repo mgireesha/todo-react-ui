@@ -7,6 +7,7 @@ import {ManageUsers} from './components/ManageUsers.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './components/main.css';
 import './components/login/SignIn.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import { Provider } from 'react-redux';
 import store from './components/redux/store';
@@ -16,6 +17,7 @@ import { getAuth } from './components/utils/GlobalFuns';
 function App() {
 	return (
 		<div className="container-fluid margin-zero" id="app-main-div">
+		<div id="disable-div" className="disable-div" style={{display:'none'}}></div>
 			<Provider store={store}>
 			<Header/>
 			<Router>
@@ -28,9 +30,7 @@ function App() {
 				</Routes>
 			</Router>
 			</Provider>
-			<div id="disable-div" className="disable-div" style={{ display: 'none' }}> 
-				
-			</div>
+			
 		</div>
 	);
 }

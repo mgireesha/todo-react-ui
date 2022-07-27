@@ -11,6 +11,7 @@ import whiteLeftArrow from '../../images/white-left-arrow.png';
 import { createTask, deleteTask, setShowTasks } from '../redux/task/taskActions.js';
 import { fethUserLists, setShowLists } from "../redux/list/listActions.js";
 import { FETCH_TASK_SUCCESS } from '../redux/task/taskActionTypes.js';
+import { getDateFormat } from '../utils/GlobalFuns.js';
 
 export const TodoTask = () => {
 	
@@ -60,22 +61,6 @@ export const TodoTask = () => {
 		}
 	},[showTaskAdd]);
 	
-	const addNewTask = async () => {
-		const taskName = document.getElementById('task-item-add-txt');
-		const tDueDate = document.getElementById('tDueDate').value;
-		const currentList = todoList;
-		if(!taskName.checkValidity()){
-			taskName.reportValidity();
-			return false;
-		}
-		const addNewTaskPayLoad = {
-			listId: currentList.listId,
-			listName: currentList.listName,
-			dueDate: tDueDate,
-			taskName: taskName.value
-		};
-		dispatch(createTask(addNewTaskPayLoad,todoList));
-	}
 	
 	const toggleShowCmptdTsks = () => {
 		if(isShowCmptdTsks){
@@ -120,7 +105,7 @@ export const TodoTask = () => {
 							headerTxt="Delete Task"
 							bodyTxt="Are you sure to delete this task ?"
 							/>
-				<AddTask onAddNewTask={addNewTask} />
+				<AddTask todoList={todoList} />
 			</div>
 	);
 }

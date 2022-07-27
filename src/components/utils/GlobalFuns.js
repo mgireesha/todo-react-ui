@@ -66,12 +66,12 @@ export function convertDateT(date) {
 }
 
 export function disableDiv() {
-    document.getElementById('disable-div').style.width
-        = document.getElementById('app-main-div').offsetWidth + 'px';
-    document.getElementById('disable-div').style.height
-        //= document.getElementById('app-main-div').offsetHeight+'px';
-        = window.innerHeight + 30 + 'px';
-    document.getElementById('disable-div').style.top = '-30px';
+    // document.getElementById('disable-div').style.width
+    //     = document.getElementById('app-main-div').offsetWidth + 'px';
+    // document.getElementById('disable-div').style.height
+    //     //= document.getElementById('app-main-div').offsetHeight+'px';
+    //     = window.innerHeight + 30 + 'px';
+    // document.getElementById('disable-div').style.top = '-30px';
     document.getElementById('disable-div').style.display = 'block';
 }
 export function enableDiv() {
@@ -99,3 +99,12 @@ export const isMobile = () => {
         //&& ( window.innerHeight <= 600 ) 
         );
       }
+
+export const getDateFormat = (inpDate) => {
+    if(inpDate===null || inpDate===undefined)return null;
+    const date = new Date(inpDate);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const datetime = ("0" + (date.getHours())).slice(-2) + ":" + ("0" + (date.getMinutes())).slice(-2)// + ":" + date.getSeconds();
+    return [date.getFullYear(),month,day].join('-')+'T'+datetime;
+}

@@ -2,6 +2,7 @@ import {React} from 'react';
 
 import {ListActionSel} from './ListActionSel.js';
 import gearBlack200 from '../../images/gear-grey-200.png';
+import {MdSettings} from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { fetTaskList, setTaskDetailShow } from '../redux/task/taskActions.js';
 
@@ -35,11 +36,13 @@ export const ListItem =({list,onSetShowConfirmPopup}) => {
 	
 	return(
 		<div style={{position:'relative'}}>
-			<div className="list-item" id={"list-item-"+list.listId} onClick={(event) =>onshowTask(event,list.listId)}>
-				<label style={{padding:5,width:list.groupName!=="default" ? 87+'%' : 100+'%'}} >{list.listName}</label>
+			<div className="list-item" id={"list-item-"+list.listId} >
+				<label style={{padding:5,width:list.groupName!=="default" ? 87+'%' : 100+'%'}} onClick={(event) =>onshowTask(event,list.listId)}>{list.listName}</label>
 				<label className={list.taskCount>0 ? "list-task-count list-task-countBG" : "list-task-count"}>{list.taskCount>0 ? list.taskCount : ''}</label>
-				{list.groupName!=="default" && <label id={"list-act-"+list.listId} style={{marginRight:5,marginLeft:5, padding:2}}>
-								<img onClick={(event)=>onShowListActionSel(event,list.listId)} alt="action" src={gearBlack200} style={{height: 0.9+'em'}} id={"list-act-img-"+list.listId} />
+				{list.groupName!=="default" && <label id={"list-act-"+list.listId} style={{marginLeft:2, paddingTop:2}}>
+					<span onClick={(event)=>onShowListActionSel(event,list.listId)} style={{padding:'10px 6px 10px 0'}}>
+						<MdSettings style={{fontSize:23,color:'#4c4b4b'}} id={"list-act-img-"+list.listId}  />
+					</span>
 				</label>}
 				{list.listName==="Important" && <input type="hidden" id="hdn-inp-Important" value={list.listId} />}
 			</div>

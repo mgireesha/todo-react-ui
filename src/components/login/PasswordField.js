@@ -15,7 +15,7 @@ export const PasswordField = (props) => {
                 name={props.name}
                 id={props.id}
                 placeholder={props.placeholder}
-                onKeyUp={(event)=>props.onKeyUp(event)}
+                onKeyUp={props.onKeyUp?(event)=>props.onKeyUp(event):null}
                 required />
         </div>
     )

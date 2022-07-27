@@ -1,7 +1,8 @@
 import { React } from 'react';
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import { PasswordField } from './PasswordField';
 
-export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm, showPwd, setShowPwd}) => {
+export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm}) => {
 	return (
 		<div className="col-sm-5 middle-span">
 		<div className="signup-form">
@@ -12,14 +13,7 @@ export const SignInDiv = ({onAuthenticate, loginError, onSetShowLForm, showPwd, 
 			</div>
 			<div className="row row-label">
 				<label  className="signup-label">Password</label>
-				<div className='relative-div-zero-padding'>
-					{showPwd?
-						<AiOutlineEye className='password-eye-icon' onClick={()=>setShowPwd(false)} />
-					:
-						<AiOutlineEyeInvisible className='password-eye-icon' onClick={()=>setShowPwd(true)} />
-					}
-					<input className="form-control signup-input" type={showPwd?'text':'password'} name="password" id="password" placeholder="Create password" required />
-				</div>
+				<PasswordField id='password' name='password' placeholder='Password'/>
 				{loginError !== "" && <label style={{ color: '#e34e4e', padding: 0 }}>{loginError}</label>}
 				<label className="signup-label" style={{width:50+'%'}}>
 					<span className='link-look' onClick={()=>onSetShowLForm("reset")} style={{fontSize: 12,textDecoration:'none'}}>Forgot password ?</span>
