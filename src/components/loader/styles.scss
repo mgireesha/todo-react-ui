@@ -12,6 +12,7 @@
     overflow: hidden;
     position: absolute;
     display: none;
+    animation: text_color 2s ease-in-out infinite;
 }
 
 .spinner-sector{
@@ -49,5 +50,20 @@
 
     100%{
         transform: rotate(360deg);
+    }
+}
+
+@keyframes text_color{
+    0%,100%{
+        //color: rgba(0, 0, 0, 1);
+        color: beige;
+    }
+    25%,75%{
+       // color: rgba(0, 0, 0, .5);
+       color: rgb(117, 117, 107);
+    }
+    50%{
+       // color: rgba(0, 0, 0, .1);
+       color: rgb(199, 199, 182);
     }
 }

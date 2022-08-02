@@ -58,7 +58,7 @@ export const Login = ({lError}) => {
 			return;
 		}
 		disableDiv();
-		setOpacity(0);
+		setOpacity(0,'Signing In..');
 		const  authPayLoad = {
 			username:username.value,
 			password:password.value
@@ -73,23 +73,30 @@ export const Login = ({lError}) => {
 		const response = await fetch(`${getServiceURI()}/todo/authenticate`,settings);
 		const data = await response.json();
 		if(data.jwt){
-			document.cookie="jToken=Bearer "+data.jwt+"; path=/";
-			window.location.replace("/todo");
+			setTimeout(()=>{
+				document.cookie="jToken=Bearer "+data.jwt+"; path=/";
+				window.location.replace("/todo");
+			},3000)
 		}else{
 			setLoginError(data.error);
+			setOpacity(1);
 		}
 		enableDiv();
 		//setOpacity(1);
 	}
 
-	const setOpacity = (op) => {
+	const setOpacity = (op,txt) => {
 		document.querySelectorAll('.signup-form').forEach(form=>{
 			form.style.opacity = op;
 		});
-		op===0?
-			document.querySelector('.spinner').style.display = 'flex' 
-			: 
+		if(op===0){
+			document.querySelector('.spinner').style.display = 'flex';
+			if(txt!==undefined)document.querySelector('.spinner-txt').innerHTML=txt;
+			else document.querySelector('.spinner-txt').innerHTML='Loading';
+		}else{
 			document.querySelector('.spinner').style.display = 'none';
+		} 
+			
 	}
 	
 	document.addEventListener("keyup",function(event){
