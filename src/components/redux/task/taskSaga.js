@@ -53,6 +53,14 @@ export function* onCreateTaskAsync(payload){
             const task = data.todoTask;
             yield put(createTaskSucc(task));
             yield put(setListCounter(payload.todoList,'add'))
+            if(payload.todoList.listName==='Important'){
+                const tempList = {
+                    listId:task.listId,
+                    listName:task.listName,
+                    groupName:'default'
+                }
+                yield put(setListCounter(tempList,'add'));
+            }
         }
     } catch (error) {
         console.log(error);

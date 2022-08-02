@@ -9,12 +9,16 @@
 }
 .row-main{
 	padding-top: 6%;
-	color: beige
+	color: beige;
+	display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .middle-span{
 	background-color: #242323;
 	border-radius: 4%;
+	min-height: 400px;
 }
 
 .signup-form{

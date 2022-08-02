@@ -5,7 +5,7 @@ import { TodoBody } from './components/TodoBody';
 import { Login } from './components/login/Login.js';
 import {ManageUsers} from './components/ManageUsers.js';
 import 'bootstrap/dist/css/bootstrap.css';
-import './components/main.css';
+import './components/main.scss';
 import './components/login/SignIn.css';
 import 'react-datepicker/dist/react-datepicker.css';
 

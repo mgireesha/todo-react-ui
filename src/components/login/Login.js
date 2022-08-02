@@ -7,6 +7,7 @@ import {ResetPwdDiv} from './ResetPwdDiv.js';
 import {ChangePwdDiv} from './ChangePwdDiv.js';
 import {ResetPwdOtpDiv} from './ResetPwdOtpDiv.js';
 import { disableDiv, enableDiv, getAuth, getServiceURI } from '../utils/GlobalFuns.js';
+import { LoaderColored } from '../loader/loaderColored.js';
 
 export const Login = ({lError}) => {
 	
@@ -57,6 +58,7 @@ export const Login = ({lError}) => {
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const  authPayLoad = {
 			username:username.value,
 			password:password.value
@@ -77,6 +79,17 @@ export const Login = ({lError}) => {
 			setLoginError(data.error);
 		}
 		enableDiv();
+		//setOpacity(1);
+	}
+
+	const setOpacity = (op) => {
+		document.querySelectorAll('.signup-form').forEach(form=>{
+			form.style.opacity = op;
+		});
+		op===0?
+			document.querySelector('.spinner').style.display = 'flex' 
+			: 
+			document.querySelector('.spinner').style.display = 'none';
 	}
 	
 	document.addEventListener("keyup",function(event){
@@ -117,6 +130,7 @@ export const Login = ({lError}) => {
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const signUpPayoad = {
 			name:name.value,
 			userName:email.value,
@@ -132,7 +146,7 @@ export const Login = ({lError}) => {
 		}
 		const response = await fetch(`${getServiceURI()}/todo/signup`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status){
 			if(data.status==="success"){
 				setMessage("You have registered successfully. Please sign in to continue.");
@@ -195,6 +209,7 @@ export const Login = ({lError}) => {
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const sendOtpPayload = {
 			userName : userName.value
 		}
@@ -209,7 +224,7 @@ export const Login = ({lError}) => {
 		}
 		const response = await fetch(`${getServiceURI()}/todo/init-reset-pwd`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status==="MESSAGE_SENT"){
 			onSetShowLForm("verify-otp");
 		}else{
@@ -238,6 +253,7 @@ export const Login = ({lError}) => {
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const resetPPayload = {
 			otp : otpResetP.value,
 			passWord : confirmPwd.value,
@@ -252,7 +268,7 @@ export const Login = ({lError}) => {
 		}
 		const response = await fetch(`${getServiceURI()}/todo/reset-pwd`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status){
 			if(data.status==="success"){
 				setLoginError(data.status);
@@ -288,6 +304,7 @@ export const Login = ({lError}) => {
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const changePPayload = {
 			currentPassword : currentPwd.value,
 			passWord : confirmPwd.value,
@@ -302,7 +319,7 @@ export const Login = ({lError}) => {
 		}
 		const response = await fetch(`${getServiceURI()}/todo/change-pwd`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status){
 			if(data.status==="success"){
 				setLoginError(data.status);
@@ -411,6 +428,7 @@ export const Login = ({lError}) => {
 						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
 						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
 					{/*</div>*/}
+					<LoaderColored />
 					<div className="col-sm-3"></div>
 				</div>
 			</div>
