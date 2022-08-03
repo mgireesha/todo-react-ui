@@ -29,7 +29,17 @@ export const TodoTask = () => {
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
 	const [selctdTask,setSelctdTask] = useState(null);
 	const phase = useSelector(state => state.task.phase);
-
+	const [taskIdLst,setTasIdLst] = useState([]);
+	useEffect(()=>{
+		let tempIdLst = [];
+		if(taskList!==undefined && taskList.length>0){
+			tempIdLst =  taskList[taskIndexT].map(task=> task.taskId).reverse()
+		}else{
+			tempIdLst =  []
+		}
+		setTasIdLst(tempIdLst)
+	},[taskList])
+	console.log('taskIdLst',taskIdLst)
 	const onMobileGoback = () => {
 		dispatch(fethUserLists(isMobileDevice));
 		dispatch(setShowTasks(false))
@@ -69,6 +79,11 @@ export const TodoTask = () => {
 			setShowCmptdTsks(true);
 		}
 	}
+
+	const revLst = () => {
+		const tempLst = [...taskIdLst].reverse();
+		setTasIdLst(tempLst)
+	}
 	
 	return(
 		<div className={showTaskDetls ? "col-sm-6 task-div" : "col-sm-8 task-div"} id="task-div">
@@ -76,12 +91,24 @@ export const TodoTask = () => {
 				{todoList!==undefined && todoList.listId!==undefined && <TaskListName  todoList={todoList}  />}
 				<div id="task-item-main">
 					<div className="tasks-n-cmptd-div">
-						{taskList[taskIndexT]!==undefined && taskList[taskIndexT].map(task=>
+						{/* {taskList[taskIndexT]!==undefined && taskList[taskIndexT].map(task=>
 							<TaskItem key={task.tskId} 
 										taskObj={task}
 										todoList={taskList[todoIndex][0]}
 										onSetShowConfirmPopup={onSetShowConfirmPopup}
 										 />
+						)} */}
+						{taskList[taskIndexT]!==undefined && taskIdLst.map(taskId=>{
+							const task = taskList[taskIndexT].find(tsk=> tsk.taskId===taskId);
+							return(
+								<TaskItem key={task.tskId} 
+									taskObj={task}
+									todoList={taskList[todoIndex][0]}
+									onSetShowConfirmPopup={onSetShowConfirmPopup}
+									revLst={revLst}
+							 	/>
+							)
+						}
 						)}
 					
 					</div>
@@ -95,6 +122,7 @@ export const TodoTask = () => {
 										taskObj={task}
 										todoList={taskList[todoIndex][0]}
 										onSetShowConfirmPopup={onSetShowConfirmPopup}
+										revLst={revLst}
 										 />
 						)}
 					</div>}

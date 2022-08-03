@@ -12,7 +12,7 @@ import { convertDateT, dueDateColor } from '../utils/GlobalFuns';
 import { fetchTask, setTaskDetailShow, updateTask } from '../redux/task/taskActions';
 import { setListDivWidth } from '../redux/list/listActions';
 
-export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup }) => {
+export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup, revLst }) => {
 
 	const dispatch = useDispatch();
 	const taskDetail = useSelector(state => state.task.taskDetail);
@@ -62,9 +62,20 @@ export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup }) => {
 		dispatch(updateTask(payload));
 	}
 
+	const draggableItms = document.querySelectorAll('[draggable]');
+	console.log('draggableItms',draggableItms)
+	draggableItms.forEach(drg=>{
+		drg.addEventListener('dragend',(event)=>{
+			console.log('dragend',event.x,event.y);
+			const el = document.elementFromPoint(event.x,event.y);
+			console.log(el.classList);
+			revLst()
+		})
+	})
+
 
 	return (
-		<div className="row" style={{ margin: 10 }} key={"task-item" + taskObj.taskId}>
+		<div className="row" style={{ margin: 10 }} key={"task-item" + taskObj.taskId} draggable='true'>
 			<div className={taskDetail !== null && taskDetail.taskId === taskObj.taskId ? "task-item selected-task" : "task-item"}
 				key={"task-item-" + taskObj.taskId} onClick={(event) => ToggleShowtaskDetls(event, taskObj.taskId)}>
 				<div className="col-sm-11" style={{ padding: 10, paddingLeft: 0, width: 92 + '%' }}>
