@@ -62,21 +62,40 @@ export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup, revLst }) =
 		dispatch(updateTask(payload));
 	}
 
+	var timer;
 	const draggableItms = document.querySelectorAll('[draggable]');
 	console.log('draggableItms',draggableItms)
 	draggableItms.forEach(drg=>{
 		drg.addEventListener('dragend',(event)=>{
+			clearTimeout(timer)
+			let tgtId = event.target.firstChild.id;
+			
+			//let target = event.target;
+			event.preventDefault();
+			event.stopPropagation();
+			event.stopImmediatePropagation();
+			//event.cancelBubble()
+			//event.target.style.opacity = 1;
 			console.log('dragend',event.x,event.y);
-			const el = document.elementFromPoint(event.x,event.y);
+			let el = document.elementFromPoint(event.x,event.y);
 			console.log(el.classList);
-			revLst()
+			let count = 0;
+			while(el!==null && (!el.classList.contains('task-item') && count<10)){
+				el = el.parentElement;count++;
+			}
+			if(el)console.log('el.id',el.id);console.log('event.target',tgtId)
+			timer = setTimeout(() => {
+				if(el)revLst(tgtId,el.id)
+			}, 600);
+			
+			
 		})
 	})
 
 
 	return (
 		<div className="row" style={{ margin: 10 }} key={"task-item" + taskObj.taskId} draggable='true'>
-			<div className={taskDetail !== null && taskDetail.taskId === taskObj.taskId ? "task-item selected-task" : "task-item"}
+			<div className={taskDetail !== null && taskDetail.taskId === taskObj.taskId ? "task-item selected-task" : "task-item"} id={taskObj.taskId}
 				key={"task-item-" + taskObj.taskId} onClick={(event) => ToggleShowtaskDetls(event, taskObj.taskId)}>
 				<div className="col-sm-11" style={{ padding: 10, paddingLeft: 0, width: 92 + '%' }}>
 					<input type="checkbox" id={"task-chkbx-" + taskObj.taskId} className={"task-item-chkbx task-chkbx-" + taskObj.taskId}

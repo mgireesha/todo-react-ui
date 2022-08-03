@@ -80,8 +80,20 @@ export const TodoTask = () => {
 		}
 	}
 
-	const revLst = () => {
-		const tempLst = [...taskIdLst].reverse();
+	const revLst = (init,cmpt) => {
+		let tempLst = [...taskIdLst];
+		const iIndex = tempLst.indexOf(parseInt(init));
+		const cIndex = tempLst.indexOf(parseInt(cmpt));
+		const cIndexNxt = cIndex-1;
+		const cNext = tempLst[cIndexNxt];
+		// tempLst[cIndex] = parseInt(init);
+		// tempLst[iIndex] = parseInt(cmpt);
+		// tempLst[cIndexNxt] = parseInt(init);
+		console.log('tempLst 92',tempLst)
+		tempLst=tempLst.filter(l=>{return l!==parseInt(init)})
+		tempLst.splice(cIndex,0,parseInt(init))
+		console.log('tempLst 94',tempLst)
+		
 		setTasIdLst(tempLst)
 	}
 	
@@ -101,12 +113,12 @@ export const TodoTask = () => {
 						{taskList[taskIndexT]!==undefined && taskIdLst.map(taskId=>{
 							const task = taskList[taskIndexT].find(tsk=> tsk.taskId===taskId);
 							return(
-								<TaskItem key={task.tskId} 
+								task!==undefined ?<TaskItem key={task.tskId} 
 									taskObj={task}
 									todoList={taskList[todoIndex][0]}
 									onSetShowConfirmPopup={onSetShowConfirmPopup}
 									revLst={revLst}
-							 	/>
+							 	/>:null
 							)
 						}
 						)}
