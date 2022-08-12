@@ -76,7 +76,7 @@ export const Login = ({lError}) => {
 			setTimeout(()=>{
 				document.cookie="jToken=Bearer "+data.jwt+"; path=/";
 				window.location.replace("/todo");
-			},3000)
+			},1000)
 		}else{
 			setLoginError(data.error);
 			setOpacity(1);

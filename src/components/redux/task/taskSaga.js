@@ -4,7 +4,7 @@ import {takeLatest, call, put} from 'redux-saga/effects';
 import { createTaskAPI, createTaskStepAPI, deleteTaskAPI, deleteTaskStepAPI, getTaskByTaskIdAPI, getTaskListAPI, moveTaskAPI, updateTaskAPI, updateTaskStepAPI } from "../apis";
 import { addNextStepSucc, createTaskSucc, deleteTaskSucc, fetchTaskSucc, fetTaskList, fetTaskListSucc, moveTaskSucc, setShowTasks, setTaskDetailShow, updateTaskListSucc, updatetaskStepSucc, updateTaskSucc } from "./taskActions";
 import { handleAPIError, isMobile } from "../../utils/GlobalFuns";
-import { setListCounter } from "../list/listActions";
+import { setListCounter, updateList } from "../list/listActions";
 
 export function* onFetchTaskList() {
     yield takeLatest(FETCH_TASK_LIST_START,onFetchTaskListAsync)
@@ -112,6 +112,10 @@ export function* onDeleteTaskAsync(payload){
         const response = yield call(deleteTaskAPI,payload);
         if(response.status===200){
             if(response.data.status==='success'){
+                if(payload.list.sortedtasks!==null){
+                    payload.list.sortedtasks = payload.list.sortedtasks.split(",").map(t=>Number(t)).filter(t=>{return payload.task.taskId!==t}).toString();
+                    yield put(updateList(payload.list));
+                }
                 yield put (setListCounter(payload.list,'reduce'));
                 yield put(deleteTaskSucc(payload.task));
                 if(isMobile()){

@@ -19,6 +19,7 @@ import whiteLeftArrow from '../../images/white-left-arrow.png';
 import { convertDateT } from '../utils/GlobalFuns';
 import { deleteTask, fetTaskList, moveTask, setShowTasks, setTaskDetailShow, updateTask } from '../redux/task/taskActions';
 import { UPDATE_TASK_SUCCESS } from '../redux/task/taskActionTypes';
+import { BsArrowLeftSquare } from 'react-icons/bs';
 
 export const TaskDetails = () => {
 
@@ -259,7 +260,10 @@ export const TaskDetails = () => {
 
 	return (
 		<div className="col-sm-3 task-detail-div" id="task-detail-div">
-		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onMobileGoback(task.listId)} />}
+		{/* <img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onMobileGoback(task.listId)} /> */}
+		{isMobileDevice &&
+			<BsArrowLeftSquare onClick={onMobileGoback} className='login-back-arrow' style={{marginLeft:10}} />
+		}
 			<div className="task-detail-main" id="task-detail-main">
 				<div className="row task-item-detail-name" id="task-item-detail-name">
 					<input type="checkbox"  onChange={(event) => initUpdateTask(event,'complete',task)}

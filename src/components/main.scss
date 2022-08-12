@@ -1090,3 +1090,63 @@ task-add-due-date, focus {
         left: 30% !important;
     }
   } */
+
+//File - start
+.t-main-container{
+    //padding-left: 10em;
+}
+.file-input-div{
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    // height: 40vh;
+    margin-left: 40%;
+    margin-top: 5%;
+}
+.file-txt-div{
+    margin-left: 20%;
+    margin-top: 1%;
+}
+.file-input{
+    
+}
+
+/* Code for file tag in import contacts div   >>> Start */
+.file-input-wrapper {
+    width: 200px;
+    height: 40px;
+    overflow: hidden;
+    position: relative;
+  }
+  .file-input-wrapper > input[type="file"] {
+    font-size: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .file-input-wrapper > .btn-file-input {
+    display: inline;
+    width: 200px;
+    height: 40px;
+    background-color: #06786e;
+    border: none;
+    color: beige;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .btn-file-input:hover{
+    background-color: #a0780b;
+  }
+
+  .file-input:hover + .btn-file-input{
+    background-color: #a0780b;
+  }
+
+  .file-input-wrapper:hover + .btn-file-input{
+    background-color: #a0780b;
+  }
+/* Code for file tag in import contacts div   >>> Start */
+//File - end

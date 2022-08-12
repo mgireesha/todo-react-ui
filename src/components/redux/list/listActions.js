@@ -109,9 +109,14 @@ export const updateListCounter = (userLists,userListsKeys,action) => {
     const actionT = action.action;
     const listIndex = userListsKeys.findIndex(obj => obj===list.groupName);
     const userList = userLists[listIndex];
+    //const task = action.task;
     userList.forEach(elem=>{
         if(elem.listId===list.listId){
             elem.taskCount = actionT==='add' ? elem.taskCount+1:elem.taskCount-1;
+            //if(task!==undefined && task!==null){
+                //const sArr = elem.sortedtasks.split(",").map(t=>Number(t)).filter(t=>{return task.taskId!==t});
+                elem.sortedtasks = list.sortedtasks;
+            //}
         }
     })
     userLists[listIndex] = userList;

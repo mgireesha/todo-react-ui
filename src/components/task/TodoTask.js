@@ -9,9 +9,10 @@ import {AddTask} from './AddTask.js';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
 import { createTask, deleteTask, setShowTasks } from '../redux/task/taskActions.js';
-import { fethUserLists, setShowLists } from "../redux/list/listActions.js";
+import { fethUserLists, setShowLists, updateList } from "../redux/list/listActions.js";
 import { FETCH_TASK_SUCCESS } from '../redux/task/taskActionTypes.js';
 import { getDateFormat } from '../utils/GlobalFuns.js';
+import { BsArrowLeftSquare } from 'react-icons/bs';
 
 export const TodoTask = () => {
 	
@@ -32,14 +33,33 @@ export const TodoTask = () => {
 	const [taskIdLst,setTasIdLst] = useState([]);
 	useEffect(()=>{
 		let tempIdLst = [];
-		if(taskList!==undefined && taskList.length>0){
-			tempIdLst =  taskList[taskIndexT].map(task=> task.taskId).reverse()
+		//const tempNlst = [];
+		if(todoList!==undefined && todoList.sortedtasks!==undefined && todoList.sortedtasks!==null){
+			tempIdLst = todoList.sortedtasks.split(',').map(taskIdStr =>Number(taskIdStr));
+			taskList[taskIndexT].forEach(elem => {
+				if(!tempIdLst.includes(elem.taskId)){
+					tempIdLst.push(elem.taskId);
+				}
+			});
 		}else{
-			tempIdLst =  []
+			if(taskList!==undefined && taskList.length>0){
+				tempIdLst =  taskList[taskIndexT].map(task=> task.taskId);
+			}else{
+				tempIdLst =  []
+			}
 		}
+		// if(todoList.sortedtasks===null){
+		// 	if(taskList!==undefined && taskList.length>0){
+		// 		tempIdLst =  taskList[taskIndexT].map(task=> task.taskId).reverse()
+		// 	}else{
+		// 		tempIdLst =  []
+		// 	}
+		// }else{
+		// 	tempIdLst = todoList.sortedtasks.split(',');
+		// }
 		setTasIdLst(tempIdLst)
-	},[taskList])
-	console.log('taskIdLst',taskIdLst)
+	},[taskList,todoList])
+	//console.log('taskIdLst',taskIdLst)
 	const onMobileGoback = () => {
 		dispatch(fethUserLists(isMobileDevice));
 		dispatch(setShowTasks(false))
@@ -82,24 +102,32 @@ export const TodoTask = () => {
 
 	const revLst = (init,cmpt) => {
 		let tempLst = [...taskIdLst];
-		const iIndex = tempLst.indexOf(parseInt(init));
-		const cIndex = tempLst.indexOf(parseInt(cmpt));
-		const cIndexNxt = cIndex-1;
-		const cNext = tempLst[cIndexNxt];
+		if(cmpt===undefined || cmpt===null || !tempLst.includes(parseInt(cmpt))){
+			return;
+		};
+		//const iIndex = tempLst.indexOf(parseInt(init));
+		//const cIndex = tempLst.indexOf(parseInt(cmpt));
+		//const cIndexNxt = cIndex-1;
+		//const cNext = tempLst[cIndexNxt];
 		// tempLst[cIndex] = parseInt(init);
 		// tempLst[iIndex] = parseInt(cmpt);
 		// tempLst[cIndexNxt] = parseInt(init);
-		console.log('tempLst 92',tempLst)
+		//console.log('tempLst 92',tempLst)
+		
+		//console.log('tempLst 94',tempLst)
+		const cIndex = tempLst.indexOf(parseInt(cmpt));
 		tempLst=tempLst.filter(l=>{return l!==parseInt(init)})
 		tempLst.splice(cIndex,0,parseInt(init))
-		console.log('tempLst 94',tempLst)
-		
-		setTasIdLst(tempLst)
+		setTasIdLst(tempLst);
+		const tempTodoList = {...todoList};
+		tempTodoList.sortedtasks = tempLst.toString();
+		dispatch(updateList(tempTodoList));
 	}
 	
 	return(
 		<div className={showTaskDetls ? "col-sm-6 task-div" : "col-sm-8 task-div"} id="task-div">
-		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={onMobileGoback} />}
+			{/*<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={onMobileGoback} />*/}
+		{isMobileDevice && <BsArrowLeftSquare onClick={onMobileGoback} className='login-back-arrow' style={{marginLeft:10}} />}
 				{todoList!==undefined && todoList.listId!==undefined && <TaskListName  todoList={todoList}  />}
 				<div id="task-item-main">
 					<div className="tasks-n-cmptd-div">

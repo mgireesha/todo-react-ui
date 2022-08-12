@@ -64,7 +64,7 @@ export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup, revLst }) =
 
 	var timer;
 	const draggableItms = document.querySelectorAll('[draggable]');
-	console.log('draggableItms',draggableItms)
+	//console.log('draggableItms',draggableItms)
 	draggableItms.forEach(drg=>{
 		drg.addEventListener('dragend',(event)=>{
 			clearTimeout(timer)
@@ -76,17 +76,17 @@ export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup, revLst }) =
 			event.stopImmediatePropagation();
 			//event.cancelBubble()
 			//event.target.style.opacity = 1;
-			console.log('dragend',event.x,event.y);
+			//console.log('dragend',event.x,event.y);
 			let el = document.elementFromPoint(event.x,event.y);
-			console.log(el.classList);
+			//console.log(el.classList);
 			let count = 0;
 			while(el!==null && (!el.classList.contains('task-item') && count<10)){
 				el = el.parentElement;count++;
 			}
-			if(el)console.log('el.id',el.id);console.log('event.target',tgtId)
-			timer = setTimeout(() => {
+			//if(el)console.log('el.id',el.id);console.log('event.target',tgtId)
+			//timer = setTimeout(() => {
 				if(el)revLst(tgtId,el.id)
-			}, 600);
+			//}, 600);
 			
 			
 		})
@@ -94,7 +94,7 @@ export const TaskItem = ({ taskObj, todoList, onSetShowConfirmPopup, revLst }) =
 
 
 	return (
-		<div className="row" style={{ margin: 10 }} key={"task-item" + taskObj.taskId} draggable='true'>
+		<div className="row" style={{ margin: 10 }} key={"task-item" + taskObj.taskId} draggable={!taskObj.completed}>
 			<div className={taskDetail !== null && taskDetail.taskId === taskObj.taskId ? "task-item selected-task" : "task-item"} id={taskObj.taskId}
 				key={"task-item-" + taskObj.taskId} onClick={(event) => ToggleShowtaskDetls(event, taskObj.taskId)}>
 				<div className="col-sm-11" style={{ padding: 10, paddingLeft: 0, width: 92 + '%' }}>
