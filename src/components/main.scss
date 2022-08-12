@@ -268,6 +268,10 @@ body{
 	background-color: #e9e9da;
 }
 
+.task-add-main{
+    
+}
+
 .task-item-add-div{
 	 padding: 10px;
     background-color: beige;
@@ -505,7 +509,10 @@ task-add-due-date, focus {
 }
 
 .task-item-add-field{
-	z-index: 1001;
+	position: absolute;
+    top: 80vh;
+    width: 62%;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
 
 .task-detail-div{

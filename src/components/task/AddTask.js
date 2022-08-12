@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowListAdd } from '../redux/list/listActions';
+import { setIsMobileDevice, setShowListAdd } from '../redux/list/listActions';
 import { createTask, setShowTaskAdd } from '../redux/task/taskActions';
 import { TodoDatePicker } from '../TodoDatePicker';
 import { getDateFormat } from '../utils/GlobalFuns';
@@ -10,14 +10,36 @@ export const AddTask = ({todoList}) => {
 	const dispatch = useDispatch();
 	const showListAdd = useSelector(state => state.list.showListAdd);
 	const showTaskAdd = useSelector(state => state.task.showTaskAdd);
+	const taskDetailShow = useSelector(state => state.task.taskDetailShow);
+	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
 	const [dueDate,setDueDate] = useState(null);
-	console.log(dueDate)
 	const TogglAddTaskField = (showTaskAdd) => {
 		if(showListAdd && showTaskAdd){
 			dispatch(setShowListAdd(false));
 		}
 		dispatch(setShowTaskAdd(showTaskAdd));
 	}
+
+	useEffect(()=>{
+		const taskItemAddField = document.getElementById('task-item-add-field');
+		const taskAddMain = document.getElementById('task-add-main');
+		const taskItemMain = document.getElementById('task-item-main');
+		if(taskItemAddField!==null && taskItemMain!==null){
+			// if(isMobileDevice){
+			// 	taskItemAddField.style.width = '88%';
+			// }else{
+			// 	if(showTaskAdd && taskDetailShow){
+			// 		taskItemAddField.style.width = '45.3%';
+			// 	}else{
+			// 		taskItemAddField.style.width = '61.6%';
+			// 	}
+			// }
+			//const taskItemMainW = taskItemMain.offsetWidth.subString;
+
+			taskItemAddField.style.width = (taskItemMain.offsetWidth - 44)+'px';
+		}
+		//showTaskAdd?taskAddMain.style.marginTop=20:taskAddMain.style.marginTop=0;
+	},[taskDetailShow,showTaskAdd])
 
 	const addNewTask = async (tDueDate) => {
 		const taskName = document.getElementById('task-item-add-txt');
@@ -43,7 +65,7 @@ export const AddTask = ({todoList}) => {
 	},[showTaskAdd])
 	
 	return (
-		<div className="task-add-main">
+		<div className="task-add-main" id='task-add-main'>
 			{!showTaskAdd &&
 				<div className="row" id="task-item-add-div" style={{ margin: 10 }} onClick={()=>TogglAddTaskField(true)}>
 					<div className="task-item-add-div" style={{ width: 97.5 + '%' }}>
@@ -53,7 +75,7 @@ export const AddTask = ({todoList}) => {
 				</div>
 			}
 			{showTaskAdd &&
-				<div className="task-item-add-div task-item-add-field" style={{ margin: 10,width:95+'%' }} id="task-item-add-field" >
+				<div className="task-item-add-div task-item-add-field" style={{ margin: 10,/*width:95+'%' */}} id="task-item-add-field" >
 					<div className="row" style={{padding:5}}>
 						<div className="col-sm-8" style={{marginTop:5}}>
 							<input type="text" placeholder="Enter task name" id="task-item-add-txt" className="form-control" required />
