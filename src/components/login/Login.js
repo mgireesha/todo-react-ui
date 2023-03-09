@@ -6,8 +6,10 @@ import {LSuccessDiv} from './LSuccessDiv.js';
 import {ResetPwdDiv} from './ResetPwdDiv.js';
 import {ChangePwdDiv} from './ChangePwdDiv.js';
 import {ResetPwdOtpDiv} from './ResetPwdOtpDiv.js';
+import { disableDiv, enableDiv, getAuth, getServiceURI } from '../utils/GlobalFuns.js';
+import { LoaderColored } from '../loader/loaderColored.js';
 
-export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) => {
+export const Login = ({lError}) => {
 	
 	const [loginError,setLoginError] = useState("");
 	const [showLForm,setShowLForm] = useState("signin");
@@ -15,6 +17,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 	const [message,setMessage] = useState("");
 	const [emailS,setEmailS] = useState("");
 	const [pwdstgth,setPwdstgth] = useState(0);
+	const [showPwd, setShowPwd] = useState(false);
 
 	const emailReg = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
@@ -55,6 +58,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			return;
 		}
 		disableDiv();
+		setOpacity(0,'Signing In..');
 		const  authPayLoad = {
 			username:username.value,
 			password:password.value
@@ -69,12 +73,30 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		const response = await fetch(`${getServiceURI()}/todo/authenticate`,settings);
 		const data = await response.json();
 		if(data.jwt){
-			document.cookie="jToken=Bearer "+data.jwt+"; path=/";
-			window.location.replace("/todo");
+			setTimeout(()=>{
+				document.cookie="jToken=Bearer "+data.jwt+"; path=/";
+				window.location.replace("/todo");
+			},1000)
 		}else{
 			setLoginError(data.error);
+			setOpacity(1);
 		}
 		enableDiv();
+		//setOpacity(1);
+	}
+
+	const setOpacity = (op,txt) => {
+		document.querySelectorAll('.signup-form').forEach(form=>{
+			form.style.opacity = op;
+		});
+		if(op===0){
+			document.querySelector('.spinner').style.display = 'flex';
+			if(txt!==undefined)document.querySelector('.spinner-txt').innerHTML=txt;
+			else document.querySelector('.spinner-txt').innerHTML='Loading';
+		}else{
+			document.querySelector('.spinner').style.display = 'none';
+		} 
+			
 	}
 	
 	document.addEventListener("keyup",function(event){
@@ -115,6 +137,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const signUpPayoad = {
 			name:name.value,
 			userName:email.value,
@@ -130,7 +153,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const response = await fetch(`${getServiceURI()}/todo/signup`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status){
 			if(data.status==="success"){
 				setMessage("You have registered successfully. Please sign in to continue.");
@@ -165,11 +188,8 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const settings = {
 			method:'GET',
-			headers:{
-				'Authorization':getAuth()
-			}
 		}
-		const response = await fetch(`${getServiceURI()}/todo/user/checkUsername/${uName.value}`);
+		const response = await fetch(`${getServiceURI()}/todo/user/checkUsername/${uName.value}`,settings);
 		const data = await response.json();
 		if(data.status==='USER_EXISTS'){
 			emailAvailality.innerHTML = 'User name already exists';
@@ -196,6 +216,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const sendOtpPayload = {
 			userName : userName.value
 		}
@@ -210,7 +231,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const response = await fetch(`${getServiceURI()}/todo/init-reset-pwd`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status==="MESSAGE_SENT"){
 			onSetShowLForm("verify-otp");
 		}else{
@@ -239,6 +260,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const resetPPayload = {
 			otp : otpResetP.value,
 			passWord : confirmPwd.value,
@@ -253,7 +275,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const response = await fetch(`${getServiceURI()}/todo/reset-pwd`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status){
 			if(data.status==="success"){
 				setLoginError(data.status);
@@ -289,6 +311,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			return;
 		}
 		disableDiv();
+		setOpacity(0);
 		const changePPayload = {
 			currentPassword : currentPwd.value,
 			passWord : confirmPwd.value,
@@ -303,7 +326,7 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 		}
 		const response = await fetch(`${getServiceURI()}/todo/change-pwd`,settings);
 		const data = await response.json();
-		enableDiv();
+		enableDiv();setOpacity(1);
 		if(data.status){
 			if(data.status==="success"){
 				setLoginError(data.status);
@@ -404,14 +427,15 @@ export const Login = ({disableDiv, enableDiv, lError,getAuth, getServiceURI}) =>
 			<div className="container ">
 				<div className="row row-main">
 					<div className="col-sm-3"></div>
-					<div className="col-sm-5 middle-span">
-						{(showLForm==="signin" || showLForm==="") && <SignInDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} onAuthenticate={authenticate} />}
+					{/*<div className="col-sm-5 middle-span">*/}
+						{(showLForm==="signin" || showLForm==="") && <SignInDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onAuthenticate={authenticate} />}
 						{showLForm==="signup" && <SignUpDiv onSetShowLForm={onSetShowLForm} onRegister={register} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} checkUNameAvaiability={checkUNameAvaiability} />}
 						{showLForm==="lsuccess" && <LSuccessDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSetLoginError={setLoginError} message={message} />}
 						{showLForm==="reset" && <ResetPwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onSendOtp={sendOtp} prevShowLForm={prevShowLForm} />}
 						{showLForm==="verify-otp" && <ResetPwdOtpDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onVerifyOtpAndResetPwd={verifyOtpAndResetPwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
 						{showLForm==="change-pwd" && <ChangePwdDiv loginError={loginError} onSetShowLForm={onSetShowLForm} onChangePwd={changePwd} prevShowLForm={prevShowLForm} checkPwdStrength={checkPwdStrength} />}
-					</div>
+					{/*</div>*/}
+					<LoaderColored />
 					<div className="col-sm-3"></div>
 				</div>
 			</div>

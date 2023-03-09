@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux/es/exports';
 
 import deleteRed2027 from '../../images/delete-red-20x27.png';
 
@@ -12,22 +13,40 @@ import {TaskUriRef} from './TaskUriRef.js';
 import {ConfirmPopup} from '../ConfirmPopup.js';
 import {TaskSteps} from './TaskSteps.js';
 
+import { days, dueDateColor, monthsI } from '../utils/GlobalFuns';
+
 import whiteLeftArrow from '../../images/white-left-arrow.png';
+import { convertDateT } from '../utils/GlobalFuns';
+import { deleteTask, fetTaskList, moveTask, setShowTasks, setTaskDetailShow, updateTask } from '../redux/task/taskActions';
+import { UPDATE_TASK_SUCCESS } from '../redux/task/taskActionTypes';
+import { BsArrowLeftSquare } from 'react-icons/bs';
 
-export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, taskList, onSetShowtaskDetls, onMoveTask, onCompleteTask, onDeleteTask, onUpdateTask, isMobileDevice,
-												days, monthsI, getAuth, disableDiv, enableDiv,getServiceURI,impListId}) => {
+export const TaskDetails = () => {
 
-	//const currListName = document.getElementById('tListName').value;
-	const currListName = document.getElementById('listName').value;
-	
+	const dispatch = useDispatch();
+	const task = useSelector(state => state.task.taskDetail);
+	const taskList = useSelector(state => state.task.taskList);
+	const taskListKeys = useSelector(state => state.task.taskListKeys);
+	const todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
+	const userLists = useSelector(state => state.list.userLists);
+	const todoList = taskList[todoIndex]!==undefined?taskList[todoIndex][0]:{};
+	const currListName = todoList.listName;
+	const [impList,setImpList] = useState();
 	const [showTaskNameField, setShowTaskNameField] = useState(false);
 	const [showDueDateSel, setShowDueDateSel] = useState(false);
 	const [showRemDateSel, setShowRemDateSel] = useState(false);
 	const [moveLists,setMoveLists] = useState([]);
 	const [showMoveListSel, setShowMoveListSel] = useState(false);
 	const [showTaskUriRefTxt, setShowTaskUriRefTxt] = useState(false);
-	
 	const [showConfirmPopup,setShowConfirmPopup] = useState(false);
+	const isMobileDevice = useSelector(state => state.list.isMobileDevice);
+	const phase = useSelector(state => state.task.phase);
+	
+	const onMobileGoback = (listId) => {
+		dispatch(fetTaskList(listId));
+		dispatch(setShowTasks(true));
+		dispatch(setTaskDetailShow(false));
+	}
 
 	function getLTH() {
 		var today = new Date();
@@ -39,11 +58,22 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 	}
 	
 	useEffect(()=>{
-		if(showTaskNameField && document.getElementById('task-detail-label-text')!==null){
+		if(phase===UPDATE_TASK_SUCCESS){
+			setShowDueDateSel(false);
+			setShowRemDateSel(false);
+			if(task.uriRef!==null){
+				setShowTaskUriRefTxt(false);
+			}
+			setShowTaskNameField(false);
+		}
+	},[phase,task])
+
+	useEffect(()=>{
+		if(showTaskNameField && document.getElementById('task-detail-label-text')!==null && task.taskName!==undefined){
 			document.getElementById('task-detail-label-text').focus();
 			document.getElementById('task-detail-label-text').value = task.taskName;
 		}
-	},[showTaskNameField,task.taskName]);
+	},[showTaskNameField,task]);
 	
 	useEffect(()=>{
 		setShowMoveListSel(false);
@@ -65,90 +95,44 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 		setShowConfirmPopup(showCnfrmPp);
 	}
 	
-	const deleteTask=async(taskId)=>{
-		if(await onDeleteTask(taskId)){
-			setShowConfirmPopup(false);
-		}
+	const initDeleteTask=()=>{
+		dispatch(deleteTask(task,todoList));
+		setShowConfirmPopup(false);
 	}
 	
-	const updateTaskName = async (event,taskId) => {
-		const updatedTaskName = event.target.value;
-		if(updatedTaskName===task.taskName){
-			setShowTaskNameField(false);
-			return false;
-		}
-		disableDiv();
-		const updateTaskNamePayLoad = {
-			taskId:taskId,
-			taskName:updatedTaskName
-		}
-		const settings = {
-			method:'PUT',
-			headers:{
-				'Authorization':getAuth(),
-				'Content-Type':'application/json; charset=UTF-8'
-			},
-			body:JSON.stringify(updateTaskNamePayLoad)
-		};
-		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/taskName`,settings);
-		const data = await response.json();
-		if(data.status==="success"){
-			let tempTaskList = [...taskList];
-			let taskListIndex;
-			if(task.completed){
-				taskListIndex=2;
-			}else{
-				taskListIndex=1;
-			}
-			let tempTaskG = tempTaskList[taskListIndex];
-			tempTaskG.map((tempTask,index)=>{
-				if(tempTask.taskId===taskId){
-					tempTaskG[index]=data.todoTask;
-				}
-				return true;
-			});
-			tempTaskList[taskListIndex] = tempTaskG;
-			onSetTask(data.todoTask);
-			setShowTaskNameField(false);
-		}
-		enableDiv();
-	}
-	
-	const onSetShowMoveListSel = (taskId) => {
+	const onSetShowMoveListSel = () => {
 		if (document.getElementById('task-item-detail-move-sel') !== null) {
 			setShowMoveListSel(false);
 		}else{
-			fetchlistList(taskId);
+			setShowMoveListSel(true);
 		}
 		
 	}
 	
-	const fetchlistList = async (taskId) => {
-		disableDiv();
-		const settings = {
-			method:'GET',
-			headers:{
-				'Authorization':getAuth()
-			}
-		}
-		const response = await fetch(`${getServiceURI()}/todo/task/getListsOfUsers/${taskId}`,settings);
-		const data = await response.json();
-		if(data!==undefined){
-			enableDiv();
-			setShowMoveListSel(true);
-				setShowDueDateSel(false);
-				setShowRemDateSel(false);
-			setMoveLists(data);
-		}
-	}
-	
 	useEffect(() => {
-		if (document.getElementById('task-item-detail-move-sel') !== null) {
-			document.getElementById('task-item-detail-move-sel').style.height = "10em";
+		if (document.getElementById('task-item-detail-move-sel') !== null && showMoveListSel && moveLists!==null) {
+			const hgtArr = ['0em','0em','0em','2.5em','5em','7em','9em']
+			let hgt = hgtArr[moveLists.length];
+			document.getElementById('task-item-detail-move-sel').style.height = hgt!==undefined?hgt:'10em';
 			document.getElementById('task-item-detail-move-sel').style.width
 				= document.getElementById('task-item-detail-dueDate').offsetWidth + 'px';
 		}
-	}, [moveLists]);
+	}, [showMoveListSel,moveLists]);
+
+	useEffect(()=>{
+		if(userLists!=null && userLists!==undefined && userLists.length>0){
+			let tempMoveList = [];
+			userLists.forEach(elem => {
+				elem.forEach(elem1=>{
+					tempMoveList.push(elem1);
+					if(elem1.listName==='Important'){
+						setImpList(elem1);
+					}
+				})
+			});
+			setMoveLists(tempMoveList);
+		}
+	},[userLists])
 	
 	const onSetShowDateSel = (event,tdElem) => {
 		
@@ -189,11 +173,7 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 		}
 	}, [showRemDateSel]);
 
-	const updateTDDate = async (event, taskId, when, tdElem) => {
-		disableDiv();
-		let reqPayload = {
-			"taskId": parseInt(taskId)
-		}
+	const updateTDDate = async (event, task, when, tdElem) => {
 		let remindTime;
 		if(when==="pick"){
 			if(tdElem==="remindMeDate"){
@@ -205,28 +185,16 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 			remindTime = getDateTime(when);
 		}
 		if(tdElem==="remindMeDate"){
-			reqPayload.remindTime = remindTime;
-			reqPayload.remindMe = true;
+			task.remindTime = remindTime;
+			task.remindMe = true;
 		}else{
-			reqPayload.dueDate = remindTime;
+			task.dueDate = remindTime;
 		}
-		const settings = {
-			method: 'PUT',
-			headers: {
-				'Authorization': getAuth(),
-				'Content-Type': "application/json; charset=utf-8"
-			},
-			body: JSON.stringify(reqPayload)
+		const payload ={
+			task,
+			action:tdElem
 		}
-		const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/${tdElem}`, settings);
-		const data = await response.json();
-		onSetTask(data.todoTask);
-		if(tdElem==="remindMeDate"){
-			onSetShowDateSel('remindMeDate');
-		}else{
-			onSetShowDateSel('dueDate');
-		}
-		enableDiv();
+		dispatch(updateTask(payload));
 	}
 	function getDateTime(when) {
 		var tDate = new Date();
@@ -251,35 +219,77 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 		return  tDate.getFullYear() + "-" + monthsI[tDate.getMonth()] + "-" + day + "T" + lth + ":00";
 	}
 
+	const initUpdateTask = (event,action,task) => {
+		if(event.target===event.currentTarget){
+			event.stopPropagation();
+		}
+		if(action==='important'){
+			task[action] = event.target.checked;
+		}else if(action==='complete'){
+			task['completed'] = event.target.checked;
+		}else if(action==="removeDueDate"){
+			action='dueDate';
+			task.dueDate=null;
+		}else if(action==="removeRemDate"){
+			action = "remindMe";
+			task.remindMe = false;
+			task.remindTime = null;
+		}else if(action==="uri-ref"){
+			task.uriRef = event.target.value;
+		}else if(action==="removeUriRef"){
+			action = "uri-ref";
+			task.uriRef = null;
+		}else{
+			task[action] = event.target.value;
+		}
+		const payload ={
+			task,
+			action,
+			impList,
+			todoList
+		}
+		dispatch(updateTask(payload));
+	}
+
+	const onMoveTask = (task,targetList) => {
+		dispatch(moveTask(task,targetList,todoList));
+		if(isMobileDevice){
+			onMobileGoback(task.listId)
+		}
+	}
+
 	return (
 		<div className="col-sm-3 task-detail-div" id="task-detail-div">
-		{isMobileDevice &&<img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onSetShowtaskDetls(false)} />}
+		{/* <img alt="back" src={whiteLeftArrow} style={{width:1.5+'em'}} onClick={()=>onMobileGoback(task.listId)} /> */}
+		{isMobileDevice &&
+			<BsArrowLeftSquare onClick={onMobileGoback} className='login-back-arrow' style={{marginLeft:10}} />
+		}
 			<div className="task-detail-main" id="task-detail-main">
 				<div className="row task-item-detail-name" id="task-item-detail-name">
-					<input type="checkbox"  onChange={(event) => onCompleteTask(event,task.taskId)}
+					<input type="checkbox"  onChange={(event) => initUpdateTask(event,'complete',task)}
 						className="task-item-chkbx-detail task-item-chkbx " checked={task.completed} />
 					{!showTaskNameField && <label id="task-detail-label" className={task.completed ? "task-item-label strike-line" : "task-item-label"}
 						onClick={()=>setShowTaskNameField(true)}>{task.taskName}
 					</label>}
 					{showTaskNameField && <input type="text" id="task-detail-label-text" className="task-detail-label-text form-control" 
-							style={{ backgroundColor: '#403a3a'}} onBlur={(event)=>updateTaskName(event,task.taskId)} />}
+							style={{ backgroundColor: '#403a3a'}} onBlur={(event)=>initUpdateTask(event,'taskName',task)} />}
 					<input className="task-detail-star" type="checkbox" title="Important" 
-									onChange={(event)=>onUpdateTask(event,"important", task.taskId)}  checked={task.important} />
-				<TaskSteps task={task} getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} onSetTask={onSetTask} />
+									onChange={(event)=>initUpdateTask(event,'important', task)}  checked={task.important} />
+				<TaskSteps todoList={todoList} />
 				</div>
 				
 				<div style={{position:'relative'}}>
-					<TaskDueDate task={task} onConvertDateT={onConvertDateT} dueDateColor={dueDateColor} onSetShowDateSel={onSetShowDateSel} showDueDateSel={showDueDateSel} onUpdateTask={onUpdateTask} />
+					<TaskDueDate task={task} onConvertDateT={convertDateT} dueDateColor={dueDateColor} onSetShowDateSel={onSetShowDateSel} showDueDateSel={showDueDateSel} onUpdateTask={initUpdateTask} />
 					{showDueDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
 														days={days} getLTH={getLTH} tdElem="dueDate" />}
 				</div>
 				<div style={{position:'relative'}}>
-					<TaskRemindDate task={task} onConvertDateT={onConvertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={onUpdateTask} showRemDateSel={showRemDateSel} />
+					<TaskRemindDate task={task} onConvertDateT={convertDateT} onSetShowDateSel={onSetShowDateSel} onUpdateTask={initUpdateTask} showRemDateSel={showRemDateSel} />
 					{showRemDateSel && <TaskDateSelector task={task} onUpdateTDDate={updateTDDate} onSetShowDateSel={onSetShowDateSel}
 													days={days} getLTH={getLTH} tdElem="remindMeDate"
 													/>}
 				</div>
-				<TaskNote task={task} onUpdateTask={onUpdateTask} />
+				<TaskNote task={task} onUpdateTask={initUpdateTask} />
 				<div style={{position:'relative'}}>
 					{currListName!=="Important"	&&	<TaskMove task={task} showMoveListSel={showMoveListSel} onSetShowMoveListSel={onSetShowMoveListSel} />}
 					{showMoveListSel && <TaskMoveListSelector 	moveLists={moveLists!==null && moveLists}
@@ -287,11 +297,11 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 															task={task}
 														/>}
 				</div>
-				<TaskUriRef task={task} showTaskUriRefTxt={showTaskUriRefTxt} setShowTaskUriRefTxt={setShowTaskUriRefTxt} onUpdateTask={onUpdateTask} />
+				<TaskUriRef task={task} showTaskUriRefTxt={showTaskUriRefTxt} setShowTaskUriRefTxt={setShowTaskUriRefTxt} onUpdateTask={initUpdateTask} />
 			</div>
 			<div className="row task-detail-delete" id="task-detail-delete">
 				<div style={{ textAlign: 'center', marginTop: 0.7 + 'em', width:80+'%' }}>
-					<label className="task-detail-crtd-lbl">Created on {onConvertDateT(task.dateCreated)}</label>
+					<label className="task-detail-crtd-lbl">Created on {convertDateT(task.dateCreated)}</label>
 				</div>
 				<div style={{ marginTop: 0.7 + 'em' , width:20+'%'}}>
 					<img alt="delete" className="task-detail-delete-label" id="task-delete-label" src={deleteRed2027}
@@ -299,7 +309,7 @@ export const TaskDetails = ({ task, onConvertDateT, dueDateColor, onSetTask, tas
 				</div>
 			</div>
 			<ConfirmPopup showConfirmPopup={showConfirmPopup} onSetShowConfirmPopup={onSetShowConfirmPopup}
-							onDelete={deleteTask}
+							onDelete={initDeleteTask}
 							selctdItem={task.taskId}
 							headerTxt="Delete Task"
 							bodyTxt="Are you sure to delete this task ?"

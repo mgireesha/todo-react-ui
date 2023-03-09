@@ -1,11 +1,16 @@
 import { React, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Nbsp from '../Nbsp.js';
+import { addNextStep, deleteTaskStep, updatetaskStep } from '../redux/task/taskActions.js';
+import { CREATE_TASK_STEP_SUCCESS } from '../redux/task/taskActionTypes.js';
 
-export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getServiceURI }) => {
+export const TaskSteps = ({todoList}) => {
 
+    const dispatch = useDispatch();
     const [showAddNxtFld, setShowAddNxtFld] = useState(false);
-
+    const phase = useSelector(state => state.task.phase);
+    const task = useSelector(state => state.task.taskDetail);
     const onSetShowAddNxtFld = (event,value) => {
         setShowAddNxtFld(value);
     }
@@ -19,7 +24,7 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
         }
     },[showAddNxtFld]);
 
-    const addNextStep = async(taskId) => {
+    const initAddNextStep = () => {
         const stepName = document.getElementById('add-nxt-fld-');
         if(stepName.value===''){
             setShowAddNxtFld(false);
@@ -28,25 +33,16 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
         const addNxtStepPayload = {
             stepName:stepName.value
         }
-        disableDiv();
-        const settigs = {
-            method:'POST',
-            headers:{
-                'Authorization': getAuth(),
-                'Content-Type':'application/json; charset=UTF-8'
-            },
-            body:JSON.stringify(addNxtStepPayload)
-        }
-        const response = await fetch(`${getServiceURI()}/todo/task/${taskId}/taskStep/`,settigs);
-        const data = await response.json();
-        if(data.status==='success'){
-            onSetTask(data.todoTask);
+        dispatch(addNextStep(task,addNxtStepPayload,todoList))
+    }
+    
+    useEffect(()=>{
+        if(phase===CREATE_TASK_STEP_SUCCESS){
             setShowAddNxtFld(false);
         }
-        enableDiv();
-    }
+    },[phase])
 
-    const updateStep = async (event,stepId,action) => {
+    const initUpdateStep =  (event,stepId,action) => {
         const updateStepPayLoad = {
             stepId
         }
@@ -63,39 +59,11 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                 return false;
             }
         }
-        const settigs = {
-            method:'PUT',
-            headers:{
-                'Authorization':getAuth(),
-                'Content-Type':'application/json; charset=UTF-8'
-            },
-            body:JSON.stringify(updateStepPayLoad)
-        }
-        disableDiv();
-        const response = await fetch(`${getServiceURI()}/todo/task/taskStep/${action}/`,settigs);
-        const data = await response.json();
-        if(data.status==='success'){
-            showRenameFld(stepId,'hide');
-            onSetTask(data.todoTask);
-        }
-        enableDiv();
+        dispatch(updatetaskStep(updateStepPayLoad,action));
     }
 
-    const deleteStep = async (stepId) => {
-        const settigs = {
-            method:'DELETE',
-            headers:{
-                'Authorization':getAuth(),
-                'Content-Type':'application/json; charset=UTF-8'
-            }
-        }
-        disableDiv();
-        const response = await fetch(`${getServiceURI()}/todo/task/taskStep/${stepId}`,settigs);
-        const data = await response.json();
-        if(data.status==='success'){
-            onSetTask(data.todoTask);
-        }
-        enableDiv();
+    const initDeleteStep = (stepId) => {
+        dispatch(deleteTaskStep(stepId));
     }
 
     const showRenameFld = (stepId,action) => {
@@ -129,13 +97,13 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                     {task!==null && task.taskSteps!==null && task.taskSteps.length !== 0 && task.taskSteps.map((step,index) => 
                             <div className='task-step-elem'>
                                 <label style={{width:10+'%'}}>
-                                    <input type='checkbox' className='task-step-chkbx' checked={step.completed} onChange={(event)=>updateStep(event,step.stepId,'complete')}  />
+                                    <input type='checkbox' className='task-step-chkbx' checked={step.completed} onChange={(event)=>initUpdateStep(event,step.stepId,'complete')}  />
                                 </label>
                                 <label className={step.completed ? 'strike-line' : ''} id={'add-nxt-label-'+step.stepId} style={{color:'#b9b4b4',cursor:'text', width:80+'%' }} key={index} onClick={()=>showRenameFld(step.stepId,'show')}>{step.stepName}</label>
                                 <textarea stepindex={index} id={'add-nxt-fld-'+step.stepId} className='c-ta-stps' placeholder='Add step'  style={{display:'none',width:72+'%'}}></textarea>
-                                <label id={'add-nxt-arr-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>updateStep(event,step.stepId,'stepName')}>&rarr;</label>
+                                <label id={'add-nxt-arr-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>initUpdateStep(event,step.stepId,'stepName')}>&rarr;</label>
                                 <span id={'add-nxt-cnl-'+step.stepId} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld(step.stepId,'hide')}><Nbsp/><Nbsp/>&#x2715;</span>
-                                <label id={'step-rmv-label-'+step.stepId} className='step-rmv-label' style={{width:10+'%'}} onClick={()=>deleteStep(step.stepId)}>X</label>
+                                <label id={'step-rmv-label-'+step.stepId} className='step-rmv-label' style={{width:10+'%'}} onClick={()=>initDeleteStep(step.stepId)}>X</label>
                             </div>
                     )}
                     {!showAddNxtFld && <div className='task-step-elem' style={{borderBottom:'none'}} onClick={(event)=>onSetShowAddNxtFld(event,true)}>
@@ -146,7 +114,7 @@ export const TaskSteps = ({ task,onSetTask, getAuth, disableDiv, enableDiv, getS
                 {showAddNxtFld && 
                 <div style={{borderBottom:'1px solid grey'}}>
                     <textarea id='add-nxt-fld-' className='c-ta' placeholder='Add step'></textarea>
-                    <label id={'add-nxt-arr-'} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={(event)=>addNextStep(task.taskId)}>&rarr;</label>
+                    <label id={'add-nxt-arr-'} style={{display:'none',cursor:'pointer',fontSize:23}} onClick={()=>initAddNextStep()}>&rarr;</label>
                     <span id={'add-nxt-cnl-'} style={{display:'none',cursor:'pointer',fontSize:15}} onClick={()=>showRenameFld('','hide')}><Nbsp/><Nbsp/>&#x2715;</span>
                 </div> 
                 }

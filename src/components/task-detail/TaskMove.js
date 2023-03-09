@@ -3,7 +3,7 @@ import moveBlue from '../../images/move-blue_20x18.png';
 
 export const TaskMove = ({ task, onSetShowMoveListSel, showMoveListSel }) => {
 	return (
-		<div className="row task-item-detail-move task-item-detail-elem" onClick={() => onSetShowMoveListSel(task.taskId)} >
+		<div className="row task-item-detail-move task-item-detail-elem" onClick={() => onSetShowMoveListSel()} >
 			<div className="task-detail-dueDate-div" style={{ width: 10 + '%' }}>
 				<img alt="due date" className="task-detail-move-img" id="task-detail-remind-img" src={moveBlue} />
 			</div>

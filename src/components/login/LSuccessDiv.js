@@ -1,7 +1,8 @@
 import {React} from 'react';
 
-export const LSuccessDiv = ({loginError, onSetLoginError, onSetShowLForm, message}) => {
+export const LSuccessDiv = ({loginError, onSetShowLForm, message}) => {
 	return(
+		<div className="col-sm-5 middle-span">
 		<div className="signup-form">
 			<h1 className="signup-header" style={{color:loginError==="success"?"green":"red", textTransform:'capitalize'}}>{loginError}!</h1>
 			<div className="row row-label">
@@ -10,6 +11,7 @@ export const LSuccessDiv = ({loginError, onSetLoginError, onSetShowLForm, messag
 			<div className="row row-btn">
 				<button className="btn-signup" onClick={()=>onSetShowLForm("signin")}>Sign In</button>
 			</div>
+		</div>
 		</div>
 	);
 }

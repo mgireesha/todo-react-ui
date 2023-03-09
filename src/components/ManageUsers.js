@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import {ConfirmPopup} from './ConfirmPopup.js';
+import { disableDiv, enableDiv, getAuth, getServiceURI } from "./utils/GlobalFuns.js";
 
-export const ManageUsers = ({getAuth, getServiceURI, disableDiv, enableDiv}) => {
+export const ManageUsers = () => {
     const [users,setUsers] = useState([]);
 
     const [showConfirmPopup,setShowConfirmPopup] = useState(false);

@@ -1,14 +1,20 @@
 import { React } from 'react';
 import './App.css';
 import { Header } from './components/Header.js';
-import { Body } from './components/Body.js';
+import { TodoBody } from './components/TodoBody';
 import { Login } from './components/login/Login.js';
 import {ManageUsers} from './components/ManageUsers.js';
 import 'bootstrap/dist/css/bootstrap.css';
-import './components/main.css';
+import './components/main.scss';
 import './components/login/SignIn.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { Provider } from 'react-redux';
+import store from './components/redux/store';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { getAuth } from './components/utils/GlobalFuns';
+import { ReadExcelFile } from './components/importExport/ReadExcelFile';
 function App() {
 	function getServiceURI(){
 		//return "https://todo-ms-rc-sb.herokuapp.com"
@@ -44,22 +50,21 @@ function App() {
 
 	return (
 		<div className="container-fluid margin-zero" id="app-main-div">
-			<Header getAuth={getAuth} />
+		<div id="disable-div" className="disable-div" style={{display:'none'}}></div>
+			<Provider store={store}>
+			<Header/>
 			<Router>
 				<Routes>
-					{['/login', '/logout'].map((path, index) => <Route path={path}
-						element={<Login disableDiv={disableDiv} enableDiv={enableDiv} getAuth={getAuth} getServiceURI={getServiceURI} />} key={index} />)}
-					<Route path='/todo/ManageUsers' element={<ManageUsers getAuth={getAuth} getServiceURI={getServiceURI} disableDiv={disableDiv} enableDiv={enableDiv} />} />
+					{['/login', '/logout'].map((path, index) => <Route path={path} element={<Login />} key={index} />)}
+					<Route path='/todo/ManageUsers' element={<ManageUsers />} />
 					{['/', '/todo'].map((path, index) => <Route path={path} 
-						element={getAuth() !== '' ? 
-							<Body getAuth={getAuth} disableDiv={disableDiv} enableDiv={enableDiv} getServiceURI={getServiceURI} /> 
-							: 
-							<Login disableDiv={disableDiv} enableDiv={enableDiv} getAuth={getAuth} getServiceURI={getServiceURI} lError="Session exired. Please login" />} 
-						key={index} />)
+						element={getAuth() !== '' ? <TodoBody /> : <Login lError="Session exired. Please login" />} key={index} />)
 					}
+					<Route path='/todo/ReadExcel' element={<ReadExcelFile/>} />
 				</Routes>
 			</Router>
-			<div id="disable-div" className="disable-div" style={{ display: 'none' }}> </div>
+			</Provider>
+			
 		</div>
 	);
 }

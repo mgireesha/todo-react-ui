@@ -1,11 +1,14 @@
 import { React } from 'react';
 
 import whiteLeftArrow from '../../images/white-left-arrow.png';
+import { PasswordField } from './PasswordField';
+import {BsArrowLeftSquare} from 'react-icons/bs';
 
 export const ResetPwdOtpDiv = ({ loginError, onSetShowLForm, onVerifyOtpAndResetPwd, prevShowLForm, checkPwdStrength }) => {
 	return (
+		<div className="col-sm-5 middle-span">
 		<div className="signup-form">
-			<img alt='back' src={whiteLeftArrow} onClick={()=>onSetShowLForm(prevShowLForm)} className='whiteLeftArrow' />
+			<BsArrowLeftSquare onClick={()=>onSetShowLForm(prevShowLForm)} className='login-back-arrow' />
 			<h1 className="signup-header">Reset Password</h1>
 			<div className="row row-label">
 				<label className="signup-label">OTP</label>
@@ -14,12 +17,12 @@ export const ResetPwdOtpDiv = ({ loginError, onSetShowLForm, onVerifyOtpAndReset
 			</div>
 			<div className="row row-label">
 				<label className="signup-label">Create new password</label>
-				<input className="form-control signup-input" type="password" name="createPwd" id="createPwd" onKeyUp={(event)=>checkPwdStrength(event)} placeholder="Create password" required />
+				<PasswordField id='createPwd' name='createPwd' placeholder='Create Password' onKeyUp={checkPwdStrength} />
 				<span id="pwdStrength" style={{display: 'inline-block',padding: 0.1+'em',color: 'darkgreen'}} className="col-sm-7">Password Strength</span>
 			</div>
 			<div className="row row-label">
 				<label className="signup-label">Confirm password</label>
-				<input className="form-control signup-input" type="password" name="confirmPwd" id="confirmPwd" placeholder="Confirm password" required />
+				<PasswordField id='confirmPwd' name='confirmPwd' placeholder='Confirm Password' />
 			</div>
 			<div className="row row-btn">
 				<button type="button" className="btn-signup" onClick={onVerifyOtpAndResetPwd}>Verify</button>
@@ -28,6 +31,7 @@ export const ResetPwdOtpDiv = ({ loginError, onSetShowLForm, onVerifyOtpAndReset
 				<label className="signup-label">Go back to <span className='link-look' onClick={()=>onSetShowLForm("signin")}>Login</span>
 				</label>
 			</div>
+		</div>
 		</div>
 	);
 }

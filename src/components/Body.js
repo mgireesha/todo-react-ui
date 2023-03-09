@@ -31,7 +31,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	const [showTasks, setShowTasks] = useState(true);
 	const [lisDivWidth, setListDivWidth] = useState('');
 
-	const [impListId,setImpListId] = useState(0);
+	const [impListId,setImpListId] = useState(0); 
 
 	
 	let todoIndex = taskListKeys.findIndex(obj => obj==="todoList");
@@ -121,6 +121,7 @@ export const Body = ({getAuth, disableDiv, enableDiv, getServiceURI}) => {
 	} 
 	
 	const  isMobile = () => {
+		console.log("Hi")
     		return ( ( window.innerWidth <= 760 ) 
     					//&& ( window.innerHeight <= 600 ) 
     			);

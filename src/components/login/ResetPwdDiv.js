@@ -1,10 +1,11 @@
 import { React } from 'react';
-import whiteLeftArrow from '../../images/white-left-arrow.png';
+import {BsArrowLeftSquare} from 'react-icons/bs';
 
 export const ResetPwdDiv = ({ loginError, onSetShowLForm, onSendOtp, prevShowLForm }) => {
 	return (
+		<div className="col-sm-5 middle-span">
 		<div className="signup-form">
-			<img alt='back' src={whiteLeftArrow} onClick={()=>onSetShowLForm(prevShowLForm)} className='whiteLeftArrow' />
+			<BsArrowLeftSquare onClick={()=>onSetShowLForm(prevShowLForm)} className='login-back-arrow' />
 			<h1 className="signup-header">Reset Password</h1>
 			<div className="reset-pwd-div" id="reset-pwd-div">
 				<div className="row row-label">
@@ -23,6 +24,7 @@ export const ResetPwdDiv = ({ loginError, onSetShowLForm, onSendOtp, prevShowLFo
 					New user ? <span onClick={()=>onSetShowLForm("signup")} className='link-look'>sign up</span> here
 				</label>
 			</div>
+		</div>
 		</div>
 	);
 }

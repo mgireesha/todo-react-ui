@@ -58,7 +58,7 @@ body{
     padding: 0;
     margin-left: 10px;
     margin-top: -8px;
-    transition: height 0.5s ease-out;
+    transition: height 0.2s ease-out;
     height: 0;
     overflow: hidden;
     background-color: #2e2729;
@@ -82,12 +82,12 @@ body{
 }
 .list-task-count{
 	float: right;
-    width: 1.4em;
+    width: 1.5em;
     text-align: center;
     font-size: 0.8em;
     border-radius: 50%;
     margin: 3px;
-    margin-top: 8px;
+    margin-top: 6px;
     height: 1.6em;
 }
 .list-task-count-def{
@@ -144,7 +144,7 @@ body{
     font-weight: 500;
     color: beige;
    /*  height: 2.3em; */
-    transition: height 0.3s ease-out;
+    /* transition: height 0.1s ease-out; */
 }
 
 
@@ -268,6 +268,10 @@ body{
 	background-color: #e9e9da;
 }
 
+.task-add-main{
+    
+}
+
 .task-item-add-div{
 	 padding: 10px;
     background-color: beige;
@@ -371,7 +375,8 @@ color: grey;
 }
 
 .task-add-button-div{
-	padding-left: 0;
+	/* padding-left: 0; */
+    margin-top:5px;
 }
 
 .task-add-button{
@@ -386,7 +391,8 @@ color: grey;
 }
 
 .task-add-due-date-div{
-	padding-left: 0;
+	/* padding-left: 0; */
+    margin-top:5px;
 	cursor: pointer;
 }
 
@@ -410,7 +416,7 @@ color: grey;
 /*Custom Scrollbar*/
 /* width */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 /* Track */
@@ -503,7 +509,10 @@ task-add-due-date, focus {
 }
 
 .task-item-add-field{
-	z-index: 1001;
+	position: absolute;
+    top: 80vh;
+    width: 62%;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
 
 .task-detail-div{
@@ -818,7 +827,7 @@ task-add-due-date, focus {
     margin-top: -8px;
     border: 1px solid #656562;
     overflow-y: auto;
-    transition: height 0.9s ease-out;
+    transition: height 0.3s ease-out;
     height: 0;
 }
 .task-detail-sel-close{
@@ -843,11 +852,11 @@ task-add-due-date, focus {
 
 .disable-div {
 	z-index: 1500;
-	width: 1362px;
-	height: 566.391px;
-	position: absolute;
-	top: 36.7969px;
-	left: 0px;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	/* top: 0;
+	left: 0; */
 	background-color: rgb(107, 106, 106);
 	opacity: 0.1;
 	cursor: wait;
@@ -1012,3 +1021,139 @@ task-add-due-date, focus {
     border: 2px solid #b31616;
     border-radius: 3px;
 }
+
+.middle-span, .task-detail-div, .task-div, .list-div{
+
+    animation: slideIn 500ms ease-in;
+}
+
+
+@keyframes slideIn {
+    0%{
+        transform:  translateX(250px);
+    }
+    80%{
+        transform:  translateX(-30px);
+    }
+    100%{
+        
+    }
+    
+}
+
+
+.react-datepicker__header--time{
+    height: 85px;
+    align-items: center;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+}
+
+.react-datepicker__year-select{
+    width: 120%;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 2px;
+}
+
+.react-datepicker__month-select{
+    width: 100%;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 2px;
+}
+
+.react-datepicker-time__input input{
+    border-radius: 4px;
+    font-size: 13px;
+    padding: 4px;
+    border: 1px solid gray;
+}
+
+.date-picker-calender-icon{
+    position: absolute;
+    right: 3%;
+    font-size: 20px;
+    top: 25%;
+    color: #0d6efd;
+}
+
+.date-picker-popper1{
+    position: fixed !important;
+}
+
+
+/* 
+@media only screen and (max-width: 600px) {
+    .date-picker-popper{
+        width:120%;
+        left: auto;
+    }
+  }
+  @media only screen and (min-width: 600px) {
+    .date-picker-popper{
+        width:200%;
+        left: 30% !important;
+    }
+  } */
+
+//File - start
+.t-main-container{
+    //padding-left: 10em;
+}
+.file-input-div{
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    // height: 40vh;
+    margin-left: 40%;
+    margin-top: 5%;
+}
+.file-txt-div{
+    margin-left: 20%;
+    margin-top: 1%;
+}
+.file-input{
+    
+}
+
+/* Code for file tag in import contacts div   >>> Start */
+.file-input-wrapper {
+    width: 200px;
+    height: 40px;
+    overflow: hidden;
+    position: relative;
+  }
+  .file-input-wrapper > input[type="file"] {
+    font-size: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .file-input-wrapper > .btn-file-input {
+    display: inline;
+    width: 200px;
+    height: 40px;
+    background-color: #06786e;
+    border: none;
+    color: beige;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .btn-file-input:hover{
+    background-color: #a0780b;
+  }
+
+  .file-input:hover + .btn-file-input{
+    background-color: #a0780b;
+  }
+
+  .file-input-wrapper:hover + .btn-file-input{
+    background-color: #a0780b;
+  }
+/* Code for file tag in import contacts div   >>> Start */
+//File - end

@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 export const ConfirmPopup = ({showConfirmPopup, onSetShowConfirmPopup, onDelete , selctdItem,
 								headerTxt, bodyTxt,msize}) => {
 	if(msize===undefined || msize===null){
-		msize='sm';
+		msize='md';
 	}
 	return (
 		<div id="confirm-popup">
@@ -17,7 +17,7 @@ export const ConfirmPopup = ({showConfirmPopup, onSetShowConfirmPopup, onDelete 
 					<span>{bodyTxt}</span>
 					<div className="" style={{margin:10}}>
 						<button type="button" className="dialog-cancel-btn" onClick={()=>onSetShowConfirmPopup(false)}>Cancel</button>
-						<button type="button" className="dialog-red-btn" onClick={()=>onDelete(selctdItem)}>delete</button>
+						<button type="button" className="dialog-red-btn" onClick={()=>onDelete(selctdItem)}>Delete</button>
 					</div>
 				</Modal.Body>
 			</Modal>
