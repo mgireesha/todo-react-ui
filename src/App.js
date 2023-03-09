@@ -16,6 +16,38 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { getAuth } from './components/utils/GlobalFuns';
 import { ReadExcelFile } from './components/importExport/ReadExcelFile';
 function App() {
+	function getServiceURI(){
+		//return "https://todo-ms-rc-sb.herokuapp.com"
+		//return "http://localhost:8087";
+		return "";
+	} 
+	function getAuth() {
+		let cookies = document.cookie;
+		let cookiesArr = cookies.split(';');
+		let cookieArr = [];
+		let jToken = '';
+		cookiesArr.forEach(cookie => {
+			cookieArr = cookie.split('=');
+			if (cookieArr[0].trim() === "jToken") {
+				jToken = cookieArr[1];
+			}
+		});
+		return jToken;
+	}
+
+	function disableDiv() {
+		document.getElementById('disable-div').style.width
+			= document.getElementById('app-main-div').offsetWidth + 'px';
+		document.getElementById('disable-div').style.height
+			//= document.getElementById('app-main-div').offsetHeight+'px';
+			= window.innerHeight + 30 + 'px';
+		document.getElementById('disable-div').style.top = '-30px';
+		document.getElementById('disable-div').style.display = 'block';
+	}
+	function enableDiv() {
+		document.getElementById('disable-div').style.display = 'none';
+	}
+
 	return (
 		<div className="container-fluid margin-zero" id="app-main-div">
 		<div id="disable-div" className="disable-div" style={{display:'none'}}></div>
