@@ -12,15 +12,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Provider } from 'react-redux';
 import store from './components/redux/store';
 
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { getAuth } from './components/utils/GlobalFuns';
 import { ReadExcelFile } from './components/importExport/ReadExcelFile';
-function App() {
-	function getServiceURI(){
-		//return "https://todo-ms-rc-sb.herokuapp.com"
-		//return "http://localhost:8087";
-		return "";
-	} 
+function App() { 
 	function getAuth() {
 		let cookies = document.cookie;
 		let cookiesArr = cookies.split(';');

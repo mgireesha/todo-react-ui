@@ -75,7 +75,7 @@ export const Login = ({lError}) => {
 		if(data.jwt){
 			setTimeout(()=>{
 				document.cookie="jToken=Bearer "+data.jwt+"; path=/";
-				window.location.replace("/todo");
+				window.location.replace("/");
 			},1000)
 		}else{
 			setLoginError(data.error);
